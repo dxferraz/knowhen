@@ -36,6 +36,10 @@ jobs:
       - name: Code generation (se necessário)
         run: dart run build_runner build --delete-conflicting-outputs
 
+      - name: Recreate google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > android/app/google-services.json
+
       - name: Build release APK
         run: |
           flutter build apk --release --split-per-abi --dart-define=OPEN_AI_API_KEY=$OPEN_AI_API_KEY --dart-define=FAL_AI_API_KEY=$FAL_AI_API_KEY
