@@ -1,0 +1,125 @@
+{
+  "@@locale": "pt",
+  "appTitle": "Knowhen",
+  "@appTitle": {},
+  "cancel": "Cancelar",
+  "@cancel": {},
+  "confirm": "Confirmar",
+  "@confirm": {},
+  "skip": "Pular",
+  "@skip": {},
+  "next": "Próximo",
+  "@next": {},
+  "start": "Começar",
+  "@start": {},
+  "continueLabel": "Continuar",
+  "@continueLabel": {},
+  "onboarding1Title":"Bem-vindo ao Knowhen!",
+  "@onboarding1Title": {},
+  "onboarding1Description": "Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento. Sua jornada começa aqui!",
+  "@onboarding1Description": {},
+  "onboarding2Title": "Desvendando o que sua data de nascimento revela!",
+  "@onboarding2Title": {},
+  "onboarding2Description": "Explore dados personalizados sobre sua personalidade, curiosidades históricas e insights únicos baseados na sua data de nascimento.",
+  "@onboarding2Description": {},
+  "onboarding3Title": "Vamos descobrir?",
+  "@onboarding3Title": {},
+  "onboarding3Description": "Insira sua data de nascimento e veja o que o universo tem reservado para você!",
+  "@onboarding3Description": {},
+  "selectBirthdateTitle": "Para começar selecione a sua data de nascimento:",
+  "@selectBirthdateTitle": {},
+  "selectADate": "Selecione uma data",
+  "@selectADate": {},
+  "selectABirthdate": "Selecione uma data de nascimento",
+  "@selectABirthdate": {},
+  "summaryPageTitle": "Resumo de {date}",
+  "@summaryPageTitle": {
+    "description": "Resumo da data selecionada",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "01/01/1925"
+      }
+    }
+  },
+  "yearsOld": "Caso você não saiba, você tem {age} anos de vida!",
+  "@yearsOld": {
+    "placeholders": {
+      "age": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "monthsOld": "Você passou por {months} meses em toda a sua vida até agora.",
+  "@monthsOld": {
+    "placeholders": {
+      "months": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "daysOld": "E {days} dias em toda a sua vida.",
+  "@daysOld": {
+    "placeholders": {
+      "days": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "conceptionRange": "Provável período de concepção: {startRange} a {endRange}.",
+  "@conceptionRange": {
+    "placeholders": {
+      "startRange": {
+        "type": "String",
+        "example": "01/01/1925"
+      },
+      "endRange": {
+        "type": "String",
+        "example": "01/01/1925"
+      }
+    }
+  },
+  "historicalFact":"Fato histórico",
+  "@historicalFact": {},
+  "firstFactParagraph":"{paragraph1}.",
+  "@firstFactParagraph": {
+    "placeholders": {
+      "paragraph1": {
+        "type": "String",
+        "example": "..."
+      }
+    }
+  },
+  "noImageForFact":"Sem imagem para o fato",
+  "@noImageForFact": {},
+  "aiGeneratedImage":"Imagem gerada por I.A.",
+  "@aiGeneratedImage": {},
+  "lastFactParagraph":"{paragraph2}",
+  "@lastFactParagraph": {
+    "placeholders": {
+      "paragraph2": {
+        "type": "String",
+        "example": "..."
+      }
+    }
+  },
+  "yearsOfLifeTitle":"Caso você não saiba, você tem:",
+  "@yearsOfLifeTitle": {},
+  "yearsOfLife":"{years} anos, {months} meses, {days} dias de vida.",
+  "@yearsOfLife": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "months": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  }
+}
