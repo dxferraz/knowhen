@@ -38,9 +38,7 @@ jobs:
 
       - name: Build release APK
         run: |
-          flutter build apk --release --split-per-abi \
-            --dart-define=OPEN_AI_API_KEY=$OPEN_AI_API_KEY \
-            --dart-define=FAL_AI_API_KEY=$FAL_AI_API_KEY
+          flutter build apk --release --split-per-abi --dart-define=OPEN_AI_API_KEY=$OPEN_AI_API_KEY --dart-define=FAL_AI_API_KEY=$FAL_AI_API_KEY
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
