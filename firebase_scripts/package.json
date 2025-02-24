@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@fal-ai/client": "^1.2.3",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "firebase-admin": "^13.0.2",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.80.0"
+  }
+}
