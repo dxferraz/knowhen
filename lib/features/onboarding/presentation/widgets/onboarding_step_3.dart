@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:knowhen/core/theme/constants/app_colors.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:knowhen/i18n/app_localizations.dart';
 
 class OnboardingStep3 extends StatelessWidget {
   const OnboardingStep3({super.key});
