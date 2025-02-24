@@ -40,6 +40,14 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+    
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def appName = "Knowhen"
+
+            outputFileName = "${appName}.apk"
+        }
+    }
 }
 
 flutter {
