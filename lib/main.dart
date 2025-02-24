@@ -8,7 +8,7 @@ import 'package:knowhen/features/onboarding/presentation/pages/onboarding_page.d
 import 'package:knowhen/services/firebase_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:knowhen/i18n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

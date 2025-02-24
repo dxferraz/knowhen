@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:knowhen/core/theme/constants/app_colors.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:knowhen/i18n/app_localizations.dart';
 
 @RoutePage()
 class BirthdatePage extends StatefulWidget {
