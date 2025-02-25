@@ -33,7 +33,7 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Code generation (se necessário)
+      - name: Code generation
         run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Recreate google-services.json
