@@ -58,3 +58,4 @@ lib/env/env.g.dart
 
 # Firebase scripts
 /firebase_scripts/node_modules
+/android/app/.cxx
