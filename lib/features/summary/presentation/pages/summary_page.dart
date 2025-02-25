@@ -11,7 +11,7 @@ import 'package:knowhen/features/summary/bloc/summary_events.dart';
 import 'package:knowhen/features/summary/bloc/summary_state.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
 import 'package:knowhen/features/years_of_life/presentation/widgets/years_of_life.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:knowhen/l10n/generated/app_localizations.dart';
 
 @RoutePage()
 class SummaryPage extends StatefulWidget {
