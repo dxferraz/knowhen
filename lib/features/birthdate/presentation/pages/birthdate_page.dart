@@ -3,7 +3,8 @@ import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:knowhen/core/theme/constants/app_colors.dart';
+import 'package:knowhen/core/theme/widgets/app_logo.dart';
+import 'package:knowhen/core/theme/widgets/custom_button.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
 import 'package:knowhen/l10n/generated/app_localizations.dart';
@@ -37,13 +38,12 @@ class _BirthdatePageState extends State<BirthdatePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text(l10n.appTitle),
+          title: AppLogo(),
           centerTitle: true,
           actions: [
             ThemeButton(),
@@ -62,7 +62,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
                 child: SvgPicture.network('https://firebasestorage.googleapis.com/v0/b/knowhen.firebasestorage.app/o/app-media%2Fbirthday.svg?alt=media&token=164027d8-0352-4ca7-90a1-d04c9208451e'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              CustomButton(
                 onPressed: () {
                   showDatePickerDialog(
                     context: context,
@@ -79,17 +79,15 @@ class _BirthdatePageState extends State<BirthdatePage> {
                     selectedCellDecoration: const BoxDecoration(),
                     selectedCellTextStyle: const TextStyle(),
                     leadingDateTextStyle: const TextStyle(),
-                    slidersColor: isDark ? DarkAppColors.accent : LightAppColors.accent,
-                    highlightColor: isDark ? DarkAppColors.secondary : LightAppColors.secondary,
+                    slidersColor: Theme.of(context).colorScheme.secondary,
+                    highlightColor: Theme.of(context).colorScheme.tertiary,
                     slidersSize: 20,
-                    splashColor: isDark ? DarkAppColors.primary : LightAppColors.primary,
+                    splashColor: Theme.of(context).colorScheme.primary,
                     splashRadius: 30,
                     centerLeadingDate: true,
                   ).then((value) => setState(() => birthDate = value));
                 },
-                child: Text(
-                  birthDate != null ? formatDate(birthDate!) : 'Selecionar data',
-                ),
+                text: birthDate != null ? formatDate(birthDate!) : 'Selecionar data',
               ),
             ],
           ),
@@ -102,7 +100,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
             children: [
               if (birthDate != null)
                 Expanded(
-                  child: ElevatedButton(
+                  child: CustomButton(
                     onPressed: () {
                       if (birthDate == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -118,7 +116,8 @@ class _BirthdatePageState extends State<BirthdatePage> {
                         ),
                       );
                     },
-                    child: Text(l10n.continueLabel),
+                    text: l10n.continueLabel,
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
             ],

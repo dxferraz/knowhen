@@ -1,52 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:knowhen/core/theme/widgets_theme.dart';
-import 'package:knowhen/core/theme/constants/app_colors.dart';
+
+class LightAppColors {
+  static const primary = Color(0xFF007AFF);
+  static const secondary = Color(0xFF34C759);
+  static const tertiary = Color(0xFFFF9500);
+  static const text = Color(0xFF1C1C1E);
+  static const background = Color(0xFFF5F5F7);
+  static const error = Color(0xFFFF3B30);
+}
+
+class DarkAppColors {
+  static const primary = Color(0xFF0A84FF);
+  static const secondary = Color(0xFF30D158);
+  static const tertiary = Color(0xFFFF9F0A);
+  static const text = Color(0xFFF2F2F7);
+  static const background = Color(0xFF1C1C1E);
+  static const error = Color(0xFFFF3B30);
+}
+
+const primaryColor = Color(0xFF007AFF);
+const secondaryColor = Color(0xFF34C759);
+const tertiaryColor = Color(0xFFFF9500);
+const textColor = Color(0xFF1C1C1E);
+const backgroundColor = Color(0xFFF5F5F7);
+const errorColor = Color(0xFFFF3B30);
+
+const ColorScheme customLightScheme = ColorScheme(
+  brightness: Brightness.light,
+  surface: Color(0xFFF5F5F7),
+  onSurface: Color(0xFF1C1C1E),
+  primary: Color(0xFF007AFF),
+  onPrimary: Color(0xFFF5F5F7),
+  secondary: Color(0xFF34C759),
+  onSecondary: Color(0xFFF5F5F7),
+  tertiary: Color(0xFFFF9500),
+  onTertiary: Color(0xFFF5F5F7),
+  error: Color(0xFFFF3B30),
+  onError: Color(0xFFF5F5F7),
+);
+
+const ColorScheme customDarkScheme = ColorScheme(
+  brightness: Brightness.dark,
+  surface: Color(0xFF1C1C1E),
+  onSurface: Color(0xFFF2F2F7),
+  primary: Color(0xFF0A84FF),
+  onPrimary: Color(0xFFF5F5F7),
+  secondary: Color(0xFF30D158),
+  onSecondary: Color(0xFFF5F5F7),
+  tertiary: Color(0xFFFF9F0A),
+  onTertiary: Color(0xFFF5F5F7),
+  error: Color(0xFFFF3B30),
+  onError: Color(0xFFF5F5F7),
+);
 
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
-  bottomSheetTheme: BottomSheetTheme.lightTheme(),
-    appBarTheme: CustomAppBarTheme.lightTheme(),
-    scaffoldBackgroundColor: LightAppColors.background,
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: Color(0xFF2D3436)),
-    ),
-    datePickerTheme: DatePickerThemeData(
-      dividerColor: Colors.transparent,
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF6C5CE7),
-        foregroundColor: Colors.white,
-      ),
-    ),
-  colorScheme: ColorScheme.light(
-    primary: Color(0xFF6C5CE7),
-    secondary: Color(0xFFA29BFE),
-    surface: Colors.white,
-    onPrimary: Colors.white,
-    onSurface: Color(0xFF2D3436),
-  ),
+  colorScheme: customLightScheme,
+  fontFamily: 'Inter',
 );
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  bottomSheetTheme: BottomSheetTheme.darkTheme(),
-    appBarTheme: CustomAppBarTheme.darkTheme(),
-    scaffoldBackgroundColor: DarkAppColors.background,
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: Color(0xFFE0E0E0)),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF8B5CF6),
-        foregroundColor: Colors.white,
-      ),
-    ),
-  colorScheme: ColorScheme.dark(
-    primary: Color(0xFF8B5CF6),
-    secondary: Color(0xFF4C9EFF),
-    surface: Color(0xFF1E1E1E),
-    onPrimary: Colors.white,
-    onSurface: Color(0xFFE0E0E0),
-  ),
+  colorScheme: customDarkScheme,
+  fontFamily: 'Inter',
 );
