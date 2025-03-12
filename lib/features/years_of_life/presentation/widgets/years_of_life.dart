@@ -3,8 +3,9 @@ import 'package:knowhen/l10n/generated/app_localizations.dart';
 
 class YearsOfLifeSection extends StatelessWidget {
   final DateTime birthDate;
+  final TimeOfDay? birthTime;
 
-  const YearsOfLifeSection({super.key, required this.birthDate});
+  const YearsOfLifeSection({super.key, required this.birthDate, required this.birthTime});
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +36,22 @@ class YearsOfLifeSection extends StatelessWidget {
       return age;
     }
 
+    int getHoursOfLife() {
+      final now = DateTime.now();
+      final difference = now.difference(birthDate);
+      final hours = difference.inHours;
+
+      return hours;
+    }
+
     final int yearsOfLife = getYearsOfLife();
     final int monthsOfLife = getMonthsOfLife();
     final int daysOfLife = getDaysOfLife();
+    final int hoursOfLife = getHoursOfLife();
 
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage('https://placehold.co/600x400'),
-          fit: BoxFit.cover,
-        ),
-      ),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -66,6 +72,7 @@ class YearsOfLifeSection extends StatelessWidget {
                 color: isDark ? Colors.white : Colors.black,
               ),
             ),
+            Text(hoursOfLife.toString())
           ],
         ),
       ),

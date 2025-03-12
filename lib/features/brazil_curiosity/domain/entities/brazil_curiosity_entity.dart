@@ -1,22 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'historical_fact_entity.g.dart';
+part 'brazil_curiosity_entity.g.dart';
 
 @JsonSerializable()
-class HistoricalFactEntity {
+class BrazilCuriosityEntity {
   final String fact;
   final String imageUrl;
   final String month;
   final String year;
 
-  HistoricalFactEntity({
+  BrazilCuriosityEntity({
     required this.fact,
     required this.imageUrl,
     required this.month,
     required this.year,
   });
 
-  factory HistoricalFactEntity.fromJson(Map<String, dynamic> json) => _$HistoricalFactEntityFromJson(json);
+  factory BrazilCuriosityEntity.fromJson(Map<String, dynamic> json) => _$BrazilCuriosityEntityFromJson(json);
 
-  Map<String, dynamic> toJson() => _$HistoricalFactEntityToJson(this);
+  Map<String, dynamic> toJson() => _$BrazilCuriosityEntityToJson(this);
 }

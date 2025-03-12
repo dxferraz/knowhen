@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/l10n/generated/app_localizations.dart';
 
-
-class HistoricalFactSection extends StatelessWidget {
+class BrazilCuriositySection extends StatelessWidget {
   final String imageUrl;
-  final String fact;
-  const HistoricalFactSection({super.key, required this.imageUrl, required this.fact});
+  final String curiosity;
+  const BrazilCuriositySection({super.key, required this.imageUrl, required this.curiosity});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final factParagraphs = fact.split('. ');
+    final factParagraphs = curiosity.split('. ');
 
     return Column(
       children: [
