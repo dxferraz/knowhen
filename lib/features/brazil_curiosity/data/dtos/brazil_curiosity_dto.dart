@@ -1,20 +1,20 @@
-import 'package:knowhen/features/historical_facts/domain/entities/historical_fact_entity.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/entities/brazil_curiosity_entity.dart';
 
-class HistoricalFactDTO {
+class BrazilCuriosityDTO {
   final String fact;
   final String imageUrl;
   final String month;
   final String year;
 
-  HistoricalFactDTO({
+  BrazilCuriosityDTO({
     required this.fact,
     required this.imageUrl,
     required this.month,
     required this.year,
   });
 
-  factory HistoricalFactDTO.fromJson(Map<String, dynamic> json) {
-    return HistoricalFactDTO(
+  factory BrazilCuriosityDTO.fromJson(Map<String, dynamic> json) {
+    return BrazilCuriosityDTO(
       fact: json['fact'],
       imageUrl: json['imageUrl'],
       month: json['month'],
@@ -31,8 +31,8 @@ class HistoricalFactDTO {
     };
   }
 
-  HistoricalFactEntity toEntity() {
-    return HistoricalFactEntity(
+  BrazilCuriosityEntity toEntity() {
+    return BrazilCuriosityEntity(
       fact: fact,
       imageUrl: imageUrl,
       month: month,
