@@ -1,13 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:knowhen/core/theme/constants/app_colors.dart';
-import 'package:knowhen/core/theme/theme_provider.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_1.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_2.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_3.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:knowhen/l10n/generated/app_localizations.dart';
@@ -44,10 +41,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
-    bool isDark = themeProvider.themeMode == ThemeMode.dark;
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(bottom: 80),
@@ -88,7 +81,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               effect: WormEffect(
                 dotHeight: 14,
                 dotWidth: 14,
-                activeDotColor: isDark ? DarkAppColors.accent : LightAppColors.accent,
+                activeDotColor: Theme.of(context).colorScheme.tertiary,
               ),
               onDotClicked: (index) => _controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease),
             ),

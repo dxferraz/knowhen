@@ -19,7 +19,12 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final showOnboarding = prefs.getBool('showOnboarding') ?? true;
 
-  runApp(MyApp(showOnboarding: showOnboarding));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: MyApp(showOnboarding: showOnboarding),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

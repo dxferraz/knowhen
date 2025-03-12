@@ -12,8 +12,8 @@ class CustomButton extends StatelessWidget {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return ElevatedButton(
       onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(backgroundColor ?? Theme.of(context).primaryColor),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
       ),
       child: Text(
         text,

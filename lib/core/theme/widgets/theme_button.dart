@@ -8,15 +8,10 @@ class ThemeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
-    bool isDark = themeProvider.themeMode == ThemeMode.dark;
-
     return IconButton(
       icon: Icon(Theme.of(context).brightness == Brightness.light ? Icons.dark_mode : Icons.light_mode),
       onPressed: () {
-        isDark = !isDark;
-        themeProvider.toggleTheme(isDark);
+        Provider.of<ThemeProvider>(context, listen: false).toggleTheme(Theme.of(context).brightness == Brightness.light);
       },
     );
   }
