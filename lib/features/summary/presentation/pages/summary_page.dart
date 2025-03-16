@@ -76,7 +76,7 @@ class _SummaryPageState extends State<SummaryPage> {
         child: BlocBuilder<SummaryBloc, SummaryState>(
           builder: (context, state) {
             if (state is SummaryLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant));
             }
             if (state is SummaryLoaded) {
               final List<Widget> sections = [
@@ -94,7 +94,7 @@ class _SummaryPageState extends State<SummaryPage> {
                   ),
                   Positioned(
                     bottom: 20,
-                    right: MediaQuery.of(context).size.width / 2 - 20,
+                    right: MediaQuery.of(context).size.width / 2 - 25,
                     child: CustomIconButton(
                       icon: Icons.arrow_downward,
                       iconColor: Theme.of(context).colorScheme.surface,

@@ -33,7 +33,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboarding1Title => 'Bem-vindo ao Knowhen!';
 
   @override
-  String get onboarding1Description => 'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento. Sua jornada começa aqui!';
+  String get onboarding1Description => 'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento';
 
   @override
   String get onboarding2Title => 'Desvendando o que sua data de nascimento revela!';
@@ -116,5 +116,20 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String daysOfLife(int days) {
     return 'e $days dias.';
+  }
+
+  @override
+  String hoursOfLife(int hours) {
+    return '$hours horas';
+  }
+
+  @override
+  String minutesOfLife(int minutes) {
+    return '$minutes minutos';
+  }
+
+  @override
+  String secondsOfLife(int seconds) {
+    return '$seconds segundos';
   }
 }

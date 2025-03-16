@@ -39,15 +39,22 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   auto_route_generator: ^9.3.1
   json_serializable: ^6.9.3
-
   flutter_lints: ^5.0.0
   envied_generator: ^1.1.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/launcher/icon.png"
+  adaptive_icon_background: "#14142B"
+  adaptive_icon_foreground: "lib/assets/launcher/icon_foreground.png"
 
 flutter:
   uses-material-design: true
+  generate: true
 
 assets:
   - assets/

@@ -15,6 +15,7 @@ class PrimaryH1 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
+        fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 32,
         fontWeight: FontWeight.w700,
         color: color,
@@ -37,6 +38,7 @@ class PrimaryH2 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
+        fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 28,
         fontWeight: FontWeight.w700,
         color: color,
@@ -59,6 +61,7 @@ class PrimaryH3 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
+        fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 24,
         fontWeight: FontWeight.w700,
         color: color,
@@ -81,6 +84,7 @@ class PrimaryH4 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
+        fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w700,
         color: color,
@@ -151,7 +155,7 @@ class SecondaryH3 extends StatelessWidget {
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w700,
-        fontFamily: GoogleFonts.firaCode().fontFamily,
+        fontFamily: GoogleFonts.poppins().fontFamily,
         color: color,
         height: 1.5,
       ),
@@ -174,7 +178,7 @@ class SecondaryH4 extends StatelessWidget {
       style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w700,
-        fontFamily: GoogleFonts.firaCode().fontFamily,
+        fontFamily: GoogleFonts.poppins().fontFamily,
         color: color,
         height: 1.5,
       ),
@@ -195,7 +199,7 @@ class PrimaryParagraphL extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w400,
         color: color,
@@ -218,7 +222,7 @@ class PrimaryParagraphM extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w400,
         color: color,
@@ -264,7 +268,7 @@ class SecondaryParagraphL extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.firaCode().fontFamily,
+        fontFamily: GoogleFonts.poppins().fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w400,
         color: color,
@@ -287,6 +291,7 @@ class PrimaryCaption extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
+        fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: color,
@@ -308,7 +313,8 @@ class SecondaryCaption extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontSize: 16,
+        fontSize: 10,
+        fontFamily: GoogleFonts.poppins().fontFamily,
         fontWeight: FontWeight.w600,
         color: color,
         height: 1.5,
@@ -336,6 +342,38 @@ class PrimaryRichText extends StatelessWidget {
       return TextSpan(
         text: text,
         style: TextStyle(
+          fontFamily: GoogleFonts.inter().fontFamily,
+          color: color,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          height: 1.5,
+          wordSpacing: 1.5,
+        ),
+      );
+    }
+
+    return RichText(
+      textAlign: textAlign,
+      text: TextSpan(
+        children: List.generate(text.length, (index) => buildTextSpan(text[index].text, text[index].color), growable: false),
+      ),
+    );
+  }
+}
+
+class SecondaryRichText extends StatelessWidget {
+  final List<RichTextEntity> text;
+  final TextAlign textAlign;
+
+  const SecondaryRichText({super.key, required this.text, this.textAlign = TextAlign.start});
+
+  @override
+  Widget build(BuildContext context) {
+    TextSpan buildTextSpan(String text, Color color) {
+      return TextSpan(
+        text: text,
+        style: TextStyle(
+          fontFamily: GoogleFonts.poppins().fontFamily,
           color: color,
           fontSize: 18,
           fontWeight: FontWeight.w600,

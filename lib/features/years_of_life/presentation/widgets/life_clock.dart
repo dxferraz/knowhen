@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
+import 'package:knowhen/l10n/generated/app_localizations.dart';
 
 class LifeClock extends StatefulWidget {
   final DateTime birthDateTime;
@@ -26,11 +27,15 @@ class _LifeClockState extends State<LifeClock> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return StreamBuilder<DateTime>(
       stream: _timeStream,
       builder: (context, snapshot) {
+        
+
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant);
         }
 
         final now = snapshot.data!;
@@ -50,17 +55,17 @@ class _LifeClockState extends State<LifeClock> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PrimaryH3(
-                text: "$hours horas",
+                text: l10n.hoursOfLife(hours),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               PrimaryH3(
-                text: "$minutes minutos",
+                text: l10n.minutesOfLife(minutes),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               PrimaryH3(
-                text: "$seconds segundos",
+                text: l10n.secondsOfLife(seconds),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
