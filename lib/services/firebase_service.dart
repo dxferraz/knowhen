@@ -2,14 +2,12 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthService {
   Future<void> signInUserAnonymously() async {
     try {
-      final userCredential = await FirebaseAuth.instance.signInAnonymously();
-      debugPrint("Signed in with temporary account. UID: ${userCredential.user!.uid}");
+      await FirebaseAuth.instance.signInAnonymously();
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
