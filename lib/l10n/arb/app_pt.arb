@@ -16,7 +16,7 @@
   "@continueLabel": {},
   "onboarding1Title": "Bem-vindo ao Knowhen!",
   "@onboarding1Title": {},
-  "onboarding1Description": "Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento. Sua jornada começa aqui!",
+  "onboarding1Description": "Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento",
   "@onboarding1Description": {},
   "onboarding2Title": "Desvendando o que sua data de nascimento revela!",
   "@onboarding2Title": {},
@@ -128,6 +128,30 @@
   "@daysOfLife": {
     "placeholders": {
       "days": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursOfLife": "{hours} horas",
+  "@hoursOfLife": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesOfLife": "{minutes} minutos",
+  "@minutesOfLife": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "secondsOfLife": "{seconds} segundos",
+  "@secondsOfLife": {
+    "placeholders": {
+      "seconds": {
         "type": "int"
       }
     }

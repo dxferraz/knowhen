@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:knowhen/core/theme/app_theme.dart';
 
 class AppLogo extends StatelessWidget {
   final double? size;
@@ -14,7 +15,7 @@ class AppLogo extends StatelessWidget {
             text: 'Kno',
             style: TextStyle(
               fontFamily: GoogleFonts.yatraOne().fontFamily,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: size ?? 28,
             ),
           ),
@@ -22,7 +23,7 @@ class AppLogo extends StatelessWidget {
             text: 'w',
             style: TextStyle(
               fontFamily: GoogleFonts.yatraOne().fontFamily,
-              color: Theme.of(context).colorScheme.tertiary,
+              color: LightAppColors.tertiary,
               fontSize: size ?? 28,
             ),
           ),
@@ -30,7 +31,7 @@ class AppLogo extends StatelessWidget {
             text: 'hen',
             style: TextStyle(
               fontFamily: GoogleFonts.yatraOne().fontFamily,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: size ?? 28,
             ),
           ),

@@ -144,7 +144,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding1Description.
   ///
   /// In pt, this message translates to:
-  /// **'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento. Sua jornada começa aqui!'**
+  /// **'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento'**
   String get onboarding1Description;
 
   /// No description provided for @onboarding2Title.
@@ -272,6 +272,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'e {days} dias.'**
   String daysOfLife(int days);
+
+  /// No description provided for @hoursOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{hours} horas'**
+  String hoursOfLife(int hours);
+
+  /// No description provided for @minutesOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{minutes} minutos'**
+  String minutesOfLife(int minutes);
+
+  /// No description provided for @secondsOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{seconds} segundos'**
+  String secondsOfLife(int seconds);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

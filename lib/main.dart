@@ -39,9 +39,9 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
+            title: 'Knowhen',
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            title: 'Knowhen',
             themeMode: themeProvider.themeMode,
             theme: lightTheme,
             darkTheme: darkTheme,
