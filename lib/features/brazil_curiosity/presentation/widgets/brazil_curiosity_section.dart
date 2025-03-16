@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/l10n/generated/app_localizations.dart';
 
 class BrazilCuriositySection extends StatelessWidget {
@@ -11,28 +12,62 @@ class BrazilCuriositySection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final factParagraphs = curiosity.split('. ');
 
-    return Column(
-      children: [
-        Text(l10n.historicalFact),
-        SizedBox(height: 20),
-        Text(l10n.firstFactParagraph(factParagraphs.first)),
-        SizedBox(height: 15),
-        Column(
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.only(bottom: 100, left: 20, right: 20),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-              clipBehavior: Clip.hardEdge,
-              width: 250,
-              child: imageUrl.isNotEmpty ? Image.network(imageUrl) : Text(l10n.noImageForFact),
+            SecondaryH1(
+              text: l10n.historicalFact,
+              textAlign: TextAlign.center,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-            SizedBox(height: 5),
-            Text(l10n.aiGeneratedImage)
+            Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: Column(
+                children: [
+                  PrimaryParagraphS(
+                    text: l10n.firstFactParagraph(factParagraphs.first),
+                    textAlign: TextAlign.center,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  SizedBox(height: 15),
+                  Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                        clipBehavior: Clip.hardEdge,
+                        width: 250,
+                        child: imageUrl.isNotEmpty ? Image.network(imageUrl) : Text(l10n.noImageForFact),
+                      ),
+                      SizedBox(height: 5),
+                      PrimaryCaption(
+                        text: l10n.aiGeneratedImage,
+                        textAlign: TextAlign.center,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  PrimaryParagraphS(
+                    text: l10n.lastFactParagraph(factParagraphs.last),
+                    textAlign: TextAlign.center,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
-        SizedBox(height: 15),
-        Text(l10n.lastFactParagraph(factParagraphs.last)),
-        SizedBox(height: 20),
-      ],
+      ),
     );
   }
 }

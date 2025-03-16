@@ -216,7 +216,7 @@ abstract class AppLocalizations {
   /// No description provided for @conceptionRange.
   ///
   /// In pt, this message translates to:
-  /// **'Provável período de concepção: {startRange} a {endRange}.'**
+  /// **'{startRange} a {endRange}'**
   String conceptionRange(String startRange, String endRange);
 
   /// No description provided for @historicalFact.
@@ -258,8 +258,20 @@ abstract class AppLocalizations {
   /// No description provided for @yearsOfLife.
   ///
   /// In pt, this message translates to:
-  /// **'{years} anos, {months} meses, {days} dias de vida.'**
-  String yearsOfLife(int years, int months, int days);
+  /// **'{years} anos,'**
+  String yearsOfLife(int years);
+
+  /// No description provided for @monthsOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{months} meses'**
+  String monthsOfLife(int months);
+
+  /// No description provided for @daysOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'e {days} dias.'**
+  String daysOfLife(int days);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

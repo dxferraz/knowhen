@@ -78,7 +78,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String conceptionRange(String startRange, String endRange) {
-    return 'Provável período de concepção: $startRange a $endRange.';
+    return '$startRange a $endRange';
   }
 
   @override
@@ -104,7 +104,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get yearsOfLifeTitle => 'Caso você não saiba, você tem:';
 
   @override
-  String yearsOfLife(int years, int months, int days) {
-    return '$years anos, $months meses, $days dias de vida.';
+  String yearsOfLife(int years) {
+    return '$years anos,';
+  }
+
+  @override
+  String monthsOfLife(int months) {
+    return '$months meses';
+  }
+
+  @override
+  String daysOfLife(int days) {
+    return 'e $days dias.';
   }
 }

@@ -43,7 +43,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
       helpText: 'Você sabe a hora exata do seu nascimento?',
       cancelText: 'Não sei',
       confirmText: 'Confirmar',
-      initialEntryMode: TimePickerEntryMode.dial,
+      initialEntryMode: TimePickerEntryMode.dialOnly,
     );
 
     if (horaEscolhida != null && horaEscolhida != _birthTime) {
@@ -57,11 +57,13 @@ class _BirthdatePageState extends State<BirthdatePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    debugPrint('birthDate: ${birthDate?.toString()}');
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: AppLogo(),
+          title: AppLogo(color: Theme.of(context).colorScheme.onSurface),
           centerTitle: true,
           actions: [
             ThemeButton(),
@@ -72,50 +74,37 @@ class _BirthdatePageState extends State<BirthdatePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              PrimaryH2(text: l10n.selectBirthdateTitle, textAlign: TextAlign.center, color: Theme.of(context).colorScheme.onSurface),
+              PrimaryH2(
+                text: l10n.selectBirthdateTitle,
+                textAlign: TextAlign.center,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               const SizedBox(height: 20),
-              // SizedBox(
-              //   width: 200,
-              //   height: 200,
-              //   child: SvgPicture.network('https://firebasestorage.googleapis.com/v0/b/knowhen.firebasestorage.app/o/app-media%2Fbirthday.svg?alt=media&token=164027d8-0352-4ca7-90a1-d04c9208451e'),
-              // ),
-              // const SizedBox(height: 20),
-              // CustomButton(
-              //   onPressed: () {
-              //     showDatePickerDialog(
-              //       context: context,
-              //       minDate: DateTime(1925, 1, 1),
-              //       maxDate: DateTime(2024, 12, 31),
-              //       initialDate: DateTime.now().subtract(const Duration(days: 365 * 25)),
-              //       width: 300,
-              //       height: 300,
-              //       daysOfTheWeekTextStyle: const TextStyle(),
-              //       disabledCellsTextStyle: const TextStyle(),
-              //       enabledCellsDecoration: const BoxDecoration(),
-              //       enabledCellsTextStyle: const TextStyle(),
-              //       initialPickerType: PickerType.years,
-              //       selectedCellDecoration: const BoxDecoration(),
-              //       selectedCellTextStyle: const TextStyle(),
-              //       leadingDateTextStyle: const TextStyle(),
-              //       slidersColor: Theme.of(context).colorScheme.secondary,
-              //       highlightColor: Theme.of(context).colorScheme.tertiary,
-              //       slidersSize: 20,
-              //       splashColor: Theme.of(context).colorScheme.primary,
-              //       splashRadius: 30,
-              //       centerLeadingDate: true,
-              //     ).then((value) => setState(() => birthDate = value));
-              //   },
-              //   text: birthDate != null ? formatDate(birthDate!) : 'Selecionar data',
-              // ),
               SizedBox(height: 20),
               DatePicker(
                 maxDate: DateTime(2024, 12, 31),
                 minDate: DateTime(1925, 1, 1),
                 initialPickerType: PickerType.years,
                 initialDate: birthDate ?? DateTime.now().subtract(const Duration(days: 365 * 25)),
-                onDateSelected: (value) => setState(() {
-                  birthDate = value;
-                }),
+                onDateSelected: (value) {
+                  debugPrint('Date saved: ${value.toString()}');
+                  setState(() {
+                    birthDate = value;
+                  });
+                },
+                slidersColor: Theme.of(context).colorScheme.secondary,
+                highlightColor: Theme.of(context).colorScheme.secondary,
+                splashColor: Theme.of(context).colorScheme.secondary,
+                daysOfTheWeekTextStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                selectedCellDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                leadingDateTextStyle: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w700),
+                centerLeadingDate: true,
+                padding: EdgeInsets.all(20),
               ),
             ],
           ),
@@ -149,7 +138,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
                       });
                     },
                     text: l10n.continueLabel,
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
             ],
