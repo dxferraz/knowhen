@@ -237,14 +237,13 @@ class PrimaryParagraphS extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Text(
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.poppins().fontFamily,
-        fontSize: 18,
-        fontWeight: FontWeight.w400,
+        fontFamily: GoogleFonts.inter().fontFamily,
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
         color: color,
         height: 1.5,
       ),
@@ -338,9 +337,8 @@ class PrimaryRichText extends StatelessWidget {
         text: text,
         style: TextStyle(
           color: color,
-          fontFamily: GoogleFonts.poppins().fontFamily,
           fontSize: 18,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w600,
           height: 1.5,
           wordSpacing: 1.5,
         ),
