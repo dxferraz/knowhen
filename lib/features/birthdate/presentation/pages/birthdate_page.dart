@@ -63,7 +63,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: AppLogo(color: Theme.of(context).colorScheme.onSurface),
+          title: AppLogo(),
           centerTitle: true,
           actions: [
             ThemeButton(),
