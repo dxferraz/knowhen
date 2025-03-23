@@ -94,17 +94,17 @@ ThemeData darkTheme = ThemeData(
   fontFamily: 'Inter',
   timePickerTheme: TimePickerThemeData(
     backgroundColor: DarkAppColors.background,
-    dayPeriodColor: DarkAppColors.complementary,
+    dayPeriodColor: DarkAppColors.secondary,
     dayPeriodTextColor: DarkAppColors.background,
-    hourMinuteColor: DarkAppColors.complementary,
+    hourMinuteColor: DarkAppColors.secondary,
     hourMinuteTextColor: DarkAppColors.background,
-    dialHandColor: DarkAppColors.complementary,
+    dialHandColor: DarkAppColors.secondary,
     cancelButtonStyle: ElevatedButton.styleFrom(
       backgroundColor: Colors.transparent,
       foregroundColor: DarkAppColors.text,
     ),
     confirmButtonStyle: ElevatedButton.styleFrom(
-      backgroundColor: DarkAppColors.secondary,
+      backgroundColor: DarkAppColors.complementary,
       foregroundColor: DarkAppColors.background,
     ),
     helpTextStyle: TextStyle(

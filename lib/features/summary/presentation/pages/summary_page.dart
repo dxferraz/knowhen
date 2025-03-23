@@ -115,6 +115,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       effect: WormEffect(
                         dotHeight: 10,
                         dotWidth: 10,
+                        dotColor: Theme.of(context).colorScheme.onSurface.withAlpha(150),
                         activeDotColor: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       onDotClicked: (index) {

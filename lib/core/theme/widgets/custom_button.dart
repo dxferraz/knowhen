@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -16,13 +17,14 @@ class CustomButton extends StatelessWidget {
         backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
         elevation: 0,
         overlayColor: Colors.transparent,
-        // enableFeedback: false,
-        // surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
       child: Text(
         text,
         style: TextStyle(
+          fontFamily: GoogleFonts.inter().fontFamily,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
           color: textColor ?? Theme.of(context).colorScheme.onPrimary,
         ),
       ),

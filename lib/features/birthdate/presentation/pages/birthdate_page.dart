@@ -44,6 +44,8 @@ class _BirthdatePageState extends State<BirthdatePage> {
       cancelText: 'Não sei',
       confirmText: 'Confirmar',
       initialEntryMode: TimePickerEntryMode.dialOnly,
+      routeSettings: RouteSettings(name: '/summary'),
+      useRootNavigator: true,
     );
 
     if (horaEscolhida != null && horaEscolhida != _birthTime) {
