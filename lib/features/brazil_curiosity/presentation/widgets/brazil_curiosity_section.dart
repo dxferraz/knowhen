@@ -46,12 +46,7 @@ class BrazilCuriositySection extends StatelessWidget {
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
                         clipBehavior: Clip.hardEdge,
                         width: 250,
-                        child: imageUrl.isNotEmpty
-                            ? Image.network(
-                                imageUrl,
-                                loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : SizedBox(width: 50, height: 50, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.secondary)),
-                              )
-                            : Text(l10n.noImageForFact),
+                        child: imageUrl.isNotEmpty ? Image.network(imageUrl, loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : SizedBox(child: CircularProgressIndicator())) : Text(l10n.noImageForFact),
                       ),
                       SizedBox(height: 5),
                       SecondaryCaption(
