@@ -81,17 +81,23 @@ class YearsOfLifeSection extends StatelessWidget {
                 ],
               ),
             ),
-            SecondaryH2(
-              text: 'E viveu:',
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
             birthTime != null
-                ? LifeClock(
-                    birthDateTime: birthDate,
-                    birthTime: birthTime!,
+                ? Column(
+                    children: [
+                      SecondaryH2(
+                        text: 'E viveu:',
+                        textAlign: TextAlign.center,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      birthTime != null
+                          ? LifeClock(
+                              birthDateTime: birthDate,
+                              birthTime: birthTime!,
+                            )
+                          : Container()
+                    ],
                   )
-                : Container()
+                : Container(),
           ],
         ),
       ),
