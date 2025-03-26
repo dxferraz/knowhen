@@ -29,14 +29,19 @@ class SummaryPage extends StatefulWidget {
 
 class _SummaryPageState extends State<SummaryPage> {
   late PageController _controller;
-  late AdService adService = AdService()..loadAd();
+  late AdService adService;
 
   @override
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
     adService = AdService();
-    adService.loadAd();
+
+    adService.loadAd().then((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        adService.showAd();
+      });
+    });
   }
 
   @override
@@ -77,16 +82,7 @@ class _SummaryPageState extends State<SummaryPage> {
           ..add(
             GetSummary(birthDate: widget.birthDate),
           ),
-        child: BlocConsumer<SummaryBloc, SummaryState>(
-          listener: (context, state) {
-            if (state is SummaryLoading) {
-              adService.loadAd().then((_) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  adService.showAd();
-                });
-              });
-            }
-          },
+        child: BlocBuilder<SummaryBloc, SummaryState>(
           builder: (context, state) {
             if (state is SummaryLoading) {
               return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant));
@@ -106,7 +102,7 @@ class _SummaryPageState extends State<SummaryPage> {
                     children: sections,
                   ),
                   Positioned(
-                    bottom: 20,
+                    bottom: 50,
                     right: MediaQuery.of(context).size.width / 2 - 25,
                     child: CustomIconButton(
                       icon: Icons.arrow_downward,
