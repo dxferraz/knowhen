@@ -14,6 +14,7 @@ import 'package:knowhen/features/summary/bloc/summary_state.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
 import 'package:knowhen/features/years_of_life/presentation/widgets/years_of_life.dart';
 import 'package:knowhen/l10n/generated/app_localizations.dart';
+import 'package:knowhen/services/ad_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 @RoutePage()
@@ -28,11 +29,14 @@ class SummaryPage extends StatefulWidget {
 
 class _SummaryPageState extends State<SummaryPage> {
   late PageController _controller;
+  late AdService adService = AdService()..loadAd();
 
   @override
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
+    adService = AdService();
+    adService.loadAd();
   }
 
   @override
@@ -73,7 +77,16 @@ class _SummaryPageState extends State<SummaryPage> {
           ..add(
             GetSummary(birthDate: widget.birthDate),
           ),
-        child: BlocBuilder<SummaryBloc, SummaryState>(
+        child: BlocConsumer<SummaryBloc, SummaryState>(
+          listener: (context, state) {
+            if (state is SummaryLoading) {
+              adService.loadAd().then((_) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  adService.showAd();
+                });
+              });
+            }
+          },
           builder: (context, state) {
             if (state is SummaryLoading) {
               return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant));

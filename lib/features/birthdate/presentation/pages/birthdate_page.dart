@@ -21,16 +21,6 @@ class _BirthdatePageState extends State<BirthdatePage> {
   DateTime? birthDate;
   TimeOfDay? _birthTime;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   String formatDate(DateTime date) {
     final dateFormat = DateFormat('dd/MM/yyyy');
     return dateFormat.format(date);
@@ -58,8 +48,6 @@ class _BirthdatePageState extends State<BirthdatePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    debugPrint('birthDate: ${birthDate?.toString()}');
 
     return SafeArea(
       child: Scaffold(
