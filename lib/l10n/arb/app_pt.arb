@@ -14,9 +14,9 @@
   "@start": {},
   "continueLabel": "Continuar",
   "@continueLabel": {},
-  "onboarding1Title":"Bem-vindo ao Knowhen!",
+  "onboarding1Title": "Bem-vindo ao Knowhen!",
   "@onboarding1Title": {},
-  "onboarding1Description": "Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento. Sua jornada começa aqui!",
+  "onboarding1Description": "Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento",
   "@onboarding1Description": {},
   "onboarding2Title": "Desvendando o que sua data de nascimento revela!",
   "@onboarding2Title": {},
@@ -69,7 +69,7 @@
       }
     }
   },
-  "conceptionRange": "Provável período de concepção: {startRange} a {endRange}.",
+  "conceptionRange": "{startRange} a {endRange}",
   "@conceptionRange": {
     "placeholders": {
       "startRange": {
@@ -82,9 +82,9 @@
       }
     }
   },
-  "historicalFact":"Fato histórico",
+  "historicalFact": "Fato histórico",
   "@historicalFact": {},
-  "firstFactParagraph":"{paragraph1}.",
+  "firstFactParagraph": "{paragraph1}.",
   "@firstFactParagraph": {
     "placeholders": {
       "paragraph1": {
@@ -93,11 +93,11 @@
       }
     }
   },
-  "noImageForFact":"Sem imagem para o fato",
+  "noImageForFact": "Sem imagem para o fato",
   "@noImageForFact": {},
-  "aiGeneratedImage":"Imagem gerada por I.A.",
+  "aiGeneratedImage": "Imagem gerada por I.A.",
   "@aiGeneratedImage": {},
-  "lastFactParagraph":"{paragraph2}",
+  "lastFactParagraph": "{paragraph2}",
   "@lastFactParagraph": {
     "placeholders": {
       "paragraph2": {
@@ -106,18 +106,52 @@
       }
     }
   },
-  "yearsOfLifeTitle":"Caso você não saiba, você tem:",
+  "yearsOfLifeTitle": "Caso você não saiba, você tem:",
   "@yearsOfLifeTitle": {},
-  "yearsOfLife":"{years} anos, {months} meses, {days} dias de vida.",
+  "yearsOfLife": "{years} anos,",
   "@yearsOfLife": {
     "placeholders": {
       "years": {
         "type": "int"
-      },
+      }
+    }
+  },
+  "monthsOfLife": "{months} meses",
+  "@monthsOfLife": {
+    "placeholders": {
       "months": {
         "type": "int"
-      },
+      }
+    }
+  },
+  "daysOfLife": "e {days} dias.",
+  "@daysOfLife": {
+    "placeholders": {
       "days": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursOfLife": "{hours} horas",
+  "@hoursOfLife": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesOfLife": "{minutes} minutos",
+  "@minutesOfLife": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "secondsOfLife": "{seconds} segundos",
+  "@secondsOfLife": {
+    "placeholders": {
+      "seconds": {
         "type": "int"
       }
     }
