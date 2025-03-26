@@ -14,11 +14,11 @@ class OnboardingStep3 extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PrimaryH1(
             text: l10n.onboarding3Title,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             textAlign: TextAlign.center,
           ),
           SizedBox(
