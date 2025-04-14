@@ -144,7 +144,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboarding1Description.
   ///
   /// In pt, this message translates to:
-  /// **'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento. Sua jornada começa aqui!'**
+  /// **'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento'**
   String get onboarding1Description;
 
   /// No description provided for @onboarding2Title.
@@ -216,7 +216,7 @@ abstract class AppLocalizations {
   /// No description provided for @conceptionRange.
   ///
   /// In pt, this message translates to:
-  /// **'Provável período de concepção: {startRange} a {endRange}.'**
+  /// **'{startRange} a {endRange}'**
   String conceptionRange(String startRange, String endRange);
 
   /// No description provided for @historicalFact.
@@ -258,8 +258,38 @@ abstract class AppLocalizations {
   /// No description provided for @yearsOfLife.
   ///
   /// In pt, this message translates to:
-  /// **'{years} anos, {months} meses, {days} dias de vida.'**
-  String yearsOfLife(int years, int months, int days);
+  /// **'{years} anos,'**
+  String yearsOfLife(int years);
+
+  /// No description provided for @monthsOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{months} meses'**
+  String monthsOfLife(int months);
+
+  /// No description provided for @daysOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'e {days} dias.'**
+  String daysOfLife(int days);
+
+  /// No description provided for @hoursOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{hours} horas'**
+  String hoursOfLife(int hours);
+
+  /// No description provided for @minutesOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{minutes} minutos'**
+  String minutesOfLife(int minutes);
+
+  /// No description provided for @secondsOfLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'{seconds} segundos'**
+  String secondsOfLife(int seconds);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

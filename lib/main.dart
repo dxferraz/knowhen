@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:knowhen/config/firebase_options.dart';
 import 'package:knowhen/core/theme/app_theme.dart';
 import 'package:knowhen/core/theme/theme_provider.dart';
@@ -16,6 +17,11 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await AuthService().signInUserAnonymously();
+  await MobileAds.instance.initialize();
+  RequestConfiguration configuration = RequestConfiguration(
+    testDeviceIds: ['9C1FE904906DF4C7D5C7E2287B821399'],
+  );
+  MobileAds.instance.updateRequestConfiguration(configuration);
   final prefs = await SharedPreferences.getInstance();
   final showOnboarding = prefs.getBool('showOnboarding') ?? true;
 
@@ -39,9 +45,9 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
+            title: 'Knowhen',
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            title: 'Knowhen',
             themeMode: themeProvider.themeMode,
             theme: lightTheme,
             darkTheme: darkTheme,

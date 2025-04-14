@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:knowhen/core/theme/app_theme.dart';
+import 'package:knowhen/core/theme/widgets/app_logo.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
+import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_1.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_2.dart';
@@ -42,6 +45,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const AppLogo(),
+        actions: [ThemeButton()],
+      ),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 80),
         child: PageView(
@@ -73,6 +81,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         curve: Curves.ease,
                       );
                     },
+                    backgroundColor: Colors.transparent,
+                    textColor: Theme.of(context).colorScheme.onSurface,
                     text: l10n.skip,
                   ),
             SmoothPageIndicator(
@@ -81,7 +91,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
               effect: WormEffect(
                 dotHeight: 14,
                 dotWidth: 14,
-                activeDotColor: Theme.of(context).colorScheme.tertiary,
+                dotColor: backgroundColor.withAlpha(150),
+                activeDotColor: isLastPage ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.secondary,
               ),
               onDotClicked: (index) => _controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease),
             ),
@@ -94,6 +105,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ));
                 },
                 text: l10n.start,
+                backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
               )
             else
               CustomButton(
@@ -104,6 +116,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   );
                 },
                 text: l10n.next,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
           ],
         ),

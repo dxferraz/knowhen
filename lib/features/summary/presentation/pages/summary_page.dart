@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:knowhen/core/theme/widgets/custom_icon_button.dart';
+import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
@@ -55,8 +56,10 @@ class _SummaryPageState extends State<SummaryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          l10n.summaryPageTitle(dateFormat.format(widget.birthDate)),
+        title: PrimaryH4(
+          text: l10n.summaryPageTitle(dateFormat.format(widget.birthDate)),
+          textAlign: TextAlign.center,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         centerTitle: true,
         actions: [
@@ -73,7 +76,7 @@ class _SummaryPageState extends State<SummaryPage> {
         child: BlocBuilder<SummaryBloc, SummaryState>(
           builder: (context, state) {
             if (state is SummaryLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant));
             }
             if (state is SummaryLoaded) {
               final List<Widget> sections = [

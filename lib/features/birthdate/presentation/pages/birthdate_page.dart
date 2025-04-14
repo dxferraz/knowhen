@@ -43,7 +43,9 @@ class _BirthdatePageState extends State<BirthdatePage> {
       helpText: 'Você sabe a hora exata do seu nascimento?',
       cancelText: 'Não sei',
       confirmText: 'Confirmar',
-      initialEntryMode: TimePickerEntryMode.dial,
+      initialEntryMode: TimePickerEntryMode.dialOnly,
+      routeSettings: RouteSettings(name: '/summary'),
+      useRootNavigator: true,
     );
 
     if (horaEscolhida != null && horaEscolhida != _birthTime) {
@@ -149,7 +151,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
                       });
                     },
                     text: l10n.continueLabel,
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
             ],

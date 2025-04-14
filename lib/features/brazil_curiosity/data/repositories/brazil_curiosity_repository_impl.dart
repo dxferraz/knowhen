@@ -24,10 +24,8 @@ class HistoricalFactsRepositoryImpl implements BrazilCuriositiesRepository {
       try {
         final storageRef = FirebaseStorage.instance.ref().child(path);
         await storageRef.getDownloadURL();
-        debugPrint("A imagem existe no Storage.");
         return true;
       } catch (e) {
-        debugPrint("Imagem não encontrada ou erro ao acessar: $e");
         return false;
       }
     }
