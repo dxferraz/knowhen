@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/l10n/generated/app_localizations.dart';
 
 class YearsOfLifeSection extends StatelessWidget {
@@ -10,7 +11,6 @@ class YearsOfLifeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     int getYearsOfLife() {
       final now = DateTime.now();
@@ -53,23 +53,39 @@ class YearsOfLifeSection extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              l10n.yearsOfLifeTitle,
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black,
-              ),
+            SecondaryH2(
+              text: l10n.yearsOfLifeTitle,
+              textAlign: TextAlign.center,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-            Text(
-              l10n.yearsOfLife(yearsOfLife, monthsOfLife, daysOfLife),
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black,
+            Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: Column(
+                children: [
+                  PrimaryH3(
+                    text: l10n.yearsOfLife(yearsOfLife),
+                    textAlign: TextAlign.center,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  PrimaryH3(
+                    text: l10n.monthsOfLife(monthsOfLife),
+                    textAlign: TextAlign.center,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  PrimaryH3(
+                    text: l10n.daysOfLife(daysOfLife),
+                    textAlign: TextAlign.center,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                ],
               ),
             ),
             Text(hoursOfLife.toString())
