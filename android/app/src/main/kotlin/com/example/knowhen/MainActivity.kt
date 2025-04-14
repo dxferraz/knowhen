@@ -1,4 +1,4 @@
-package com.example.knowhen
+package com.dxferraz.knowhen
 
 import io.flutter.embedding.android.FlutterActivity
 
