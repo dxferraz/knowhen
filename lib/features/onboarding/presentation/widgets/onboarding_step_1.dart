@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:knowhen/assets/svg/widgets/birthday_svg.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/l10n/generated/app_localizations.dart';
 
@@ -24,7 +24,7 @@ class OnboardingStep1 extends StatelessWidget {
           SizedBox(
             width: 200,
             height: 200,
-            child: SvgPicture.network('https://firebasestorage.googleapis.com/v0/b/knowhen.firebasestorage.app/o/app-media%2Fonboarding_1.svg?alt=media&token=dab8a9b6-d77c-4b50-9101-f91cf5379173'),
+            child: BirthdaySVG(),
           ),
           PrimaryParagraphM(
             text: l10n.onboarding1Description,
