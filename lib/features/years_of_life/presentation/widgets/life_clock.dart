@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:knowhen/core/functions/int_formatter.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
-import 'package:knowhen/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 class LifeClock extends StatefulWidget {
   final DateTime birthDateTime;
@@ -32,14 +34,20 @@ class _LifeClockState extends State<LifeClock> {
     return StreamBuilder<DateTime>(
       stream: _timeStream,
       builder: (context, snapshot) {
-        
-
         if (!snapshot.hasData) {
           return CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant);
         }
 
         final now = snapshot.data!;
-        final duration = now.difference(DateTime(widget.birthDateTime.year, widget.birthDateTime.month, widget.birthDateTime.day, widget.birthTime.hour, widget.birthTime.minute));
+        final duration = now.difference(
+          DateTime(
+            widget.birthDateTime.year,
+            widget.birthDateTime.month,
+            widget.birthDateTime.day,
+            widget.birthTime.hour,
+            widget.birthTime.minute,
+          ),
+        );
 
         final hours = duration.inHours;
         final minutes = duration.inMinutes;
@@ -55,17 +63,17 @@ class _LifeClockState extends State<LifeClock> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PrimaryH3(
-                text: l10n.hoursOfLife(hours),
+                text: l10n.hoursOfLife(IntFormatter.format(hours)),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               PrimaryH3(
-                text: l10n.minutesOfLife(minutes),
+                text: l10n.minutesOfLife(IntFormatter.format(minutes)),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               PrimaryH3(
-                text: l10n.secondsOfLife(seconds),
+                text: l10n.secondsOfLife(IntFormatter.format(seconds)),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),

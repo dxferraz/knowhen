@@ -7,7 +7,7 @@ import 'package:knowhen/core/theme/widgets/custom_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
-import 'package:knowhen/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 @RoutePage()
 class BirthdatePage extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:knowhen/assets/svg/widgets/date_svg.dart';
+import 'package:knowhen/core/assets/svg/widgets/date_svg.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
-import 'package:knowhen/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 class OnboardingStep3 extends StatelessWidget {
   const OnboardingStep3({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:knowhen/features/summary/bloc/summary_events.dart';
-import 'package:knowhen/features/summary/bloc/summary_state.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
 import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
 
 class SummaryBloc extends Bloc<SummaryEvents, SummaryState> {
