@@ -124,17 +124,17 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String hoursOfLife(int hours) {
+  String hoursOfLife(Object hours) {
     return '$hours horas';
   }
 
   @override
-  String minutesOfLife(int minutes) {
+  String minutesOfLife(Object minutes) {
     return '$minutes minutos';
   }
 
   @override
-  String secondsOfLife(int seconds) {
+  String secondsOfLife(Object seconds) {
     return '$seconds segundos';
   }
 }

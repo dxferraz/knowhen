@@ -10,7 +10,7 @@ import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:knowhen/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 @RoutePage()
 class OnboardingPage extends StatefulWidget {

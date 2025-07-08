@@ -1,15 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:knowhen/config/firebase_options.dart';
+import 'package:knowhen/core/config/firebase_options.dart';
 import 'package:knowhen/core/theme/app_theme.dart';
 import 'package:knowhen/core/theme/theme_provider.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:knowhen/services/firebase_service.dart';
+import 'package:knowhen/core/services/firebase_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:knowhen/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -8,13 +8,13 @@ import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
-import 'package:knowhen/features/summary/bloc/summary_bloc.dart';
-import 'package:knowhen/features/summary/bloc/summary_events.dart';
-import 'package:knowhen/features/summary/bloc/summary_state.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
 import 'package:knowhen/features/years_of_life/presentation/widgets/years_of_life.dart';
-import 'package:knowhen/l10n/generated/app_localizations.dart';
-import 'package:knowhen/services/ad_service.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/services/ad_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 @RoutePage()

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fal_client/fal_client.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:knowhen/env/env.dart';
+import 'package:knowhen/core/env/env.dart';
 import 'package:knowhen/features/brazil_curiosity/data/dtos/brazil_curiosity_dto.dart';
 import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 import 'package:http/http.dart' as http;

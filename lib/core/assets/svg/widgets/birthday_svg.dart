@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:knowhen/extensions/color_extensions.dart';
+import 'package:knowhen/core/extensions/color_extensions.dart';
 
 class BirthdaySVG extends StatelessWidget {
   const BirthdaySVG({super.key});

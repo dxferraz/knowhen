@@ -135,25 +135,19 @@
   "hoursOfLife": "{hours} horas",
   "@hoursOfLife": {
     "placeholders": {
-      "hours": {
-        "type": "int"
-      }
+      "hours": {}
     }
   },
   "minutesOfLife": "{minutes} minutos",
   "@minutesOfLife": {
     "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
+      "minutes": {}
     }
   },
   "secondsOfLife": "{seconds} segundos",
   "@secondsOfLife": {
     "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
+      "seconds": {}
     }
   }
 }
