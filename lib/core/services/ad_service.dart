@@ -8,8 +8,8 @@ class AdService {
   InterstitialAd? _interstitialAd;
   bool _isAdLoaded = false;
   final String interstitialAdUnitId = kReleaseMode
-    ? 'ca-app-pub-3761849151183894/4490537633'
-    : 'ca-app-pub-3940256099942544/1033173712';
+      ? 'ca-app-pub-3761849151183894/4490537633'
+      : 'ca-app-pub-3940256099942544/1033173712';
 
   Future<void> loadAd() async {
     Completer<void> completer = Completer();
@@ -37,7 +37,7 @@ class AdService {
   void showAd() async {
     if (_isAdLoaded && _interstitialAd != null) {
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-      
+
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (InterstitialAd ad) async {
           ad.dispose();

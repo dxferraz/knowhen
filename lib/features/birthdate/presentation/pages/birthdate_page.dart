@@ -65,7 +65,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PrimaryH2(
-                text: l10n.selectBirthdateTitle,
+                l10n.selectBirthdateTitle,
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onSurface,
               ),

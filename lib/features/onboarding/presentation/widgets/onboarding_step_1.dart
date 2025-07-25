@@ -17,7 +17,7 @@ class OnboardingStep1 extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PrimaryH1(
-            text: l10n.onboarding1Title,
+            l10n.onboarding1Title,
             color: Theme.of(context).colorScheme.secondary,
             textAlign: TextAlign.center,
           ),
@@ -27,7 +27,7 @@ class OnboardingStep1 extends StatelessWidget {
             child: BirthdaySVG(),
           ),
           PrimaryParagraphM(
-            text: l10n.onboarding1Description,
+            l10n.onboarding1Description,
             color: Theme.of(context).colorScheme.onSurface,
             textAlign: TextAlign.center,
           ),

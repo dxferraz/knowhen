@@ -8,6 +8,7 @@ import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
+import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
@@ -66,7 +67,7 @@ class _SummaryPageState extends State<SummaryPage> {
     return Scaffold(
       appBar: AppBar(
         title: PrimaryH4(
-          text: l10n.summaryPageTitle(dateFormat.format(widget.birthDate)),
+          l10n.summaryPageTitle(dateFormat.format(widget.birthDate)),
           textAlign: TextAlign.center,
           color: Theme.of(context).colorScheme.onSurface,
         ),
@@ -91,6 +92,7 @@ class _SummaryPageState extends State<SummaryPage> {
               final List<Widget> sections = [
                 YearsOfLifeSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
                 getUserAge() > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
+                MoonPhaseSection(moonPhase: state.moonPhase),
                 BrazilCuriositySection(imageUrl: state.curiosityImage, curiosity: state.brazilCuriosity.fact),
               ];
               return Stack(
