@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:knowhen/core/theme/app_theme.dart';
 
 class PrimaryH1 extends StatelessWidget {
-  const PrimaryH1({super.key, required this.text, required this.textAlign, required this.color});
+  const PrimaryH1(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -26,7 +26,7 @@ class PrimaryH1 extends StatelessWidget {
 }
 
 class PrimaryH2 extends StatelessWidget {
-  const PrimaryH2({super.key, required this.text, required this.textAlign, required this.color});
+  const PrimaryH2(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -49,7 +49,7 @@ class PrimaryH2 extends StatelessWidget {
 }
 
 class PrimaryH3 extends StatelessWidget {
-  const PrimaryH3({super.key, required this.text, required this.textAlign, required this.color});
+  const PrimaryH3(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -72,7 +72,7 @@ class PrimaryH3 extends StatelessWidget {
 }
 
 class PrimaryH4 extends StatelessWidget {
-  const PrimaryH4({super.key, required this.text, required this.textAlign, required this.color});
+  const PrimaryH4(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -85,7 +85,7 @@ class PrimaryH4 extends StatelessWidget {
       textAlign: textAlign,
       style: TextStyle(
         fontFamily: GoogleFonts.inter().fontFamily,
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: FontWeight.w700,
         color: color,
         height: 1.5,
@@ -95,7 +95,8 @@ class PrimaryH4 extends StatelessWidget {
 }
 
 class SecondaryH1 extends StatelessWidget {
-  const SecondaryH1({super.key, required this.text, required this.textAlign, required this.color});
+  const SecondaryH1(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
 
   final String text;
   final TextAlign textAlign;
@@ -118,7 +119,8 @@ class SecondaryH1 extends StatelessWidget {
 }
 
 class SecondaryH2 extends StatelessWidget {
-  const SecondaryH2({super.key, required this.text, required this.textAlign, required this.color});
+  const SecondaryH2(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
 
   final String text;
   final TextAlign textAlign;
@@ -141,7 +143,8 @@ class SecondaryH2 extends StatelessWidget {
 }
 
 class SecondaryH3 extends StatelessWidget {
-  const SecondaryH3({super.key, required this.text, required this.textAlign, required this.color});
+  const SecondaryH3(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
 
   final String text;
   final TextAlign textAlign;
@@ -164,7 +167,8 @@ class SecondaryH3 extends StatelessWidget {
 }
 
 class SecondaryH4 extends StatelessWidget {
-  const SecondaryH4({super.key, required this.text, required this.textAlign, required this.color});
+  const SecondaryH4(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
 
   final String text;
   final TextAlign textAlign;
@@ -187,7 +191,8 @@ class SecondaryH4 extends StatelessWidget {
 }
 
 class PrimaryParagraphL extends StatelessWidget {
-  const PrimaryParagraphL({super.key, required this.text, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryParagraphL(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -210,7 +215,8 @@ class PrimaryParagraphL extends StatelessWidget {
 }
 
 class PrimaryParagraphM extends StatelessWidget {
-  const PrimaryParagraphM({super.key, required this.text, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryParagraphM(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -233,7 +239,8 @@ class PrimaryParagraphM extends StatelessWidget {
 }
 
 class PrimaryParagraphS extends StatelessWidget {
-  const PrimaryParagraphS({super.key, required this.text, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryParagraphS(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -256,7 +263,8 @@ class PrimaryParagraphS extends StatelessWidget {
 }
 
 class SecondaryParagraphL extends StatelessWidget {
-  const SecondaryParagraphL({super.key, required this.text, required this.textAlign, required this.color});
+  const SecondaryParagraphL(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -279,7 +287,8 @@ class SecondaryParagraphL extends StatelessWidget {
 }
 
 class PrimaryCaption extends StatelessWidget {
-  const PrimaryCaption({super.key, required this.text, this.textAlign = TextAlign.start, this.color = secondaryColor});
+  const PrimaryCaption(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -301,7 +310,8 @@ class PrimaryCaption extends StatelessWidget {
 }
 
 class SecondaryCaption extends StatelessWidget {
-  const SecondaryCaption({super.key, required this.text, required this.textAlign, required this.color});
+  const SecondaryCaption(this.text,
+      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
 
   final String text;
   final TextAlign textAlign;
@@ -327,14 +337,14 @@ class RichTextEntity {
   final String text;
   final Color color;
 
-  RichTextEntity({required this.text, required this.color});
+  RichTextEntity(this.text, {required this.color});
 }
 
 class PrimaryRichText extends StatelessWidget {
   final List<RichTextEntity> text;
   final TextAlign textAlign;
 
-  const PrimaryRichText({super.key, required this.text, this.textAlign = TextAlign.start});
+  const PrimaryRichText(this.text, {super.key, this.textAlign = TextAlign.start});
 
   @override
   Widget build(BuildContext context) {
@@ -355,7 +365,9 @@ class PrimaryRichText extends StatelessWidget {
     return RichText(
       textAlign: textAlign,
       text: TextSpan(
-        children: List.generate(text.length, (index) => buildTextSpan(text[index].text, text[index].color), growable: false),
+        children: List.generate(
+            text.length, (index) => buildTextSpan(text[index].text, text[index].color),
+            growable: false),
       ),
     );
   }
@@ -365,7 +377,7 @@ class SecondaryRichText extends StatelessWidget {
   final List<RichTextEntity> text;
   final TextAlign textAlign;
 
-  const SecondaryRichText({super.key, required this.text, this.textAlign = TextAlign.start});
+  const SecondaryRichText(this.text, {super.key, this.textAlign = TextAlign.start});
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +398,9 @@ class SecondaryRichText extends StatelessWidget {
     return RichText(
       textAlign: textAlign,
       text: TextSpan(
-        children: List.generate(text.length, (index) => buildTextSpan(text[index].text, text[index].color), growable: false),
+        children: List.generate(
+            text.length, (index) => buildTextSpan(text[index].text, text[index].color),
+            growable: false),
       ),
     );
   }

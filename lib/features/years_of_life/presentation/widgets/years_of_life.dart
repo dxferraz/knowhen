@@ -51,7 +51,7 @@ class YearsOfLifeSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SecondaryH2(
-              text: l10n.yearsOfLifeTitle,
+              l10n.yearsOfLifeTitle,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -64,17 +64,17 @@ class YearsOfLifeSection extends StatelessWidget {
               child: Column(
                 children: [
                   PrimaryH3(
-                    text: l10n.yearsOfLife(yearsOfLife),
+                    l10n.yearsOfLife(yearsOfLife),
                     textAlign: TextAlign.center,
                     color: Theme.of(context).colorScheme.surface,
                   ),
                   PrimaryH3(
-                    text: l10n.monthsOfLife(monthsOfLife),
+                    l10n.monthsOfLife(monthsOfLife),
                     textAlign: TextAlign.center,
                     color: Theme.of(context).colorScheme.surface,
                   ),
                   PrimaryH3(
-                    text: l10n.daysOfLife(daysOfLife),
+                    l10n.daysOfLife(daysOfLife),
                     textAlign: TextAlign.center,
                     color: Theme.of(context).colorScheme.surface,
                   ),
@@ -85,7 +85,7 @@ class YearsOfLifeSection extends StatelessWidget {
                 ? Column(
                     children: [
                       SecondaryH2(
-                        text: 'E viveu:',
+                        'E viveu:',
                         textAlign: TextAlign.center,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),

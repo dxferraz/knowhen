@@ -22,7 +22,7 @@ class BrazilCuriositySection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SecondaryH1(
-              text: l10n.historicalFact,
+              l10n.historicalFact,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -35,7 +35,7 @@ class BrazilCuriositySection extends StatelessWidget {
               child: Column(
                 children: [
                   PrimaryParagraphS(
-                    text: l10n.firstFactParagraph(factParagraphs.first),
+                    l10n.firstFactParagraph(factParagraphs.first),
                     textAlign: TextAlign.center,
                     color: Theme.of(context).colorScheme.surface,
                   ),
@@ -50,7 +50,7 @@ class BrazilCuriositySection extends StatelessWidget {
                       ),
                       SizedBox(height: 5),
                       SecondaryCaption(
-                        text: l10n.aiGeneratedImage,
+                        l10n.aiGeneratedImage,
                         textAlign: TextAlign.center,
                         color: Theme.of(context).colorScheme.surface,
                       ),
@@ -58,7 +58,7 @@ class BrazilCuriositySection extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   PrimaryParagraphS(
-                    text: l10n.lastFactParagraph(factParagraphs.last),
+                    l10n.lastFactParagraph(factParagraphs.last),
                     textAlign: TextAlign.center,
                     color: Theme.of(context).colorScheme.surface,
                   ),

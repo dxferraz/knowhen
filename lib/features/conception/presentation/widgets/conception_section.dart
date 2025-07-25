@@ -30,7 +30,7 @@ class ConceptionSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SecondaryH2(
-              text: 'Muito provavavelmente, no período de:',
+              'Muito provavavelmente, no período de:',
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -43,7 +43,7 @@ class ConceptionSection extends StatelessWidget {
               child: Column(
                 children: [
                   PrimaryH3(
-                    text: calculateConception(context, birthDate),
+                    calculateConception(context, birthDate),
                     textAlign: TextAlign.center,
                     color: Theme.of(context).colorScheme.surface,
                   ),
@@ -51,7 +51,7 @@ class ConceptionSection extends StatelessWidget {
               ),
             ),
             SecondaryH2(
-              text: 'Foi quando a cegonha te levou ao colo de sua mãe!',
+              'Foi quando a cegonha te levou ao colo de sua mãe!',
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),

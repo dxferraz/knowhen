@@ -63,17 +63,17 @@ class _LifeClockState extends State<LifeClock> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PrimaryH3(
-                text: l10n.hoursOfLife(IntFormatter.format(hours)),
+                l10n.hoursOfLife(IntFormatter.format(hours)),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               PrimaryH3(
-                text: l10n.minutesOfLife(IntFormatter.format(minutes)),
+                l10n.minutesOfLife(IntFormatter.format(minutes)),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               PrimaryH3(
-                text: l10n.secondsOfLife(IntFormatter.format(seconds)),
+                l10n.secondsOfLife(IntFormatter.format(seconds)),
                 textAlign: TextAlign.center,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),

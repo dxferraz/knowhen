@@ -17,7 +17,7 @@ class OnboardingStep3 extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PrimaryH1(
-            text: l10n.onboarding3Title,
+            l10n.onboarding3Title,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
             textAlign: TextAlign.center,
           ),
@@ -27,7 +27,7 @@ class OnboardingStep3 extends StatelessWidget {
             child: DateSvg(),
           ),
           PrimaryParagraphM(
-            text: l10n.onboarding3Description,
+            l10n.onboarding3Description,
             color: Theme.of(context).colorScheme.onSurface,
             textAlign: TextAlign.center,
           ),
