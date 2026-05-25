@@ -24,36 +24,36 @@ class MoonPhaseSection extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.primaryContainer,
               ),
               child: Column(
                 children: [
                   PrimaryH3(
                     moonPhase.phaseName,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Image.network(
                     moonPhase.imageUrl,
                     loadingBuilder: (context, child, loadingProgress) {
                       return loadingProgress == null
                           ? child
-                          : SizedBox(child: CircularProgressIndicator());
+                          : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimaryContainer);
                     },
                     width: MediaQuery.of(context).size.width * 0.4,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   PrimaryParagraphS(
                     moonPhase.description,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   PrimaryParagraphS(
                     moonPhase.influence,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ],
               ),

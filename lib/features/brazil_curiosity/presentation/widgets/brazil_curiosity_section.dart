@@ -27,40 +27,47 @@ class BrazilCuriositySection extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.primaryContainer,
               ),
               child: Column(
                 children: [
                   PrimaryParagraphS(
                     l10n.firstFactParagraph(factParagraphs.first),
                     textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Column(
                     children: [
                       Container(
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
                         clipBehavior: Clip.hardEdge,
                         width: 250,
-                        child: imageUrl.isNotEmpty ? Image.network(imageUrl, loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : SizedBox(child: CircularProgressIndicator())) : Text(l10n.noImageForFact),
+                        child: imageUrl.isNotEmpty
+                            ? Image.network(
+                                imageUrl,
+                                loadingBuilder: (context, child, loadingProgress) => loadingProgress == null
+                                    ? child
+                                    : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimaryContainer),
+                              )
+                            : Text(l10n.noImageForFact, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       SecondaryCaption(
                         l10n.aiGeneratedImage,
                         textAlign: TextAlign.center,
-                        color: Theme.of(context).colorScheme.surface,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ],
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   PrimaryParagraphS(
                     l10n.lastFactParagraph(factParagraphs.last),
                     textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ],
               ),

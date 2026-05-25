@@ -39,22 +39,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Knowhen',
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            themeMode: themeProvider.themeMode,
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            home: showOnboarding ? const OnboardingPage() : const BirthdatePage(),
-          );
-        },
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Knowhen',
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          themeMode: themeProvider.themeMode,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          home: showOnboarding ? const OnboardingPage() : const BirthdatePage(),
+        );
+      },
     );
   }
 }

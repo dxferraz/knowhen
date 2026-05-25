@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
 
 class AdService {
   InterstitialAd? _interstitialAd;
@@ -21,6 +22,7 @@ class AdService {
         onAdLoaded: (InterstitialAd ad) {
           _interstitialAd = ad;
           _isAdLoaded = true;
+          AnalyticsService.instance.logAdLoaded();
           completer.complete();
         },
         onAdFailedToLoad: (LoadAdError error) {
@@ -43,6 +45,7 @@ class AdService {
           ad.dispose();
           _isAdLoaded = false;
           await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+          AnalyticsService.instance.logAdDismissed();
           loadAd();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) async {
@@ -53,6 +56,7 @@ class AdService {
         },
       );
 
+      AnalyticsService.instance.logAdShown();
       _interstitialAd!.show();
       _interstitialAd = null;
       _isAdLoaded = false;

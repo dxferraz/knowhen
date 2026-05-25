@@ -8,6 +8,7 @@ import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
 
 @RoutePage()
 class BirthdatePage extends StatefulWidget {
@@ -141,13 +142,19 @@ class _BirthdatePageState extends State<BirthdatePage> {
                         return;
                       }
                       _selecionarHora(context).then((value) {
-                        context.mounted
-                            ? Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => SummaryPage(birthDate: birthDate!, birthTime: _birthTime),
-                                ),
-                              )
-                            : null;
+                        if (context.mounted) {
+                          final age = DateTime.now().difference(birthDate!).inDays ~/ 365;
+                          final hasBirthTime = _birthTime != null;
+                          AnalyticsService.instance.logBirthdateSubmitted(
+                            age: age,
+                            hasBirthTime: hasBirthTime,
+                          );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => SummaryPage(birthDate: birthDate!, birthTime: _birthTime),
+                            ),
+                          );
+                        }
                       });
                     },
                     text: l10n.continueLabel,
