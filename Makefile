@@ -1,5 +1,5 @@
 install: ## Default rule, does everything needed to run the project
-install: deps gen
+install: clean deps gen
 
 check: ## Run linter and tests (automatic before every push)
 check: lint test
@@ -48,4 +48,4 @@ help:
 		printf "%-30s %s\n" $$help_command $$help_info ; \
 	done
 
-.PHONY: build test
+.PHONY: clean install lint coverage test
