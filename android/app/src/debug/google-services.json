@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "754028480385",
+    "project_id": "knowhen",
+    "storage_bucket": "knowhen.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754028480385:android:52f84ba2b9c6c60615ca80",
+        "android_client_info": {
+          "package_name": "com.dxferraz.knowhen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754028480385-qv3ilsttk0vi2tpk1fj48ju723jt81ag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClW564nFZbAmD9oOOKOK_ipgPaoTJGDTY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754028480385-qv3ilsttk0vi2tpk1fj48ju723jt81ag.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

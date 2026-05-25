@@ -75,26 +75,49 @@ class _BirthdatePageState extends State<BirthdatePage> {
                 maxDate: DateTime(2024, 12, 31),
                 minDate: DateTime(1925, 1, 1),
                 initialPickerType: PickerType.years,
-                initialDate: birthDate ?? DateTime.now().subtract(const Duration(days: 365 * 25)),
+                selectedDate: birthDate,
+                displayedDate: birthDate ?? DateTime.now().subtract(const Duration(days: 365 * 25)),
                 onDateSelected: (value) {
                   debugPrint('Date saved: ${value.toString()}');
                   setState(() {
                     birthDate = value;
                   });
                 },
-                slidersColor: Theme.of(context).colorScheme.secondary,
-                highlightColor: Theme.of(context).colorScheme.secondary,
-                splashColor: Theme.of(context).colorScheme.secondary,
-                daysOfTheWeekTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
+                theme: DatePickerPlusTheme(
+                  headerTheme: HeaderTheme(
+                    centerLeadingDate: true,
+                    leadingDateTextStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    forwardArrowWidget: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Theme.of(context).colorScheme.secondary,
+                      size: 20,
+                    ),
+                    backwardArrowWidget: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      color: Theme.of(context).colorScheme.secondary,
+                      size: 20,
+                    ),
+                  ),
+                  daysPickerTheme: DaysPickerTheme(
+                    daysOfTheWeekTheme: DaysOfTheWeekTheme(
+                      textStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    selectedCellDecoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    inkResponseTheme: InkResponseTheme(
+                      splashColor: Theme.of(context).colorScheme.secondary,
+                      highlightColor: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
                 ),
-                selectedCellDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                leadingDateTextStyle: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w700),
-                centerLeadingDate: true,
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
               ),
             ],
           ),
