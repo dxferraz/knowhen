@@ -20,11 +20,7 @@ deps: ## Install dependencies (included in install)
 
 gen: ## Run build_runner (included in install)
 	@echo "|-> Generating auto-generated files"
-	@dart run build_runner build --delete-conflicting-outputs
-
-build: ## Run build_runner (included in install)
-	@echo "|-> Building auto-generated files"
-	@dart run build_runner build --delete-conflicting-outputs
+	@dart run build_runner build
 
 run: ## Run the app from the command line
 	@echo "|-> Running the app"

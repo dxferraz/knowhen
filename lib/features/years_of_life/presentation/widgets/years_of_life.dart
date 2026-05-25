@@ -56,27 +56,27 @@ class YearsOfLifeSection extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.primaryContainer,
               ),
               child: Column(
                 children: [
                   PrimaryH3(
                     l10n.yearsOfLife(yearsOfLife),
                     textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   PrimaryH3(
                     l10n.monthsOfLife(monthsOfLife),
                     textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   PrimaryH3(
                     l10n.daysOfLife(daysOfLife),
                     textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ],
               ),

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:knowhen/core/theme/app_theme.dart';
 import 'package:knowhen/core/theme/widgets/app_logo.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
@@ -11,6 +10,8 @@ import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
+
 
 @RoutePage()
 class OnboardingPage extends StatefulWidget {
@@ -28,6 +29,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
+    AnalyticsService.instance.logOnboardingStarted();
+    AnalyticsService.instance.logOnboardingStepViewed(0);
   }
 
   @override
@@ -58,6 +61,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             setState(() {
               isLastPage = index == 2;
             });
+            AnalyticsService.instance.logOnboardingStepViewed(index);
           },
           children: const [
             OnboardingStep1(),
@@ -75,6 +79,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ? Container(width: 85)
                 : CustomButton(
                     onPressed: () {
+                      final currentPage = _controller.hasClients ? _controller.page?.round() ?? 0 : 0;
+                      AnalyticsService.instance.logOnboardingSkipped(currentPage);
                       _controller.animateToPage(
                         2,
                         duration: const Duration(milliseconds: 800),
@@ -91,7 +97,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               effect: WormEffect(
                 dotHeight: 14,
                 dotWidth: 14,
-                dotColor: backgroundColor.withAlpha(150),
+                dotColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                 activeDotColor: isLastPage ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.secondary,
               ),
               onDotClicked: (index) => _controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease),
@@ -100,6 +106,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               CustomButton(
                 onPressed: () {
                   markOnboardingCompleted();
+                  AnalyticsService.instance.logOnboardingCompleted();
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const BirthdatePage(),
                   ));

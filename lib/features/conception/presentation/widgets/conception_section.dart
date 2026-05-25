@@ -35,17 +35,17 @@ class ConceptionSection extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.primaryContainer,
               ),
               child: Column(
                 children: [
                   PrimaryH3(
                     calculateConception(context, birthDate),
                     textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ],
               ),

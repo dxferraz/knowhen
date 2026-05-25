@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 
 class BottomSheetTheme {
   static BottomSheetThemeData lightTheme() {
-    return BottomSheetThemeData(
+    return const BottomSheetThemeData(
       backgroundColor: Colors.transparent,
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24.0),
+          topRight: Radius.circular(24.0),
+        ),
       ),
     );
   }
 
   static BottomSheetThemeData darkTheme() {
-    return BottomSheetThemeData(
+    return const BottomSheetThemeData(
       backgroundColor: Colors.transparent,
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24.0),
+          topRight: Radius.circular(24.0),
+        ),
       ),
     );
   }
@@ -22,14 +30,20 @@ class BottomSheetTheme {
 
 class CustomAppBarTheme {
   static AppBarTheme lightTheme() {
-    return AppBarTheme(
+    return const AppBarTheme(
       backgroundColor: Colors.transparent,
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
+      centerTitle: true,
     );
   }
 
   static AppBarTheme darkTheme() {
-    return AppBarTheme(
+    return const AppBarTheme(
       backgroundColor: Colors.transparent,
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
+      centerTitle: true,
     );
   }
 }

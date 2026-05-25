@@ -17,6 +17,7 @@ import 'package:knowhen/features/years_of_life/presentation/widgets/years_of_lif
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
 
 @RoutePage()
 class SummaryPage extends StatefulWidget {
@@ -31,6 +32,7 @@ class SummaryPage extends StatefulWidget {
 class _SummaryPageState extends State<SummaryPage> {
   late PageController _controller;
   late AdService adService;
+  final Set<int> _loggedSections = {};
 
   @override
   void initState() {
@@ -38,11 +40,40 @@ class _SummaryPageState extends State<SummaryPage> {
     _controller = PageController(initialPage: 0);
     adService = AdService();
 
+    final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
+    AnalyticsService.instance.logSummaryViewed(age);
+
     adService.loadAd().then((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         adService.showAd();
       });
     });
+  }
+
+  void _logSectionIfNeeded(int index) {
+    if (!_loggedSections.contains(index)) {
+      _loggedSections.add(index);
+      final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
+      final isOver18 = age > 18;
+      String sectionName;
+      switch (index) {
+        case 0:
+          sectionName = 'years_of_life';
+          break;
+        case 1:
+          sectionName = isOver18 ? 'conception' : 'conception_hidden';
+          break;
+        case 2:
+          sectionName = 'moon_phase';
+          break;
+        case 3:
+          sectionName = 'brazil_curiosity';
+          break;
+        default:
+          sectionName = 'unknown';
+      }
+      AnalyticsService.instance.logSummarySectionViewed(sectionName, index);
+    }
   }
 
   @override
@@ -89,6 +120,9 @@ class _SummaryPageState extends State<SummaryPage> {
               return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant));
             }
             if (state is SummaryLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _logSectionIfNeeded(0);
+              });
               final List<Widget> sections = [
                 YearsOfLifeSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
                 getUserAge() > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
@@ -101,6 +135,7 @@ class _SummaryPageState extends State<SummaryPage> {
                     controller: _controller,
                     scrollBehavior: ScrollBehavior(),
                     scrollDirection: Axis.vertical,
+                    onPageChanged: _logSectionIfNeeded,
                     children: sections,
                   ),
                   Positioned(

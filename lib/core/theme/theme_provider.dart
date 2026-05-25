@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:knowhen/core/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
@@ -17,6 +18,7 @@ class ThemeProvider extends ChangeNotifier {
     _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
     _saveTheme(isDarkMode);
     _updateSystemUI();
+    AnalyticsService.instance.logThemeChanged(isDarkMode ? 'dark' : 'light');
     notifyListeners();
   }
 

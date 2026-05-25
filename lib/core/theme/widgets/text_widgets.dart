@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:knowhen/core/theme/app_theme.dart';
 
 class PrimaryH1 extends StatelessWidget {
-  const PrimaryH1(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryH1(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class PrimaryH1 extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 32,
         fontWeight: FontWeight.w700,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -26,11 +25,11 @@ class PrimaryH1 extends StatelessWidget {
 }
 
 class PrimaryH2 extends StatelessWidget {
-  const PrimaryH2(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryH2(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class PrimaryH2 extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 28,
         fontWeight: FontWeight.w700,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -49,11 +48,11 @@ class PrimaryH2 extends StatelessWidget {
 }
 
 class PrimaryH3 extends StatelessWidget {
-  const PrimaryH3(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryH3(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +63,7 @@ class PrimaryH3 extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 24,
         fontWeight: FontWeight.w700,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -72,11 +71,11 @@ class PrimaryH3 extends StatelessWidget {
 }
 
 class PrimaryH4 extends StatelessWidget {
-  const PrimaryH4(this.text, {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryH4(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +86,7 @@ class PrimaryH4 extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 16,
         fontWeight: FontWeight.w700,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -95,12 +94,11 @@ class PrimaryH4 extends StatelessWidget {
 }
 
 class SecondaryH1 extends StatelessWidget {
-  const SecondaryH1(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
+  const SecondaryH1(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +109,7 @@ class SecondaryH1 extends StatelessWidget {
         fontSize: 32,
         fontWeight: FontWeight.w700,
         fontFamily: GoogleFonts.poppins().fontFamily,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
     );
@@ -119,12 +117,11 @@ class SecondaryH1 extends StatelessWidget {
 }
 
 class SecondaryH2 extends StatelessWidget {
-  const SecondaryH2(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
+  const SecondaryH2(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +132,7 @@ class SecondaryH2 extends StatelessWidget {
         fontSize: 28,
         fontWeight: FontWeight.w700,
         fontFamily: GoogleFonts.poppins().fontFamily,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
     );
@@ -143,12 +140,11 @@ class SecondaryH2 extends StatelessWidget {
 }
 
 class SecondaryH3 extends StatelessWidget {
-  const SecondaryH3(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
+  const SecondaryH3(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +155,7 @@ class SecondaryH3 extends StatelessWidget {
         fontSize: 24,
         fontWeight: FontWeight.w700,
         fontFamily: GoogleFonts.poppins().fontFamily,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
     );
@@ -167,12 +163,11 @@ class SecondaryH3 extends StatelessWidget {
 }
 
 class SecondaryH4 extends StatelessWidget {
-  const SecondaryH4(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = secondaryColor});
+  const SecondaryH4(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +178,7 @@ class SecondaryH4 extends StatelessWidget {
         fontSize: 18,
         fontWeight: FontWeight.w700,
         fontFamily: GoogleFonts.poppins().fontFamily,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
     );
@@ -191,12 +186,11 @@ class SecondaryH4 extends StatelessWidget {
 }
 
 class PrimaryParagraphL extends StatelessWidget {
-  const PrimaryParagraphL(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryParagraphL(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +201,7 @@ class PrimaryParagraphL extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w400,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -215,12 +209,11 @@ class PrimaryParagraphL extends StatelessWidget {
 }
 
 class PrimaryParagraphM extends StatelessWidget {
-  const PrimaryParagraphM(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryParagraphM(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +224,7 @@ class PrimaryParagraphM extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w400,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -239,12 +232,11 @@ class PrimaryParagraphM extends StatelessWidget {
 }
 
 class PrimaryParagraphS extends StatelessWidget {
-  const PrimaryParagraphS(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryParagraphS(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +247,7 @@ class PrimaryParagraphS extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -263,12 +255,11 @@ class PrimaryParagraphS extends StatelessWidget {
 }
 
 class SecondaryParagraphL extends StatelessWidget {
-  const SecondaryParagraphL(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const SecondaryParagraphL(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +270,7 @@ class SecondaryParagraphL extends StatelessWidget {
         fontFamily: GoogleFonts.poppins().fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w400,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );
@@ -287,12 +278,11 @@ class SecondaryParagraphL extends StatelessWidget {
 }
 
 class PrimaryCaption extends StatelessWidget {
-  const PrimaryCaption(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const PrimaryCaption(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -303,19 +293,18 @@ class PrimaryCaption extends StatelessWidget {
         fontFamily: GoogleFonts.inter().fontFamily,
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
       ),
     );
   }
 }
 
 class SecondaryCaption extends StatelessWidget {
-  const SecondaryCaption(this.text,
-      {super.key, this.textAlign = TextAlign.start, this.color = textColor});
+  const SecondaryCaption(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
 
   final String text;
   final TextAlign textAlign;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -326,7 +315,7 @@ class SecondaryCaption extends StatelessWidget {
         fontSize: 10,
         fontFamily: GoogleFonts.poppins().fontFamily,
         fontWeight: FontWeight.w600,
-        color: color,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
       ),
     );

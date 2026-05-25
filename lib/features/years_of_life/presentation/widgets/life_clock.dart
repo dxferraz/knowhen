@@ -54,10 +54,10 @@ class _LifeClockState extends State<LifeClock> {
         final seconds = duration.inSeconds;
 
         return Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.primaryContainer,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -65,17 +65,17 @@ class _LifeClockState extends State<LifeClock> {
               PrimaryH3(
                 l10n.hoursOfLife(IntFormatter.format(hours)),
                 textAlign: TextAlign.center,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
               PrimaryH3(
                 l10n.minutesOfLife(IntFormatter.format(minutes)),
                 textAlign: TextAlign.center,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
               PrimaryH3(
                 l10n.secondsOfLife(IntFormatter.format(seconds)),
                 textAlign: TextAlign.center,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ],
           ),
