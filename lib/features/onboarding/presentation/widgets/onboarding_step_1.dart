@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/assets/svg/widgets/birthday_svg.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/theme.dart';
+import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_layout.dart';
 
 class OnboardingStep1 extends StatelessWidget {
   const OnboardingStep1({super.key});
@@ -10,29 +11,11 @@ class OnboardingStep1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          PrimaryH1(
-            l10n.onboarding1Title,
-            color: Theme.of(context).colorScheme.secondary,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            width: 200,
-            height: 200,
-            child: BirthdaySVG(),
-          ),
-          PrimaryParagraphM(
-            l10n.onboarding1Description,
-            color: Theme.of(context).colorScheme.onSurface,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+    return OnboardingStepLayout(
+      illustration: const BirthdaySVG(),
+      title: l10n.onboarding1Title,
+      description: l10n.onboarding1Description,
+      accent: context.glass.brandGradient,
     );
   }
 }

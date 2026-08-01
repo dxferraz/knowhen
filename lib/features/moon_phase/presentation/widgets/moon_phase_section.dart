@@ -1,64 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/functions/get_moon_phase.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
+import 'package:knowhen/core/theme/theme.dart';
 
 class MoonPhaseSection extends StatelessWidget {
-  final MoonPhase moonPhase;
   const MoonPhaseSection({super.key, required this.moonPhase});
+
+  final MoonPhase moonPhase;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(bottom: 100, left: 20, right: 20),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
+    final glass = context.glass;
+
+    return AppSection(
+      eyebrow: 'Céu da sua noite',
+      title: 'Você nasceu na',
+      child: GlassCard(
+        level: GlassLevel.regular,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 8.0,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SecondaryH2(
-              'Você nasceu na:',
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
+            AppText.display(
+              moonPhase.phaseName,
+              align: TextAlign.center,
+              gradient: glass.warmGradient,
             ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              child: Column(
-                children: [
-                  PrimaryH3(
-                    moonPhase.phaseName,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(height: 10),
-                  Image.network(
-                    moonPhase.imageUrl,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      return loadingProgress == null
-                          ? child
-                          : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimaryContainer);
-                    },
-                    width: MediaQuery.of(context).size.width * 0.4,
-                  ),
-                  const SizedBox(height: 10),
-                  PrimaryParagraphS(
-                    moonPhase.description,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(height: 10),
-                  PrimaryParagraphS(
-                    moonPhase.influence,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: AppSpacing.large),
+            // A lua ganha um halo próprio: é o único elemento pictórico da
+            // seção e precisa se destacar do vidro sem virar um card dentro
+            // de outro card.
+            Flexible(child: _MoonArtwork(imageUrl: moonPhase.imageUrl)),
+            const SizedBox(height: AppSpacing.large),
+            AppText.body(moonPhase.description, align: TextAlign.center),
+            const SizedBox(height: AppSpacing.small),
+            AppText.caption(moonPhase.influence, align: TextAlign.center),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MoonArtwork extends StatelessWidget {
+  const _MoonArtwork({required this.imageUrl});
+
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final double size = context.isCompactHeight ? 120 : 156;
+
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: context.colors.tertiary.withValues(alpha: 0.26),
+            blurRadius: 48,
+            spreadRadius: -10,
+          ),
+        ],
+      ),
+      child: Image.network(
+        imageUrl,
+        fit: BoxFit.contain,
+        loadingBuilder: (context, child, progress) => progress == null
+            ? child
+            : Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: context.colors.tertiary,
+                  ),
+                ),
+              ),
+        errorBuilder: (context, error, stack) => Icon(
+          Icons.nightlight_round,
+          size: size * 0.6,
+          color: context.colors.tertiary,
         ),
       ),
     );

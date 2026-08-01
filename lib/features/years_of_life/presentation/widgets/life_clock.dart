@@ -2,21 +2,28 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/functions/int_formatter.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
-import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/theme.dart';
 
+/// Relógio da vida — horas, minutos e segundos desde o nascimento.
+///
+/// É o único elemento do app que muda a cada segundo, então usa algarismos
+/// tabulares: sem eles a largura dos números oscila e o card "treme".
 class LifeClock extends StatefulWidget {
+  const LifeClock({
+    super.key,
+    required this.birthDateTime,
+    required this.birthTime,
+  });
+
   final DateTime birthDateTime;
   final TimeOfDay birthTime;
-
-  const LifeClock({super.key, required this.birthDateTime, required this.birthTime});
 
   @override
   State<LifeClock> createState() => _LifeClockState();
 }
 
 class _LifeClockState extends State<LifeClock> {
-  late Stream<DateTime> _timeStream;
+  late final Stream<DateTime> _timeStream;
 
   @override
   void initState() {
@@ -27,60 +34,84 @@ class _LifeClockState extends State<LifeClock> {
     );
   }
 
+  DateTime get _birthMoment => DateTime(
+        widget.birthDateTime.year,
+        widget.birthDateTime.month,
+        widget.birthDateTime.day,
+        widget.birthTime.hour,
+        widget.birthTime.minute,
+      );
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final glass = context.glass;
 
     return StreamBuilder<DateTime>(
       stream: _timeStream,
+      initialData: DateTime.now(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant);
-        }
+        final Duration lived =
+            (snapshot.data ?? DateTime.now()).difference(_birthMoment);
 
-        final now = snapshot.data!;
-        final duration = now.difference(
-          DateTime(
-            widget.birthDateTime.year,
-            widget.birthDateTime.month,
-            widget.birthDateTime.day,
-            widget.birthTime.hour,
-            widget.birthTime.minute,
-          ),
-        );
-
-        final hours = duration.inHours;
-        final minutes = duration.inMinutes;
-        final seconds = duration.inSeconds;
-
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).colorScheme.primaryContainer,
-          ),
+        return GlassCard(
+          eyebrow: 'E viveu, exatamente',
+          accent: context.colors.secondary,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              PrimaryH3(
-                l10n.hoursOfLife(IntFormatter.format(hours)),
-                textAlign: TextAlign.center,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              _ClockRow(
+                label: 'horas',
+                value: IntFormatter.format(lived.inHours),
+                gradient: glass.coolGradient,
               ),
-              PrimaryH3(
-                l10n.minutesOfLife(IntFormatter.format(minutes)),
-                textAlign: TextAlign.center,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              const SizedBox(height: AppSpacing.small),
+              _ClockRow(
+                label: 'minutos',
+                value: IntFormatter.format(lived.inMinutes),
+                gradient: glass.coolGradient,
               ),
-              PrimaryH3(
-                l10n.secondsOfLife(IntFormatter.format(seconds)),
-                textAlign: TextAlign.center,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              const SizedBox(height: AppSpacing.small),
+              _ClockRow(
+                label: 'segundos',
+                value: IntFormatter.format(lived.inSeconds),
+                gradient: glass.brandGradient,
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class _ClockRow extends StatelessWidget {
+  const _ClockRow({
+    required this.label,
+    required this.value,
+    required this.gradient,
+  });
+
+  final String label;
+  final String value;
+  final Gradient gradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: AppText.numeric(value, gradient: gradient, maxLines: 1),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sMedium),
+        AppText.overline(label),
+      ],
     );
   }
 }

@@ -61,5 +61,27 @@ flutter:
   uses-material-design: true
   generate: true
 
+  # Fontes do design system, empacotadas no app (sem download em runtime).
+  # Ver lib/core/theme/tokens/app_typography.dart.
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: lib/core/assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: lib/core/assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: lib/core/assets/fonts/Inter-Bold.ttf
+          weight: 700
+    - family: Sora
+      fonts:
+        - asset: lib/core/assets/fonts/Sora-SemiBold.ttf
+          weight: 600
+        - asset: lib/core/assets/fonts/Sora-Bold.ttf
+          weight: 700
+    - family: YatraOne
+      fonts:
+        - asset: lib/core/assets/fonts/YatraOne-Regular.ttf
+          weight: 400
+
 assets:
   - assets/

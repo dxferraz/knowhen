@@ -1,17 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:knowhen/core/theme/widgets/app_logo.dart';
-import 'package:knowhen/core/theme/widgets/custom_button.dart';
-import 'package:knowhen/core/theme/widgets/theme_button.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:knowhen/core/theme/theme.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_1.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_2.dart';
 import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:knowhen/core/l10n/generated/app_localizations.dart';
-import 'package:knowhen/core/services/analytics_service.dart';
-
 
 @RoutePage()
 class OnboardingPage extends StatefulWidget {
@@ -22,7 +18,9 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  late PageController _controller;
+  static const int _stepCount = 3;
+
+  late final PageController _controller;
   bool isLastPage = false;
 
   @override
@@ -39,92 +37,98 @@ class _OnboardingPageState extends State<OnboardingPage> {
     super.dispose();
   }
 
-  void markOnboardingCompleted() async {
+  Future<void> markOnboardingCompleted() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('showOnboarding', false);
+  }
+
+  void _goToBirthdate() {
+    markOnboardingCompleted();
+    AnalyticsService.instance.logOnboardingCompleted();
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (context) => const BirthdatePage()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const AppLogo(),
+
+    return GlassScaffold(
+      appBar: const GlassAppBar(
+        titleWidget: AppLogo(),
+        automaticallyImplyLeading: false,
+        bottomDivider: false,
         actions: [ThemeButton()],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: 80),
-        child: PageView(
-          controller: _controller,
-          onPageChanged: (index) {
-            setState(() {
-              isLastPage = index == 2;
-            });
-            AnalyticsService.instance.logOnboardingStepViewed(index);
-          },
-          children: const [
-            OnboardingStep1(),
-            OnboardingStep2(),
-            OnboardingStep3(),
-          ],
-        ),
+      body: PageView(
+        controller: _controller,
+        onPageChanged: (index) {
+          setState(() => isLastPage = index == _stepCount - 1);
+          AnalyticsService.instance.logOnboardingStepViewed(index);
+        },
+        children: const [
+          OnboardingStep1(),
+          OnboardingStep2(),
+          OnboardingStep3(),
+        ],
       ),
-      bottomSheet: SizedBox(
-        height: 80,
+      bottomBar: GlassBottomBar(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            isLastPage
-                ? Container(width: 85)
-                : CustomButton(
-                    onPressed: () {
-                      final currentPage = _controller.hasClients ? _controller.page?.round() ?? 0 : 0;
-                      AnalyticsService.instance.logOnboardingSkipped(currentPage);
-                      _controller.animateToPage(
-                        2,
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.ease,
-                      );
-                    },
-                    backgroundColor: Colors.transparent,
-                    textColor: Theme.of(context).colorScheme.onSurface,
-                    text: l10n.skip,
-                  ),
-            SmoothPageIndicator(
-              controller: _controller,
-              count: 3,
-              effect: WormEffect(
-                dotHeight: 14,
-                dotWidth: 14,
-                dotColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
-                activeDotColor: isLastPage ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.secondary,
+            // Os `Expanded` iguais nas pontas mantêm o indicador centrado
+            // mesmo quando os rótulos dos botões mudam de largura.
+            //
+            // `heightFactor: 1` é obrigatório: sem ele o `Align` se expande
+            // até a altura máxima permitida pela `Row` — que aqui é a tela
+            // inteira — e a barra deixa de ser uma barra.
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                heightFactor: 1,
+                child: isLastPage
+                    ? const SizedBox.shrink()
+                    : GlassButton(
+                        label: l10n.skip,
+                        variant: AppButtonVariant.ghost,
+                        size: AppButtonSize.small,
+                        onPressed: () {
+                          final currentPage = _controller.hasClients
+                              ? _controller.page?.round() ?? 0
+                              : 0;
+                          AnalyticsService.instance
+                              .logOnboardingSkipped(currentPage);
+                          _controller.animateToPage(
+                            _stepCount - 1,
+                            duration: AppMotion.page,
+                            curve: AppMotion.standard,
+                          );
+                        },
+                      ),
               ),
-              onDotClicked: (index) => _controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease),
             ),
-            if (isLastPage)
-              CustomButton(
-                onPressed: () {
-                  markOnboardingCompleted();
-                  AnalyticsService.instance.logOnboardingCompleted();
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const BirthdatePage(),
-                  ));
-                },
-                text: l10n.start,
-                backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-              )
-            else
-              CustomButton(
-                onPressed: () {
-                  _controller.nextPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.ease,
-                  );
-                },
-                text: l10n.next,
-                backgroundColor: Theme.of(context).colorScheme.secondary,
+            AppPageIndicator(controller: _controller, count: _stepCount),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                heightFactor: 1,
+                child: GlassButton(
+                  label: isLastPage ? l10n.start : l10n.next,
+                  size: AppButtonSize.small,
+                  trailingIcon: Icons.arrow_forward_rounded,
+                  onPressed: () {
+                    if (isLastPage) {
+                      _goToBirthdate();
+                    } else {
+                      _controller.nextPage(
+                        duration: AppMotion.page,
+                        curve: AppMotion.standard,
+                      );
+                    }
+                  },
+                ),
               ),
+            ),
           ],
         ),
       ),

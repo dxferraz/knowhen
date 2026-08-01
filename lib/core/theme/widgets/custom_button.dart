@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'glass_button.dart';
+
+/// Camada de compatibilidade — prefira [GlassButton] em código novo.
+///
+/// O mapeamento preserva a intenção das chamadas antigas:
+/// `backgroundColor: Colors.transparent` vira ação terciária (`ghost`),
+/// qualquer outra cor vira ação primária tingida com essa cor.
 class CustomButton extends StatelessWidget {
+  const CustomButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+    this.backgroundColor,
+    this.textColor,
+  });
+
   final VoidCallback onPressed;
   final Color? backgroundColor;
   final Color? textColor;
   final String text;
 
-  const CustomButton({super.key, required this.onPressed, this.backgroundColor, required this.text, this.textColor});
-
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    final bool isGhost = backgroundColor?.a == 0;
+
+    return GlassButton(
+      label: text,
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
-        elevation: 0,
-        overlayColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: GoogleFonts.inter().fontFamily,
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: textColor ?? Theme.of(context).colorScheme.onPrimary,
-        ),
-      ),
+      variant: isGhost ? AppButtonVariant.ghost : AppButtonVariant.primary,
+      foregroundColor: textColor,
+      gradient: (isGhost || backgroundColor == null)
+          ? null
+          : LinearGradient(colors: [backgroundColor!, backgroundColor!]),
     );
   }
 }
