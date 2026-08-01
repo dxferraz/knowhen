@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:knowhen/core/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 
@@ -41,20 +40,20 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   void _updateSystemUI() {
-    SystemUiOverlayStyle systemUiOverlayStyle = _themeMode == ThemeMode.dark
-        ? SystemUiOverlayStyle.light.copyWith(
-            statusBarColor: DarkAppColors.background,
-            statusBarIconBrightness: Brightness.light,
-            systemNavigationBarIconBrightness: Brightness.light,
-            systemNavigationBarColor: DarkAppColors.background,
-          )
-        : SystemUiOverlayStyle.dark.copyWith(
-            statusBarColor: LightAppColors.background,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.dark,
-            systemNavigationBarColor: LightAppColors.background,
-          );
+    // Barras transparentes: a cena de aurora vai até as bordas da tela, então
+    // pintar status/navigation bar cortaria o gradiente em faixas.
+    final bool isDark = _themeMode == ThemeMode.dark;
 
-    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+      ),
+    );
   }
 }

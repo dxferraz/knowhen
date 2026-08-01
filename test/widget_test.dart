@@ -1,17 +1,22 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:knowhen/core/theme/theme_provider.dart';
 import 'package:knowhen/main.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   testWidgets('App builds and pumps successfully', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(showOnboarding: true));
+    // Duas condições para este teste rodar sem infraestrutura:
+    // 1. `MyApp` consome o `ThemeProvider` — o teste fornece o mesmo escopo
+    //    que `main()` monta em produção;
+    // 2. `showOnboarding: false` porque o onboarding registra evento de
+    //    analytics já no `initState`, o que exige o Firebase inicializado.
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+        child: const MyApp(showOnboarding: false),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
   });
 }

@@ -1,157 +1,225 @@
 import 'package:flutter/material.dart';
-import 'package:knowhen/core/theme/widgets_theme.dart';
 
-const primaryColor = Color(0xFF3B82F6);
-const accentColor = Color(0xFF10B981);
-const secondaryColor = Color(0xFF10B981);
-const tertiaryColor = Color(0xFFF59E0B);
-const complementaryColor = Color(0xFFF59E0B);
-const textColor = Color(0xFF0F172A);
-const backgroundColor = Color(0xFFF8FAFC);
-const errorColor = Color(0xFFEF4444);
+import 'glass_theme.dart';
+import 'tokens/app_colors.dart';
+import 'tokens/app_palette.dart';
+import 'tokens/app_spacing.dart';
+import 'tokens/app_typography.dart';
+
+export 'context_extensions.dart';
+export 'glass_theme.dart';
+export 'tokens/app_colors.dart';
+export 'tokens/app_gradients.dart';
+export 'tokens/app_motion.dart';
+export 'tokens/app_palette.dart';
+export 'tokens/app_spacing.dart';
+export 'tokens/app_typography.dart';
+
+/// Monta o `ThemeData` a partir dos design tokens.
+///
+/// Nada de valor literal aqui: este arquivo só **compõe**. Cor vem de
+/// [AppColors], texto de [AppTypography], vidro de [GlassTheme].
+ThemeData buildAppTheme(Brightness brightness) {
+  final AppColors colors = AppColors.of(brightness);
+  final ColorScheme scheme = colors.toColorScheme();
+  final TextTheme textTheme = AppTypography.textTheme(colors);
+  final GlassTheme glass = GlassTheme.of(brightness);
+
+  return ThemeData(
+    useMaterial3: true,
+    brightness: brightness,
+    colorScheme: scheme,
+    textTheme: textTheme,
+    fontFamily: AppTypography.bodyFamily,
+    extensions: <ThemeExtension<dynamic>>[glass],
+
+    // A cor sólida existe como fallback: a cena real é a aurora
+    // (ver `GlassScaffold`), pintada atrás do Scaffold transparente.
+    scaffoldBackgroundColor: colors.canvas,
+    canvasColor: colors.canvas,
+    splashColor: colors.primary.withValues(alpha: 0.08),
+    highlightColor: colors.primary.withValues(alpha: 0.06),
+    dividerColor: glass.dividerColor,
+
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      foregroundColor: colors.textPrimary,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      centerTitle: true,
+      titleTextStyle: textTheme.titleMedium,
+      iconTheme: IconThemeData(color: colors.textPrimary, size: 22),
+    ),
+
+    iconTheme: IconThemeData(color: colors.textSecondary, size: 22),
+
+    dividerTheme: DividerThemeData(
+      color: glass.dividerColor,
+      thickness: 0.5,
+      space: AppSpacing.large,
+    ),
+
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      modalBackgroundColor: Colors.transparent,
+      elevation: 0,
+      modalElevation: 0,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.xxLarge),
+        ),
+      ),
+    ),
+
+    dialogTheme: DialogThemeData(
+      backgroundColor: scheme.surfaceContainerHigh,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.xLarge),
+      ),
+      titleTextStyle: textTheme.titleLarge,
+      contentTextStyle: textTheme.bodyMedium,
+    ),
+
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: scheme.inverseSurface,
+      contentTextStyle: textTheme.bodyMedium?.copyWith(
+        color: colors.textInverse,
+      ),
+      behavior: SnackBarBehavior.floating,
+      elevation: 0,
+      insetPadding: const EdgeInsets.all(AppSpacing.medium),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.medium),
+      ),
+    ),
+
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: colors.primary,
+      circularTrackColor: colors.primary.withValues(alpha: 0.15),
+      linearTrackColor: colors.primary.withValues(alpha: 0.15),
+    ),
+
+    tooltipTheme: TooltipThemeData(
+      decoration: BoxDecoration(
+        color: scheme.inverseSurface.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(AppRadius.small),
+      ),
+      textStyle: textTheme.labelMedium?.copyWith(color: colors.textInverse),
+    ),
+
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: colors.primary,
+        textStyle: AppTypography.labelLarge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+        ),
+      ),
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary,
+        elevation: 0,
+        shadowColor: Colors.transparent,
+        minimumSize: const Size(0, 48),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
+        textStyle: AppTypography.labelLarge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+        ),
+      ),
+    ),
+
+    timePickerTheme: TimePickerThemeData(
+      backgroundColor: scheme.surfaceContainerHigh,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.xLarge),
+      ),
+      dayPeriodColor: colors.primary,
+      dayPeriodTextColor: colors.onPrimary,
+      dayPeriodBorderSide: BorderSide(color: colors.outline),
+      hourMinuteColor: colors.primarySoft,
+      hourMinuteTextColor: colors.onPrimarySoft,
+      hourMinuteTextStyle: AppTypography.numericMedium.copyWith(fontSize: 32),
+      dialBackgroundColor: scheme.surfaceContainerHighest,
+      dialHandColor: colors.primary,
+      dialTextColor: colors.textPrimary,
+      entryModeIconColor: colors.textSecondary,
+      helpTextStyle: textTheme.titleMedium,
+      cancelButtonStyle: TextButton.styleFrom(
+        foregroundColor: colors.textSecondary,
+        textStyle: AppTypography.labelLarge,
+      ),
+      confirmButtonStyle: TextButton.styleFrom(
+        foregroundColor: colors.primary,
+        textStyle: AppTypography.labelLarge,
+      ),
+      timeSelectorSeparatorColor:
+          WidgetStatePropertyAll<Color>(colors.textPrimary),
+    ),
+  );
+}
+
+ThemeData lightTheme = buildAppTheme(Brightness.light);
+ThemeData darkTheme = buildAppTheme(Brightness.dark);
+
+// ---------------------------------------------------------------------------
+// Compatibilidade com o tema anterior.
+//
+// Mantido para não quebrar imports existentes. Em código novo use
+// `context.colors` / `context.glass`.
+// ---------------------------------------------------------------------------
+
+const primaryColor = AppPalette.iris500;
+const accentColor = AppPalette.aqua500;
+const secondaryColor = AppPalette.aqua500;
+const tertiaryColor = AppPalette.solar500;
+const complementaryColor = AppPalette.nebula500;
+const textColor = AppPalette.ink900;
+const backgroundColor = AppPalette.dawnAlt;
+const errorColor = AppPalette.danger500;
 
 class LightAppColors {
-  static const primary = Color(0xFF3B82F6);
-  static const onPrimary = Color(0xFFFFFFFF);
-  static const primaryContainer = Color(0xFFE0F2FE);
-  static const onPrimaryContainer = Color(0xFF0369A1);
-  
-  static const secondary = Color(0xFF10B981);
-  static const onSecondary = Color(0xFFFFFFFF);
-  static const secondaryContainer = Color(0xFFD1FAE5);
-  static const onSecondaryContainer = Color(0xFF065F46);
-
-  static const tertiary = Color(0xFFF59E0B);
-  static const onTertiary = Color(0xFFFFFFFF);
-  static const tertiaryContainer = Color(0xFFFEF3C7);
-  static const onTertiaryContainer = Color(0xFF78350F);
-
-  static const text = Color(0xFF0F172A);
-  static const textMuted = Color(0xFF475569);
-  static const background = Color(0xFFF8FAFC);
-  static const error = Color(0xFFEF4444);
+  static const primary = AppPalette.iris500;
+  static const onPrimary = AppPalette.white;
+  static const primaryContainer = AppPalette.iris100;
+  static const onPrimaryContainer = AppPalette.iris800;
+  static const secondary = AppPalette.aqua600;
+  static const onSecondary = AppPalette.white;
+  static const secondaryContainer = AppPalette.aqua100;
+  static const onSecondaryContainer = AppPalette.aqua800;
+  static const tertiary = AppPalette.solar600;
+  static const onTertiary = AppPalette.white;
+  static const tertiaryContainer = AppPalette.solar100;
+  static const onTertiaryContainer = AppPalette.solar800;
+  static const text = AppPalette.ink900;
+  static const textMuted = AppPalette.ink600;
+  static const background = AppPalette.dawnAlt;
+  static const error = AppPalette.danger500;
 }
 
 class DarkAppColors {
-  static const primary = Color(0xFF60A5FA);
-  static const onPrimary = Color(0xFF0F172A);
-  static const primaryContainer = Color(0xFF1E293B);
-  static const onPrimaryContainer = Color(0xFFE2E8F0);
-
-  static const secondary = Color(0xFF34D399);
-  static const onSecondary = Color(0xFF064E3B);
-  static const secondaryContainer = Color(0xFF064E3B);
-  static const onSecondaryContainer = Color(0xFFA7F3D0);
-
-  static const tertiary = Color(0xFFFBBF24);
-  static const onTertiary = Color(0xFF78350F);
-  static const tertiaryContainer = Color(0xFF78350F);
-  static const onTertiaryContainer = Color(0xFFFDE68A);
-
-  static const text = Color(0xFFF8FAFC);
-  static const textMuted = Color(0xFF94A3B8);
-  static const background = Color(0xFF0F172A);
-  static const error = Color(0xFFF87171);
+  static const primary = AppPalette.iris300;
+  static const onPrimary = AppPalette.ink950;
+  static const primaryContainer = AppPalette.iris900;
+  static const onPrimaryContainer = AppPalette.iris100;
+  static const secondary = AppPalette.aqua300;
+  static const onSecondary = AppPalette.aqua900;
+  static const secondaryContainer = AppPalette.aqua900;
+  static const onSecondaryContainer = AppPalette.aqua100;
+  static const tertiary = AppPalette.solar300;
+  static const onTertiary = AppPalette.solar900;
+  static const tertiaryContainer = AppPalette.solar900;
+  static const onTertiaryContainer = AppPalette.solar100;
+  static const text = Color(0xFFF4F3FF);
+  static const textMuted = Color(0xFFA9A5C9);
+  static const background = AppPalette.night;
+  static const error = AppPalette.danger400;
 }
-
-const ColorScheme customLightScheme = ColorScheme(
-  brightness: Brightness.light,
-  surface: LightAppColors.background,
-  onSurface: LightAppColors.text,
-  onSurfaceVariant: LightAppColors.textMuted,
-  primary: LightAppColors.primary,
-  onPrimary: LightAppColors.onPrimary,
-  primaryContainer: LightAppColors.primaryContainer,
-  onPrimaryContainer: LightAppColors.onPrimaryContainer,
-  secondary: LightAppColors.secondary,
-  onSecondary: LightAppColors.onSecondary,
-  secondaryContainer: LightAppColors.secondaryContainer,
-  onSecondaryContainer: LightAppColors.onSecondaryContainer,
-  tertiary: LightAppColors.tertiary,
-  onTertiary: LightAppColors.onTertiary,
-  tertiaryContainer: LightAppColors.tertiaryContainer,
-  onTertiaryContainer: LightAppColors.onTertiaryContainer,
-  error: LightAppColors.error,
-  onError: LightAppColors.onPrimary,
-);
-
-const ColorScheme customDarkScheme = ColorScheme(
-  brightness: Brightness.dark,
-  surface: DarkAppColors.background,
-  onSurface: DarkAppColors.text,
-  onSurfaceVariant: DarkAppColors.textMuted,
-  primary: DarkAppColors.primary,
-  onPrimary: DarkAppColors.onPrimary,
-  primaryContainer: DarkAppColors.primaryContainer,
-  onPrimaryContainer: DarkAppColors.onPrimaryContainer,
-  secondary: DarkAppColors.secondary,
-  onSecondary: DarkAppColors.onSecondary,
-  secondaryContainer: DarkAppColors.secondaryContainer,
-  onSecondaryContainer: DarkAppColors.onSecondaryContainer,
-  tertiary: DarkAppColors.tertiary,
-  onTertiary: DarkAppColors.onTertiary,
-  tertiaryContainer: DarkAppColors.tertiaryContainer,
-  onTertiaryContainer: DarkAppColors.onTertiaryContainer,
-  error: DarkAppColors.error,
-  onError: DarkAppColors.onPrimary,
-);
-
-ThemeData lightTheme = ThemeData(
-  brightness: Brightness.light,
-  colorScheme: customLightScheme,
-  fontFamily: 'Inter',
-  scaffoldBackgroundColor: customLightScheme.surface,
-  appBarTheme: CustomAppBarTheme.lightTheme(),
-  bottomSheetTheme: BottomSheetTheme.lightTheme(),
-  timePickerTheme: TimePickerThemeData(
-    backgroundColor: LightAppColors.background,
-    dayPeriodColor: LightAppColors.primary,
-    dayPeriodTextColor: LightAppColors.onPrimary,
-    hourMinuteColor: LightAppColors.primaryContainer,
-    hourMinuteTextColor: LightAppColors.onPrimaryContainer,
-    dialHandColor: LightAppColors.primary,
-    cancelButtonStyle: ElevatedButton.styleFrom(
-      backgroundColor: Colors.transparent,
-      foregroundColor: LightAppColors.text,
-    ),
-    confirmButtonStyle: ElevatedButton.styleFrom(
-      backgroundColor: LightAppColors.secondary,
-      foregroundColor: LightAppColors.onSecondary,
-    ),
-    helpTextStyle: const TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w700,
-    ),
-    timeSelectorSeparatorColor: WidgetStatePropertyAll(LightAppColors.text),
-  ),
-);
-
-ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
-  colorScheme: customDarkScheme,
-  fontFamily: 'Inter',
-  scaffoldBackgroundColor: customDarkScheme.surface,
-  appBarTheme: CustomAppBarTheme.darkTheme(),
-  bottomSheetTheme: BottomSheetTheme.darkTheme(),
-  timePickerTheme: TimePickerThemeData(
-    backgroundColor: DarkAppColors.background,
-    dayPeriodColor: DarkAppColors.primary,
-    dayPeriodTextColor: DarkAppColors.onPrimary,
-    hourMinuteColor: DarkAppColors.primaryContainer,
-    hourMinuteTextColor: DarkAppColors.onPrimaryContainer,
-    dialHandColor: DarkAppColors.primary,
-    cancelButtonStyle: ElevatedButton.styleFrom(
-      backgroundColor: Colors.transparent,
-      foregroundColor: DarkAppColors.text,
-    ),
-    confirmButtonStyle: ElevatedButton.styleFrom(
-      backgroundColor: DarkAppColors.secondary,
-      foregroundColor: DarkAppColors.onSecondary,
-    ),
-    helpTextStyle: const TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w700,
-    ),
-    timeSelectorSeparatorColor: WidgetStatePropertyAll(DarkAppColors.text),
-  ),
-);

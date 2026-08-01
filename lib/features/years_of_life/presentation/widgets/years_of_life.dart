@@ -1,106 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
-import 'package:knowhen/features/years_of_life/presentation/widgets/life_clock.dart';
+import 'package:knowhen/core/functions/int_formatter.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/theme.dart';
+import 'package:knowhen/features/years_of_life/presentation/widgets/life_clock.dart';
 
 class YearsOfLifeSection extends StatelessWidget {
+  const YearsOfLifeSection({
+    super.key,
+    required this.birthDate,
+    required this.birthTime,
+  });
+
   final DateTime birthDate;
   final TimeOfDay? birthTime;
-
-  const YearsOfLifeSection({super.key, required this.birthDate, required this.birthTime});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final glass = context.glass;
+    final Duration lived = DateTime.now().difference(birthDate);
 
-    int getYearsOfLife() {
-      final now = DateTime.now();
-      final difference = now.difference(birthDate);
-      final age = difference.inDays ~/ 365;
-
-      return age;
-    }
-
-    int getMonthsOfLife() {
-      final now = DateTime.now();
-      final difference = now.difference(birthDate);
-      final age = difference.inDays ~/ 30;
-
-      return age;
-    }
-
-    int getDaysOfLife() {
-      final now = DateTime.now();
-      final difference = now.difference(birthDate);
-      final age = difference.inDays;
-
-      return age;
-    }
-
-    final int yearsOfLife = getYearsOfLife();
-    final int monthsOfLife = getMonthsOfLife();
-    final int daysOfLife = getDaysOfLife();
-
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(bottom: 100),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SecondaryH2(
-              l10n.yearsOfLifeTitle,
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
+    return AppSection(
+      eyebrow: 'Tempo de vida',
+      title: l10n.yearsOfLifeTitle,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GlassCard(
+            level: GlassLevel.regular,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: GlassStatTile(
+                    value: IntFormatter.format(lived.inDays ~/ 365),
+                    label: 'anos',
+                    gradient: glass.brandGradient,
+                    compact: true,
+                  ),
+                ),
+                _Divider(color: glass.dividerColor),
+                Expanded(
+                  child: GlassStatTile(
+                    value: IntFormatter.format(lived.inDays ~/ 30),
+                    label: 'meses',
+                    gradient: glass.coolGradient,
+                    compact: true,
+                  ),
+                ),
+                _Divider(color: glass.dividerColor),
+                Expanded(
+                  child: GlassStatTile(
+                    value: IntFormatter.format(lived.inDays),
+                    label: 'dias',
+                    gradient: glass.warmGradient,
+                    compact: true,
+                  ),
+                ),
+              ],
             ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              child: Column(
-                children: [
-                  PrimaryH3(
-                    l10n.yearsOfLife(yearsOfLife),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  PrimaryH3(
-                    l10n.monthsOfLife(monthsOfLife),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  PrimaryH3(
-                    l10n.daysOfLife(daysOfLife),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ],
+          ),
+          if (birthTime != null) ...[
+            const SizedBox(height: AppSpacing.medium),
+            Flexible(
+              child: LifeClock(
+                birthDateTime: birthDate,
+                birthTime: birthTime!,
               ),
             ),
-            birthTime != null
-                ? Column(
-                    children: [
-                      SecondaryH2(
-                        'E viveu:',
-                        textAlign: TextAlign.center,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      birthTime != null
-                          ? LifeClock(
-                              birthDateTime: birthDate,
-                              birthTime: birthTime!,
-                            )
-                          : Container()
-                    ],
-                  )
-                : Container(),
           ],
-        ),
+        ],
       ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  const _Divider({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      height: 52,
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xSmall),
+      color: color,
     );
   }
 }

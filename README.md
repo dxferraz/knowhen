@@ -56,6 +56,18 @@ Knowhen aims to be both informative and fun. By simply providing a birth date, u
 
 ---
 
+## Design System
+
+Knowhen ships with a parameterized Glassmorphism design system: design tokens (color,
+typography, spacing, radius, motion, glass), a `GlassTheme` theme extension and a component
+library — all under `lib/core/theme/`.
+
+- Study and reference: [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md)
+- Single import: `import 'package:knowhen/core/theme/theme.dart';`
+- Live styleguide: `DesignSystemPage` (`lib/core/theme/showcase/`)
+
+---
+
 ## Technologies Used
 
 - **Flutter & Dart** for cross-platform mobile development

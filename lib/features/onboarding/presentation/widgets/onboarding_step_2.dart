@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/assets/svg/widgets/report_svg.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/theme.dart';
+import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_layout.dart';
 
 class OnboardingStep2 extends StatelessWidget {
   const OnboardingStep2({super.key});
@@ -10,29 +11,11 @@ class OnboardingStep2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          PrimaryH1(
-            l10n.onboarding2Title,
-            color: Theme.of(context).colorScheme.secondary,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            width: 200,
-            height: 200,
-            child: ReportSvg(),
-          ),
-          PrimaryParagraphM(
-            l10n.onboarding2Description,
-            color: Theme.of(context).colorScheme.onSurface,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+    return OnboardingStepLayout(
+      illustration: const ReportSvg(),
+      title: l10n.onboarding2Title,
+      description: l10n.onboarding2Description,
+      accent: context.glass.coolGradient,
     );
   }
 }

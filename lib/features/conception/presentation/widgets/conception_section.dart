@@ -1,63 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
-import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/theme.dart';
 
 class ConceptionSection extends StatelessWidget {
-  final DateTime birthDate;
   const ConceptionSection({super.key, required this.birthDate});
 
-  String calculateConception(BuildContext context, DateTime birthDate) {
-    final l10n = AppLocalizations.of(context)!;
-    final conceptionDate = birthDate.subtract(Duration(days: 280));
-    final startRange = conceptionDate.subtract(Duration(days: 7));
-    final endRange = conceptionDate.add(Duration(days: 7));
+  final DateTime birthDate;
 
-    final dateFormat = DateFormat('dd/MM/yyyy');
-
-    return l10n.conceptionRange(dateFormat.format(startRange), dateFormat.format(endRange));
+  ({String start, String end}) _conceptionRange() {
+    final DateTime conception = birthDate.subtract(const Duration(days: 280));
+    final DateFormat format = DateFormat('dd/MM/yyyy');
+    return (
+      start: format.format(conception.subtract(const Duration(days: 7))),
+      end: format.format(conception.add(const Duration(days: 7))),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(bottom: 100, left: 20, right: 20),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
+    final glass = context.glass;
+    final range = _conceptionRange();
+
+    return AppSection(
+      eyebrow: 'Concepção',
+      title: 'Muito provavelmente, no período de:',
+      footer: const AppText.bodyLarge(
+        'Foi quando a cegonha te levou ao colo da sua mãe.',
+        align: TextAlign.center,
+      ),
+      child: GlassCard(
+        level: GlassLevel.regular,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SecondaryH2(
-              'Muito provavavelmente, no período de:',
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              child: Column(
-                children: [
-                  PrimaryH3(
-                    calculateConception(context, birthDate),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ],
+            // Duas datas empilhadas com um conector no meio leem melhor que
+            // "data a data" em uma linha só — e não quebram em telas estreitas.
+            _RangeBound(label: 'de', value: range.start, gradient: glass.coolGradient),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.small),
+              child: Icon(
+                Icons.more_vert_rounded,
+                size: 18,
+                color: context.colors.textTertiary,
               ),
             ),
-            SecondaryH2(
-              'Foi quando a cegonha te levou ao colo de sua mãe!',
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+            _RangeBound(label: 'até', value: range.end, gradient: glass.warmGradient),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _RangeBound extends StatelessWidget {
+  const _RangeBound({
+    required this.label,
+    required this.value,
+    required this.gradient,
+  });
+
+  final String label;
+  final String value;
+  final Gradient gradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppText.overline(label),
+        const SizedBox(height: AppSpacing.xSmall),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: AppText.numeric(value, gradient: gradient, maxLines: 1),
+        ),
+      ],
     );
   }
 }
