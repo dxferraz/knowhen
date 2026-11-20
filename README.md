@@ -82,6 +82,8 @@ Knowhen aims to be both informative and fun. By simply providing a birth date, u
 3. `make install` (clean, `flutter pub get`, `build_runner`).
 4. `make check` (analyze + tests).
 
+CI (GitHub Actions, `.github/workflows/ci.yml`) runs the same steps on every pull request and on pushes to `main`/`develop`: codegen, `make check` (coverage is shown in the job summary and uploaded as an artifact) and a debug APK build. It uses placeholder `.env`/`google-services.json`, never real secrets.
+
 ---
 
 ## Contributing
