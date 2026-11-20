@@ -7,6 +7,9 @@ version: 1.0.0+1
 
 environment:
   sdk: ^3.8.0
+  # Pinned to Flutter 3.38.x (see .fvmrc and README > Requirements).
+  # pub only enforces the lower bound; `make flutter-version` and CI enforce the rest.
+  flutter: ">=3.38.0 <3.39.0"
 
 dependencies:
   flutter:

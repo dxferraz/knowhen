@@ -1,8 +1,15 @@
+FLUTTER_VERSION := $(shell sed -n 's/.*"flutter": *"\([^"]*\)".*/\1/p' .fvmrc)
+FLUTTER_SERIES := $(basename $(FLUTTER_VERSION))
+
 install: ## Default rule, does everything needed to run the project
-install: clean deps gen
+install: flutter-version clean deps gen
 
 check: ## Run linter and tests (automatic before every push)
-check: lint test
+check: flutter-version lint test
+
+flutter-version: ## Check that the Flutter on PATH matches .fvmrc (same major.minor)
+	@flutter --version --machine | grep -q '"frameworkVersion": "$(FLUTTER_SERIES)\.' || \
+		(echo "Flutter $(FLUTTER_SERIES).x is required (.fvmrc: $(FLUTTER_VERSION)). Found:"; flutter --version | head -n 1; exit 1)
 
 clean: ## Clean everything
 	@echo "|-> Cleaning the project..."
@@ -44,4 +51,4 @@ help:
 		printf "%-30s %s\n" $$help_command $$help_info ; \
 	done
 
-.PHONY: clean install lint coverage test
+.PHONY: clean install lint coverage test flutter-version
