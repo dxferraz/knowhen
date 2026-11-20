@@ -6,6 +6,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 
 class AdService {
+  AdService(this._analytics);
+
+  final AnalyticsService _analytics;
   InterstitialAd? _interstitialAd;
   bool _isAdLoaded = false;
   final String interstitialAdUnitId = kReleaseMode
@@ -22,7 +25,7 @@ class AdService {
         onAdLoaded: (InterstitialAd ad) {
           _interstitialAd = ad;
           _isAdLoaded = true;
-          AnalyticsService.instance.logAdLoaded();
+          _analytics.logAdLoaded();
           completer.complete();
         },
         onAdFailedToLoad: (LoadAdError error) {
@@ -45,7 +48,7 @@ class AdService {
           ad.dispose();
           _isAdLoaded = false;
           await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-          AnalyticsService.instance.logAdDismissed();
+          _analytics.logAdDismissed();
           loadAd();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) async {
@@ -56,7 +59,7 @@ class AdService {
         },
       );
 
-      AnalyticsService.instance.logAdShown();
+      _analytics.logAdShown();
       _interstitialAd!.show();
       _interstitialAd = null;
       _isAdLoaded = false;

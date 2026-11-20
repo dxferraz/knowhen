@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:knowhen/core/theme/widgets/custom_icon_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
-import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
@@ -36,10 +35,10 @@ class _SummaryPageState extends State<SummaryPage> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
-    adService = AdService();
+    adService = context.read<AdService>();
 
     final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
-    AnalyticsService.instance.logSummaryViewed(age);
+    context.read<AnalyticsService>().logSummaryViewed(age);
 
     adService.loadAd().then((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -70,7 +69,7 @@ class _SummaryPageState extends State<SummaryPage> {
         default:
           sectionName = 'unknown';
       }
-      AnalyticsService.instance.logSummarySectionViewed(sectionName, index);
+      context.read<AnalyticsService>().logSummarySectionViewed(sectionName, index);
     }
   }
 
@@ -108,7 +107,7 @@ class _SummaryPageState extends State<SummaryPage> {
         surfaceTintColor: Colors.transparent,
       ),
       body: BlocProvider(
-        create: (context) => SummaryBloc(HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance))
+        create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>())
           ..add(
             GetSummary(birthDate: widget.birthDate),
           ),

@@ -8,6 +8,7 @@ import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:provider/provider.dart';
 
 class BirthdatePage extends StatefulWidget {
   const BirthdatePage({super.key});
@@ -143,7 +144,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
                         if (context.mounted) {
                           final age = DateTime.now().difference(birthDate!).inDays ~/ 365;
                           final hasBirthTime = _birthTime != null;
-                          AnalyticsService.instance.logBirthdateSubmitted(
+                          context.read<AnalyticsService>().logBirthdateSubmitted(
                             age: age,
                             hasBirthTime: hasBirthTime,
                           );

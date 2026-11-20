@@ -2,10 +2,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
 class AnalyticsService {
-  AnalyticsService._internal();
-  static final AnalyticsService instance = AnalyticsService._internal();
+  AnalyticsService(this._analytics);
 
-  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  final FirebaseAnalytics _analytics;
 
   /// Helper to print debug information to console
   void _printDebug(String eventName, [Map<String, dynamic>? parameters]) {
