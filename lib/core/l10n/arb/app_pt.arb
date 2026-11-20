@@ -8,7 +8,7 @@
   "@confirm": {},
   "skip": "Pular",
   "@skip": {},
-  "next": "Próximo",
+  "next": "Próximo",
   "@next": {},
   "start": "Começar",
   "@start": {},
@@ -149,5 +149,17 @@
     "placeholders": {
       "seconds": {}
     }
-  }
+  },
+  "birthTimeQuestion": "Você sabe a hora exata do seu nascimento?",
+  "@birthTimeQuestion": {},
+  "unknownBirthTime": "Não sei",
+  "@unknownBirthTime": {},
+  "conceptionTitle": "Muito provavelmente, no período de:",
+  "@conceptionTitle": {},
+  "conceptionFooter": "Foi quando a cegonha te levou ao colo de sua mãe!",
+  "@conceptionFooter": {},
+  "moonPhaseTitle": "Você nasceu na:",
+  "@moonPhaseTitle": {},
+  "livedTitle": "E viveu:",
+  "@livedTitle": {}
 }

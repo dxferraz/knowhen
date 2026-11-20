@@ -20,6 +20,8 @@ class ConceptionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -30,7 +32,7 @@ class ConceptionSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SecondaryH2(
-              'Muito provavavelmente, no período de:',
+              l10n.conceptionTitle,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -51,7 +53,7 @@ class ConceptionSection extends StatelessWidget {
               ),
             ),
             SecondaryH2(
-              'Foi quando a cegonha te levou ao colo de sua mãe!',
+              l10n.conceptionFooter,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),

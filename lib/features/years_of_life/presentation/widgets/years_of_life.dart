@@ -85,7 +85,7 @@ class YearsOfLifeSection extends StatelessWidget {
                 ? Column(
                     children: [
                       SecondaryH2(
-                        'E viveu:',
+                        l10n.livedTitle,
                         textAlign: TextAlign.center,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
