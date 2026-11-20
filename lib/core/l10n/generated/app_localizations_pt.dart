@@ -98,6 +98,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noImageForFact => 'Sem imagem para o fato';
 
   @override
+  String get noHistoricalFact =>
+      'Ainda não temos um fato histórico para o mês do seu nascimento. Volte em breve!';
+
+  @override
+  String get historicalFactLoadError =>
+      'Não foi possível carregar o fato histórico agora. Verifique sua conexão e tente novamente mais tarde.';
+
+  @override
   String get aiGeneratedImage => 'Imagem gerada por I.A.';
 
   @override

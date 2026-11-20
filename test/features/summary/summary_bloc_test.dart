@@ -1,0 +1,83 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:knowhen/core/functions/get_moon_phase.dart';
+import 'package:knowhen/features/brazil_curiosity/data/dtos/brazil_curiosity_dto.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
+import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
+
+class FakeBrazilCuriositiesRepository implements BrazilCuriositiesRepository {
+  FakeBrazilCuriositiesRepository({this.curiosity, this.curiosityError, this.imageUrl = '', this.imageError});
+
+  final BrazilCuriosityDTO? curiosity;
+  final Object? curiosityError;
+  final String imageUrl;
+  final Object? imageError;
+  var imageRequests = 0;
+
+  @override
+  Future<BrazilCuriosityDTO?> getBrazilCuriosity(DateTime birthDate) async {
+    if (curiosityError != null) throw curiosityError!;
+    return curiosity;
+  }
+
+  @override
+  Future<String> getCuriosityImage(String year, String month) async {
+    imageRequests++;
+    if (imageError != null) throw imageError!;
+    return imageUrl;
+  }
+}
+
+void main() {
+  final birthDate = DateTime(2000, 1, 21);
+  final curiosity = BrazilCuriosityDTO(fact: 'Um fato. Outro fato', imageUrl: '', month: '1', year: '2000');
+
+  Future<SummaryLoaded> loadSummary(FakeBrazilCuriositiesRepository repository) async {
+    final bloc = SummaryBloc(repository);
+    final states = bloc.stream.take(2).toList();
+    bloc.add(GetSummary(birthDate: birthDate));
+
+    final emitted = await states;
+    await bloc.close();
+    expect(emitted.first, isA<SummaryLoading>());
+    expect(emitted.last, isA<SummaryLoaded>());
+    return emitted.last as SummaryLoaded;
+  }
+
+  test('carrega todas as seções quando há curiosidade e imagem', () async {
+    final state = await loadSummary(FakeBrazilCuriositiesRepository(curiosity: curiosity, imageUrl: 'https://example.com/fato.png'));
+
+    expect(state.moonPhase, getMoonPhase(birthDate));
+    expect(state.brazilCuriosity?.fact, 'Um fato. Outro fato');
+    expect(state.brazilCuriosityFailed, isFalse);
+    expect(state.curiosityImage, 'https://example.com/fato.png');
+  });
+
+  test('sem curiosidade para o mês/ano o resumo carrega com a seção vazia e não gera imagem', () async {
+    final repository = FakeBrazilCuriositiesRepository();
+    final state = await loadSummary(repository);
+
+    expect(state.moonPhase.phaseName, 'Lua cheia');
+    expect(state.brazilCuriosity, isNull);
+    expect(state.brazilCuriosityFailed, isFalse);
+    expect(state.curiosityImage, isEmpty);
+    expect(repository.imageRequests, 0);
+  });
+
+  test('erro ao buscar a curiosidade não derruba as outras seções', () async {
+    final state = await loadSummary(FakeBrazilCuriositiesRepository(curiosityError: Exception('sem rede')));
+
+    expect(state.moonPhase.phaseName, 'Lua cheia');
+    expect(state.brazilCuriosity, isNull);
+    expect(state.brazilCuriosityFailed, isTrue);
+  });
+
+  test('erro ao gerar a imagem mantém a curiosidade, sem imagem', () async {
+    final state = await loadSummary(FakeBrazilCuriositiesRepository(curiosity: curiosity, imageError: Exception('fal.ai fora do ar')));
+
+    expect(state.brazilCuriosity?.fact, 'Um fato. Outro fato');
+    expect(state.brazilCuriosityFailed, isFalse);
+    expect(state.curiosityImage, isEmpty);
+  });
+}

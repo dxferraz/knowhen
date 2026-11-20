@@ -13,9 +13,10 @@ class HistoricalFactsRepositoryImpl implements BrazilCuriositiesRepository {
   HistoricalFactsRepositoryImpl({required this.firestore});
 
   @override
-  Future<BrazilCuriosityDTO> getBrazilCuriosity(DateTime birthDate) async {
+  Future<BrazilCuriosityDTO?> getBrazilCuriosity(DateTime birthDate) async {
     final result = await firestore.collection('brasil-curiosities').where('year', isEqualTo: birthDate.year.toString()).where('month', isEqualTo: birthDate.month.toString()).get();
-    return BrazilCuriosityDTO.fromJson(result.docs.first.data());
+    final doc = result.docs.firstOrNull;
+    return doc == null ? null : BrazilCuriosityDTO.fromJson(doc.data());
   }
 
   @override
@@ -40,7 +41,9 @@ class HistoricalFactsRepositoryImpl implements BrazilCuriositiesRepository {
       String downloadUrl = await storageRef.getDownloadURL();
       return downloadUrl;
     } else {
-      final fact = await firestore.collection(firestorePath).where('year', isEqualTo: year.toString()).where('month', isEqualTo: month.toString()).get().then((value) => BrazilCuriosityDTO.fromJson(value.docs.first.data()));
+      final factDoc = await firestore.collection(firestorePath).where('year', isEqualTo: year.toString()).where('month', isEqualTo: month.toString()).get().then((value) => value.docs.firstOrNull);
+      if (factDoc == null) return '';
+      final fact = BrazilCuriosityDTO.fromJson(factDoc.data());
 
       final fal = FalClient.withCredentials(Env.falAiApiKey);
 
@@ -67,7 +70,7 @@ class HistoricalFactsRepositoryImpl implements BrazilCuriositiesRepository {
 
       final imageUrl = await uploadRef.getDownloadURL();
 
-      await firestore.collection(firestorePath).where('year', isEqualTo: year).where('month', isEqualTo: month).get().then((value) => value.docs.first.reference.update({'imageUrl': imageUrl}));
+      await factDoc.reference.update({'imageUrl': imageUrl});
 
       return imageUrl;
     }

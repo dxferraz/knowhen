@@ -43,6 +43,11 @@ class MoonPhaseSection extends StatelessWidget {
                           ? child
                           : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimaryContainer);
                     },
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.nightlight_round,
+                      size: MediaQuery.of(context).size.width * 0.3,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                     width: MediaQuery.of(context).size.width * 0.4,
                   ),
                   const SizedBox(height: 10),
