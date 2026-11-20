@@ -118,7 +118,11 @@ class _SummaryPageState extends State<SummaryPage> {
                 YearsOfLifeSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
                 calculateAge(widget.birthDate, DateTime.now()) > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
                 MoonPhaseSection(moonPhase: state.moonPhase),
-                BrazilCuriositySection(imageUrl: state.curiosityImage, curiosity: state.brazilCuriosity.fact),
+                BrazilCuriositySection(
+                  imageUrl: state.curiosityImage,
+                  curiosity: state.brazilCuriosity?.fact,
+                  loadFailed: state.brazilCuriosityFailed,
+                ),
               ];
               return Stack(
                 children: [
@@ -164,9 +168,6 @@ class _SummaryPageState extends State<SummaryPage> {
                   ),
                 ],
               );
-            }
-            if (state is SummaryError) {
-              return Center(child: Text(state.message));
             }
             return Container();
           },
