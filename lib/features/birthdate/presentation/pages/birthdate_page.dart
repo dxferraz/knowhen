@@ -72,7 +72,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
               const SizedBox(height: 20),
               SizedBox(height: 20),
               DatePicker(
-                maxDate: DateTime(2024, 12, 31),
+                maxDate: DateUtils.dateOnly(DateTime.now()),
                 minDate: DateTime(1925, 1, 1),
                 initialPickerType: PickerType.years,
                 selectedDate: birthDate,
