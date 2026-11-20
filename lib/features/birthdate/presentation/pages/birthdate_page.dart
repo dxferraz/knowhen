@@ -28,12 +28,13 @@ class _BirthdatePageState extends State<BirthdatePage> {
   }
 
   Future<void> _selecionarHora(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final TimeOfDay? horaEscolhida = await showTimePicker(
       context: context,
       initialTime: _birthTime ?? TimeOfDay(hour: 12, minute: 00),
-      helpText: 'Você sabe a hora exata do seu nascimento?',
-      cancelText: 'Não sei',
-      confirmText: 'Confirmar',
+      helpText: l10n.birthTimeQuestion,
+      cancelText: l10n.unknownBirthTime,
+      confirmText: l10n.confirm,
       initialEntryMode: TimePickerEntryMode.dialOnly,
       routeSettings: RouteSettings(name: '/summary'),
       useRootNavigator: true,
