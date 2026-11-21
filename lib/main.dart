@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:knowhen/core/config/firebase_options.dart';
+import 'package:knowhen/core/services/ad_service.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
 import 'package:knowhen/core/theme/app_theme.dart';
 import 'package:knowhen/core/theme/theme_provider.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
+import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 import 'package:knowhen/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:knowhen/core/services/firebase_service.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +30,18 @@ Future<void> main() async {
   MobileAds.instance.updateRequestConfiguration(configuration);
   final prefs = await SharedPreferences.getInstance();
   final showOnboarding = prefs.getBool('showOnboarding') ?? true;
+  final analytics = AnalyticsService(FirebaseAnalytics.instance);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        Provider<AnalyticsService>.value(value: analytics),
+        Provider<AdService>(create: (context) => AdService(analytics)),
+        Provider<BrazilCuriositiesRepository>(
+          create: (context) => HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance),
+        ),
+        ChangeNotifierProvider(create: (context) => ThemeProvider(analytics)),
+      ],
       child: MyApp(showOnboarding: showOnboarding),
     ),
   );
