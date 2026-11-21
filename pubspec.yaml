@@ -39,6 +39,7 @@ dependencies:
   google_mobile_ads: ^8.0.0
   equatable: ^2.0.7
   hexcolor: ^3.0.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

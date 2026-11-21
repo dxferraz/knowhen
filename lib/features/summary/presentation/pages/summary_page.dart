@@ -6,10 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:knowhen/core/theme/widgets/custom_icon_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
+import 'package:knowhen/features/birth_song/data/repositories/birth_song_repository_impl.dart';
+import 'package:knowhen/features/birth_song/presentation/widgets/birth_song_section.dart';
 import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
+import 'package:knowhen/features/summary/presentation/summary_section_name.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
@@ -55,23 +58,7 @@ class _SummaryPageState extends State<SummaryPage> {
       _loggedSections.add(index);
       final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
       final isOver18 = age > 18;
-      String sectionName;
-      switch (index) {
-        case 0:
-          sectionName = 'years_of_life';
-          break;
-        case 1:
-          sectionName = isOver18 ? 'conception' : 'conception_hidden';
-          break;
-        case 2:
-          sectionName = 'moon_phase';
-          break;
-        case 3:
-          sectionName = 'brazil_curiosity';
-          break;
-        default:
-          sectionName = 'unknown';
-      }
+      final sectionName = summarySectionName(index, isOver18: isOver18);
       AnalyticsService.instance.logSummarySectionViewed(sectionName, index);
     }
   }
@@ -103,31 +90,43 @@ class _SummaryPageState extends State<SummaryPage> {
           color: Theme.of(context).colorScheme.onSurface,
         ),
         centerTitle: true,
-        actions: [
-          ThemeButton(),
-        ],
+        actions: [ThemeButton()],
         backgroundColor: Theme.of(context).colorScheme.surface,
         surfaceTintColor: Colors.transparent,
       ),
       body: BlocProvider(
-        create: (context) => SummaryBloc(HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance))
-          ..add(
-            GetSummary(birthDate: widget.birthDate),
-          ),
+        create: (context) => SummaryBloc(
+          HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance),
+          BirthSongRepositoryImpl(firestore: FirebaseFirestore.instance),
+        )..add(GetSummary(birthDate: widget.birthDate)),
         child: BlocBuilder<SummaryBloc, SummaryState>(
           builder: (context, state) {
             if (state is SummaryLoading) {
-              return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant));
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              );
             }
             if (state is SummaryLoaded) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 _logSectionIfNeeded(0);
               });
               final List<Widget> sections = [
-                YearsOfLifeSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
-                getUserAge() > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
+                YearsOfLifeSection(
+                  birthDate: widget.birthDate,
+                  birthTime: widget.birthTime,
+                ),
+                getUserAge() > 18
+                    ? ConceptionSection(birthDate: widget.birthDate)
+                    : Container(),
                 MoonPhaseSection(moonPhase: state.moonPhase),
-                BrazilCuriositySection(imageUrl: state.curiosityImage, curiosity: state.brazilCuriosity.fact),
+                BrazilCuriositySection(
+                  imageUrl: state.curiosityImage,
+                  curiosity: state.brazilCuriosity.fact,
+                ),
+                if (state.birthSong != null)
+                  BirthSongSection(song: state.birthSong!),
               ];
               return Stack(
                 children: [
@@ -161,12 +160,20 @@ class _SummaryPageState extends State<SummaryPage> {
                       effect: WormEffect(
                         dotHeight: 10,
                         dotWidth: 10,
-                        dotColor: Theme.of(context).colorScheme.onSurface.withAlpha(150),
-                        activeDotColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                        dotColor: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withAlpha(150),
+                        activeDotColor: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant,
                       ),
                       onDotClicked: (index) {
                         setState(() {
-                          _controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                          _controller.animateToPage(
+                            index,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.ease,
+                          );
                         });
                       },
                     ),
