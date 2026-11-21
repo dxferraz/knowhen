@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:knowhen/core/theme/app_theme.dart';
+import 'package:knowhen/core/theme/tokens/kn_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 
@@ -22,14 +22,14 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Sem escolha salva, segue o tema do sistema (inclusive quando ele muda).
   Future<void> _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('isDarkMode')) {
       bool isDark = prefs.getBool('isDarkMode') ?? false;
       _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     } else {
-      var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
-      _themeMode = brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+      _themeMode = ThemeMode.system;
     }
     _updateSystemUI();
     notifyListeners();
@@ -41,20 +41,22 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   void _updateSystemUI() {
-    SystemUiOverlayStyle systemUiOverlayStyle = _themeMode == ThemeMode.dark
-        ? SystemUiOverlayStyle.light.copyWith(
-            statusBarColor: DarkAppColors.background,
-            statusBarIconBrightness: Brightness.light,
-            systemNavigationBarIconBrightness: Brightness.light,
-            systemNavigationBarColor: DarkAppColors.background,
-          )
-        : SystemUiOverlayStyle.dark.copyWith(
-            statusBarColor: LightAppColors.background,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.dark,
-            systemNavigationBarColor: LightAppColors.background,
-          );
+    final dark = switch (_themeMode) {
+      ThemeMode.dark => true,
+      ThemeMode.light => false,
+      ThemeMode.system => SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark,
+    };
+    final colors = dark ? KnColors.night : KnColors.dawn;
+    final style = dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
 
-    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+    SystemChrome.setSystemUIOverlayStyle(
+      style.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: dark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: dark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: colors.bg,
+        systemNavigationBarIconBrightness: dark ? Brightness.light : Brightness.dark,
+      ),
+    );
   }
 }
