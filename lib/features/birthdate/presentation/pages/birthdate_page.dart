@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +9,6 @@ import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 
-@RoutePage()
 class BirthdatePage extends StatefulWidget {
   const BirthdatePage({super.key});
 

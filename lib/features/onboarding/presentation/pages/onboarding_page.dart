@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/theme/widgets/app_logo.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
@@ -13,7 +12,6 @@ import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 
 
-@RoutePage()
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
 
