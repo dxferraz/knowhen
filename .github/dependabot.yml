@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Admin scripts (Node) that populate Firestore/Storage. Not shipped with the app.
+  - package-ecosystem: "npm"
+    directory: "/firebase_scripts"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    groups:
+      firebase-scripts:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+
+  # pub is intentionally not enabled: the app is pinned to Flutter 3.38.x and
+  # Dependabot resolves with the latest stable Flutter, which produces lockfiles
+  # that do not build on 3.38. Enable it after the Flutter upgrade.
