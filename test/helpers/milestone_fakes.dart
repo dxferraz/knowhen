@@ -2,11 +2,19 @@ import 'package:knowhen/core/services/analytics_service.dart';
 import 'package:knowhen/core/services/milestone_notifier.dart';
 
 class FakeMilestoneNotifier implements MilestoneNotifier {
-  FakeMilestoneNotifier({this.permission = false, this.grantsOnRequest = true, this.scheduleError});
+  FakeMilestoneNotifier({
+    this.permission = false,
+    this.grantsOnRequest = true,
+    this.scheduleError,
+    this.initializeError,
+    this.launchError,
+  });
 
   bool permission;
   bool grantsOnRequest;
   Object? scheduleError;
+  Object? initializeError;
+  Object? launchError;
 
   int permissionRequests = 0;
   int settingsOpened = 0;
@@ -16,10 +24,16 @@ class FakeMilestoneNotifier implements MilestoneNotifier {
   String? launch;
 
   @override
-  Future<void> initialize({required void Function(String? payload) onSelected}) async => this.onSelected = onSelected;
+  Future<void> initialize({required void Function(String? payload) onSelected}) async {
+    if (initializeError != null) throw initializeError!;
+    this.onSelected = onSelected;
+  }
 
   @override
-  Future<String?> launchPayload() async => launch;
+  Future<String?> launchPayload() async {
+    if (launchError != null) throw launchError!;
+    return launch;
+  }
 
   @override
   Future<bool> hasPermission() async => permission;
