@@ -153,5 +153,123 @@
     "placeholders": {
       "seconds": {}
     }
+  },
+  "shareButtonLabel": "Compartilhar",
+  "@shareButtonLabel": {},
+  "shareSheetTitle": "Prévia do card",
+  "@shareSheetTitle": {},
+  "shareHideFullDate": "Esconder data completa",
+  "@shareHideFullDate": {},
+  "shareHideFullDateHint": "Mostra só o mês e o ano do nascimento no card.",
+  "@shareHideFullDateHint": {},
+  "shareAction": "Compartilhar card",
+  "@shareAction": {},
+  "shareGenerating": "Gerando card…",
+  "@shareGenerating": {},
+  "shareError": "Não foi possível gerar o card agora. Tente novamente.",
+  "@shareError": {},
+  "shareMessage": "Descubra o seu no Knowhen: {url}",
+  "@shareMessage": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "https://knowhen.app"
+      }
+    }
+  },
+  "shareWatermark": "Descubra o seu no Knowhen",
+  "@shareWatermark": {},
+  "shareSummaryTitle": "Meu Knowhen",
+  "@shareSummaryTitle": {},
+  "shareYearsTitle": "Eu já vivi",
+  "@shareYearsTitle": {},
+  "shareYearsHighlight": "{years, plural, =1{1 ano} other{{years} anos}}",
+  "@shareYearsHighlight": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "shareYearsDetail": "{months, plural, =1{1 mês} other{{months} meses}} e {days, plural, =1{1 dia} other{{days} dias}} de vida",
+  "@shareYearsDetail": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "shareYearsDetailHidden": "{months, plural, =1{1 mês} other{{months} meses}} de vida",
+  "@shareYearsDetailHidden": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "shareConceptionTitle": "Fui concebido por volta de",
+  "@shareConceptionTitle": {},
+  "shareMoonTitle": "Eu nasci na",
+  "@shareMoonTitle": {},
+  "shareMoonLine": "Nasci na {phase}",
+  "@shareMoonLine": {
+    "placeholders": {
+      "phase": {
+        "type": "String",
+        "example": "Lua cheia"
+      }
+    }
+  },
+  "shareConceptionLine": "Concebido(a) por volta de {when}",
+  "@shareConceptionLine": {
+    "placeholders": {
+      "when": {
+        "type": "String",
+        "example": "junho de 1990"
+      }
+    }
+  },
+  "shareBirthFull": "Nascimento: {date}",
+  "@shareBirthFull": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "shareBirthMonthYear": "Nascimento: {date}",
+  "@shareBirthMonthYear": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMM"
+      }
+    }
+  },
+  "shareMonthYear": "{date}",
+  "@shareMonthYear": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMM"
+      }
+    }
+  },
+  "shareConceptionRange": "{startRange} a {endRange}",
+  "@shareConceptionRange": {
+    "placeholders": {
+      "startRange": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "endRange": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
   }
 }

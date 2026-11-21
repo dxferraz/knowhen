@@ -85,6 +85,24 @@ class AnalyticsService {
     );
   }
 
+  /// Logs when the user taps a share button (opens the card preview)
+  Future<void> logShareTapped(String sectionName) async {
+    _printDebug('share_tapped', {'section_name': sectionName});
+    await _analytics.logEvent(
+      name: 'share_tapped',
+      parameters: {'section_name': sectionName},
+    );
+  }
+
+  /// Logs when the user finishes sharing a card (the native share sheet was not dismissed)
+  Future<void> logShareCompleted(String sectionName) async {
+    _printDebug('share_completed', {'section_name': sectionName});
+    await _analytics.logEvent(
+      name: 'share_completed',
+      parameters: {'section_name': sectionName},
+    );
+  }
+
   /// Logs when the user changes the application theme
   Future<void> logThemeChanged(String themeMode) async {
     _printDebug('theme_changed', {'theme_mode': themeMode});
