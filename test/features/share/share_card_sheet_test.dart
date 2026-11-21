@@ -12,7 +12,7 @@ import 'package:knowhen/features/share/presentation/widgets/share_card_sheet.dar
 import 'package:share_plus/share_plus.dart';
 
 void main() {
-  const moon = MoonPhase(phaseName: 'Lua cheia', imageUrl: '', description: 'A Lua está totalmente visível.', influence: '...');
+  const moon = MoonPhase(type: MoonPhaseType.fullMoon, imageUrl: '');
   final data = ShareCardData(birthDate: DateTime(1990, 3, 15), now: DateTime(2026, 11, 21), moonPhase: moon);
 
   Future<void> pumpSheet(

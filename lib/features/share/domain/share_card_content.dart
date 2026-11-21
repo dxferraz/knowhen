@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/functions/get_moon_phase.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/features/moon_phase/presentation/moon_phase_l10n.dart';
 import 'package:knowhen/features/share/domain/share_section.dart';
 
 /// Dados do resumo necessários para montar os cards.
@@ -81,8 +82,8 @@ class ShareCardContent {
         return ShareCardContent(
           section: section,
           title: l10n.shareMoonTitle,
-          highlight: data.moonPhase.phaseName,
-          details: [data.moonPhase.description],
+          highlight: l10n.moonPhaseName(data.moonPhase.type),
+          details: [l10n.moonPhaseDescription(data.moonPhase.type)],
           birthLabel: birthLabel,
           icon: Icons.nightlight_round,
           imageUrl: data.moonPhase.imageUrl,
@@ -105,7 +106,7 @@ class ShareCardContent {
           highlight: l10n.shareYearsHighlight(years),
           details: [
             yearsDetail,
-            l10n.shareMoonLine(data.moonPhase.phaseName),
+            l10n.shareMoonLine(l10n.moonPhaseName(data.moonPhase.type)),
             if (data.showsConception) l10n.shareConceptionLine(conception),
           ],
           birthLabel: birthLabel,

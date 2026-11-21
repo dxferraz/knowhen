@@ -9,12 +9,7 @@ void main() {
   setUpAll(() => initializeDateFormatting('pt'));
 
   final l10n = AppLocalizationsPt();
-  const moon = MoonPhase(
-    phaseName: 'Lua cheia',
-    imageUrl: 'https://example.com/lua.png',
-    description: 'A Lua está totalmente visível.',
-    influence: '...',
-  );
+  const moon = MoonPhase(type: MoonPhaseType.fullMoon, imageUrl: 'https://example.com/lua.png');
 
   ShareCardData data({DateTime? birth, String? curiosity = 'Primeira parte. Segunda parte', String image = ''}) => ShareCardData(
     birthDate: birth ?? DateTime(1990, 3, 15),
@@ -78,7 +73,7 @@ void main() {
     final content = build(ShareSection.moonPhase);
 
     expect(content.highlight, 'Lua cheia');
-    expect(content.details, ['A Lua está totalmente visível.']);
+    expect(content.details, [l10n.moonPhaseFullMoonDescription]);
     expect(content.imageUrl, 'https://example.com/lua.png');
   });
 
