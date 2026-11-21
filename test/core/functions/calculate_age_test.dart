@@ -75,4 +75,18 @@ void main() {
       expect(calculateDaysOfLife(DateTime(2026, 11, 21), DateTime(2026, 11, 20)), 0);
     });
   });
+
+  group('shouldShowConception', () {
+    final birthDate = DateTime(2000, 6, 10);
+
+    test('esconde aos 18 anos completos e antes', () {
+      expect(shouldShowConception(birthDate, DateTime(2018, 6, 9)), isFalse);
+      expect(shouldShowConception(birthDate, DateTime(2018, 6, 10)), isFalse);
+      expect(shouldShowConception(birthDate, DateTime(2019, 6, 9)), isFalse);
+    });
+
+    test('mostra a partir dos 19 anos completos', () {
+      expect(shouldShowConception(birthDate, DateTime(2019, 6, 10)), isTrue);
+    });
+  });
 }

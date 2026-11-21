@@ -489,6 +489,138 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Não foi possível entrar no app agora. Verifique sua conexão e tente novamente.'**
   String get authSignInError;
+
+  /// No description provided for @shareButtonLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar'**
+  String get shareButtonLabel;
+
+  /// No description provided for @shareSheetTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prévia do card'**
+  String get shareSheetTitle;
+
+  /// No description provided for @shareHideFullDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esconder data completa'**
+  String get shareHideFullDate;
+
+  /// No description provided for @shareHideFullDateHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mostra só o mês e o ano do nascimento no card.'**
+  String get shareHideFullDateHint;
+
+  /// No description provided for @shareAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar card'**
+  String get shareAction;
+
+  /// No description provided for @shareGenerating.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerando card…'**
+  String get shareGenerating;
+
+  /// No description provided for @shareError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível gerar o card agora. Tente novamente.'**
+  String get shareError;
+
+  /// No description provided for @shareMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descubra o seu no Knowhen: {url}'**
+  String shareMessage(String url);
+
+  /// No description provided for @shareWatermark.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descubra o seu no Knowhen'**
+  String get shareWatermark;
+
+  /// No description provided for @shareSummaryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meu Knowhen'**
+  String get shareSummaryTitle;
+
+  /// No description provided for @shareYearsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Eu já vivi'**
+  String get shareYearsTitle;
+
+  /// No description provided for @shareYearsHighlight.
+  ///
+  /// In pt, this message translates to:
+  /// **'{years, plural, =1{1 ano} other{{years} anos}}'**
+  String shareYearsHighlight(int years);
+
+  /// No description provided for @shareYearsDetail.
+  ///
+  /// In pt, this message translates to:
+  /// **'{months, plural, =1{1 mês} other{{months} meses}} e {days, plural, =1{1 dia} other{{days} dias}} de vida'**
+  String shareYearsDetail(int months, int days);
+
+  /// No description provided for @shareYearsDetailHidden.
+  ///
+  /// In pt, this message translates to:
+  /// **'{months, plural, =1{1 mês} other{{months} meses}} de vida'**
+  String shareYearsDetailHidden(int months);
+
+  /// No description provided for @shareConceptionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fui concebido por volta de'**
+  String get shareConceptionTitle;
+
+  /// No description provided for @shareMoonTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Eu nasci na'**
+  String get shareMoonTitle;
+
+  /// No description provided for @shareMoonLine.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nasci na {phase}'**
+  String shareMoonLine(String phase);
+
+  /// No description provided for @shareConceptionLine.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concebido(a) por volta de {when}'**
+  String shareConceptionLine(String when);
+
+  /// No description provided for @shareBirthFull.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nascimento: {date}'**
+  String shareBirthFull(DateTime date);
+
+  /// No description provided for @shareBirthMonthYear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nascimento: {date}'**
+  String shareBirthMonthYear(DateTime date);
+
+  /// No description provided for @shareMonthYear.
+  ///
+  /// In pt, this message translates to:
+  /// **'{date}'**
+  String shareMonthYear(DateTime date);
+
+  /// No description provided for @shareConceptionRange.
+  ///
+  /// In pt, this message translates to:
+  /// **'{startRange} a {endRange}'**
+  String shareConceptionRange(DateTime startRange, DateTime endRange);
 }
 
 class _AppLocalizationsDelegate
