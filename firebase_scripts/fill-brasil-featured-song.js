@@ -3,10 +3,17 @@ const OpenAIApi = require("openai").default;
 
 require("dotenv").config();
 
-const serviceAccount = require("./serviceAccountKey.json");
+// Credencial lida de GOOGLE_APPLICATION_CREDENTIALS (caminho para o JSON da
+// service account, fora do repositório). Veja firebase_scripts/README.md.
+if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  console.error(
+    "GOOGLE_APPLICATION_CREDENTIALS não definido. Veja firebase_scripts/README.md."
+  );
+  process.exit(1);
+}
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.applicationDefault(),
 });
 
 const db = admin.firestore();
