@@ -21,3 +21,6 @@ int calculateDaysOfLife(DateTime birthDate, DateTime now) {
   final days = DateTime.utc(now.year, now.month, now.day).difference(DateTime.utc(birthDate.year, birthDate.month, birthDate.day)).inDays;
   return days < 0 ? 0 : days;
 }
+
+/// A seção de concepção (resumo e card de compartilhamento) só aparece para maiores de 18 anos.
+bool shouldShowConception(DateTime birthDate, DateTime now) => calculateAge(birthDate, now) > 18;

@@ -256,4 +256,132 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get authSignInError =>
       'Não foi possível entrar no app agora. Verifique sua conexão e tente novamente.';
+
+  @override
+  String get shareButtonLabel => 'Compartilhar';
+
+  @override
+  String get shareSheetTitle => 'Prévia do card';
+
+  @override
+  String get shareHideFullDate => 'Esconder data completa';
+
+  @override
+  String get shareHideFullDateHint =>
+      'Mostra só o mês e o ano do nascimento no card.';
+
+  @override
+  String get shareAction => 'Compartilhar card';
+
+  @override
+  String get shareGenerating => 'Gerando card…';
+
+  @override
+  String get shareError =>
+      'Não foi possível gerar o card agora. Tente novamente.';
+
+  @override
+  String shareMessage(String url) {
+    return 'Descubra o seu no Knowhen: $url';
+  }
+
+  @override
+  String get shareWatermark => 'Descubra o seu no Knowhen';
+
+  @override
+  String get shareSummaryTitle => 'Meu Knowhen';
+
+  @override
+  String get shareYearsTitle => 'Eu já vivi';
+
+  @override
+  String shareYearsHighlight(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years anos',
+      one: '1 ano',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String shareYearsDetail(int months, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months meses',
+      one: '1 mês',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days dias',
+      one: '1 dia',
+    );
+    return '$_temp0 e $_temp1 de vida';
+  }
+
+  @override
+  String shareYearsDetailHidden(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months meses',
+      one: '1 mês',
+    );
+    return '$_temp0 de vida';
+  }
+
+  @override
+  String get shareConceptionTitle => 'Fui concebido por volta de';
+
+  @override
+  String get shareMoonTitle => 'Eu nasci na';
+
+  @override
+  String shareMoonLine(String phase) {
+    return 'Nasci na $phase';
+  }
+
+  @override
+  String shareConceptionLine(String when) {
+    return 'Concebido(a) por volta de $when';
+  }
+
+  @override
+  String shareBirthFull(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Nascimento: $dateString';
+  }
+
+  @override
+  String shareBirthMonthYear(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMMMM(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Nascimento: $dateString';
+  }
+
+  @override
+  String shareMonthYear(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMMMM(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String shareConceptionRange(DateTime startRange, DateTime endRange) {
+    final intl.DateFormat startRangeDateFormat = intl.DateFormat.yMd(
+      localeName,
+    );
+    final String startRangeString = startRangeDateFormat.format(startRange);
+    final intl.DateFormat endRangeDateFormat = intl.DateFormat.yMd(localeName);
+    final String endRangeString = endRangeDateFormat.format(endRange);
+
+    return '$startRangeString a $endRangeString';
+  }
 }

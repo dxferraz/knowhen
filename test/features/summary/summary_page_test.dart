@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
+import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
+import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
 import 'package:knowhen/features/years_of_life/presentation/widgets/years_of_life.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -87,5 +90,62 @@ void main() {
     expect(next.disposeCalls, 0);
     expect(ad.disposeCalls, 1);
     expect(ad.showCalls, 1);
+  });
+
+  group('share button on every page of the PageView', () {
+    // The button next to the arrow only exists on pages that have a card to share.
+    final shareButton = find.byTooltip(l10n.shareButtonLabel);
+    final adultBirthDate = DateTime(1990, 5, 20);
+    final minorBirthDate = DateTime.now().subtract(const Duration(days: 365 * 10));
+
+    Future<List<bool>> pageThroughSummary(WidgetTester tester, DateTime birth, FakeBrazilCuriositiesRepository repository, int pageCount) async {
+      await tester.pumpApp(SummaryPage(birthDate: birth), TestDependencies(repository: repository));
+      await tester.pumpAndSettle();
+      final hasShareButton = <bool>[];
+      for (var page = 0; page < pageCount; page++) {
+        hasShareButton.add(shareButton.evaluate().isNotEmpty);
+        if (page < pageCount - 1) {
+          await tester.tap(find.byIcon(Icons.arrow_downward));
+          await tester.pumpAndSettle();
+        }
+      }
+      expect(tester.takeException(), isNull);
+      return hasShareButton;
+    }
+
+    testWidgets('adult with curiosity: all four pages offer a card', (tester) async {
+      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(), 4);
+
+      expect(hasShareButton, [true, true, true, true]);
+      expect(find.byType(BrazilCuriositySection), findsOneWidget);
+    });
+
+    testWidgets('adult without curiosity: the last page has no card', (tester) async {
+      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(hasCuriosity: false), 4);
+
+      expect(hasShareButton, [true, true, true, false]);
+    });
+
+    testWidgets('minor: the conception page is empty and has no card', (tester) async {
+      final hasShareButton = await pageThroughSummary(tester, minorBirthDate, FakeBrazilCuriositiesRepository(), 4);
+
+      expect(hasShareButton, [true, false, true, true]);
+      expect(find.byType(ConceptionSection), findsNothing);
+    });
+
+    testWidgets('tapping share opens the card preview of the current page', (tester) async {
+      await tester.pumpApp(SummaryPage(birthDate: adultBirthDate), TestDependencies());
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.arrow_downward));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.arrow_downward));
+      await tester.pumpAndSettle();
+      expect(find.byType(MoonPhaseSection), findsOneWidget);
+
+      await tester.tap(shareButton);
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.shareSheetTitle), findsOneWidget);
+    });
   });
 }
