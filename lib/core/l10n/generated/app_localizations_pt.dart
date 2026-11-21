@@ -164,4 +164,96 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get livedTitle => 'E viveu:';
+
+  @override
+  String get moonPhaseNewMoonName => 'Lua nova';
+
+  @override
+  String get moonPhaseNewMoonDescription =>
+      'A Lua está invisível no céu, marcando o início de um novo ciclo.';
+
+  @override
+  String get moonPhaseNewMoonInfluence =>
+      'Pessoas nascidas sob a Lua Nova costumam ser visionárias, cheias de ideias e energia para começar do zero. Tendem a buscar novos caminhos e gostam de recomeços, mesmo em situações difíceis.';
+
+  @override
+  String get moonPhaseWaxingCrescentName => 'Lua crescente';
+
+  @override
+  String get moonPhaseWaxingCrescentDescription =>
+      'A Lua começa a ganhar luz, simbolizando crescimento e construção.';
+
+  @override
+  String get moonPhaseWaxingCrescentInfluence =>
+      'Nascidos nessa fase têm perfil determinado e progressivo. São pessoas que aprendem com o tempo, gostam de desafios e têm sede de evolução. Costumam ser persistentes e confiantes no que querem conquistar.';
+
+  @override
+  String get moonPhaseFirstQuarterName => 'Lua quarto crescente';
+
+  @override
+  String get moonPhaseFirstQuarterDescription =>
+      'Metade da Lua está iluminada e visível. O ciclo está ganhando força.';
+
+  @override
+  String get moonPhaseFirstQuarterInfluence =>
+      'Pessoas do Quarto Crescente têm espírito de ação. São decididas, práticas e focadas em realizar. Lidam bem com pressões e sabem transformar ideias em realidade.';
+
+  @override
+  String get moonPhaseWaxingGibbousName => 'Lua gibosa crescente';
+
+  @override
+  String get moonPhaseWaxingGibbousDescription =>
+      'Mais de metade da Lua está iluminada, aproximando-se da Lua Cheia.';
+
+  @override
+  String get moonPhaseWaxingGibbousInfluence =>
+      'Nascidos sob essa fase são visionários e idealistas. Buscam aprimoramento constante e querem deixar sua marca no mundo. São guiados por propósito e aperfeiçoamento.';
+
+  @override
+  String get moonPhaseFullMoonName => 'Lua cheia';
+
+  @override
+  String get moonPhaseFullMoonDescription =>
+      'A Lua está totalmente visível e oposta ao Sol. É o auge do ciclo lunar.';
+
+  @override
+  String get moonPhaseFullMoonInfluence =>
+      'Intensos, carismáticos e sensíveis — pessoas de Lua Cheia sentem tudo profundamente. São expressivas, envolventes e têm grande energia emocional e magnética.';
+
+  @override
+  String get moonPhaseWaningGibbousName => 'Lua gibosa minguante';
+
+  @override
+  String get moonPhaseWaningGibbousDescription =>
+      'A Lua começa a perder luz, logo após a Lua Cheia.';
+
+  @override
+  String get moonPhaseWaningGibbousInfluence =>
+      'Pessoas dessa fase tendem a ser analíticas e sábias. Gostam de refletir, entender o porquê das coisas e aprender com a experiência. Buscam sentido em tudo o que fazem.';
+
+  @override
+  String get moonPhaseLastQuarterName => 'Lua quarto minguante';
+
+  @override
+  String get moonPhaseLastQuarterDescription =>
+      'Metade da Lua ainda está visível, mas está minguando. O ciclo se aproxima do fim.';
+
+  @override
+  String get moonPhaseLastQuarterInfluence =>
+      'Nascidos nessa fase são desapegados, introspectivos e bons em encerrar ciclos. Costumam ser calmos, observadores e têm uma maturidade emocional profunda.';
+
+  @override
+  String get moonPhaseWaningCrescentName => 'Lua minguante';
+
+  @override
+  String get moonPhaseWaningCrescentDescription =>
+      'Apenas uma pequena parte da Lua ainda está iluminada antes da fase nova.';
+
+  @override
+  String get moonPhaseWaningCrescentInfluence =>
+      'Pessoas de Lua Minguante são intuitivas, espirituais e ligadas ao invisível. Têm sabedoria interior, são reservadas e vivem bem no silêncio e na contemplação.';
+
+  @override
+  String get authSignInError =>
+      'Não foi possível entrar no app agora. Verifique sua conexão e tente novamente.';
 }
