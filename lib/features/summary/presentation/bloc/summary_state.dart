@@ -17,23 +17,18 @@ class SummaryLoading extends SummaryState {
 class SummaryLoaded extends SummaryState {
   final MoonPhase moonPhase;
   final String curiosityImage;
-  final BrazilCuriosityEntity brazilCuriosity;
+
+  /// `null` quando não há curiosidade para o mês/ano ou quando ela não pôde ser carregada.
+  final BrazilCuriosityEntity? brazilCuriosity;
+  final bool brazilCuriosityFailed;
 
   SummaryLoaded({
     required this.moonPhase,
     required this.curiosityImage,
     required this.brazilCuriosity,
+    this.brazilCuriosityFailed = false,
   });
 
   @override
-  List<Object?> get props => [moonPhase, curiosityImage, brazilCuriosity];
-}
-
-class SummaryError extends SummaryState {
-  final String message;
-
-  SummaryError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [moonPhase, curiosityImage, brazilCuriosity, brazilCuriosityFailed];
 }

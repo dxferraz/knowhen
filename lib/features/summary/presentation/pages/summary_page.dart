@@ -1,8 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/theme/widgets/custom_icon_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
@@ -19,7 +19,6 @@ import 'package:knowhen/core/services/ad_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 
-@RoutePage()
 class SummaryPage extends StatefulWidget {
   final DateTime birthDate;
   final TimeOfDay? birthTime;
@@ -40,7 +39,7 @@ class _SummaryPageState extends State<SummaryPage> {
     _controller = PageController(initialPage: 0);
     adService = AdService();
 
-    final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
+    final age = calculateAge(widget.birthDate, DateTime.now());
     AnalyticsService.instance.logSummaryViewed(age);
 
     adService.loadAd().then((_) {
@@ -53,7 +52,7 @@ class _SummaryPageState extends State<SummaryPage> {
   void _logSectionIfNeeded(int index) {
     if (!_loggedSections.contains(index)) {
       _loggedSections.add(index);
-      final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
+      final age = calculateAge(widget.birthDate, DateTime.now());
       final isOver18 = age > 18;
       String sectionName;
       switch (index) {
@@ -87,14 +86,6 @@ class _SummaryPageState extends State<SummaryPage> {
     final l10n = AppLocalizations.of(context)!;
     DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
-    int getUserAge() {
-      final now = DateTime.now();
-      final difference = now.difference(widget.birthDate);
-      final age = difference.inDays ~/ 365;
-
-      return age;
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: PrimaryH4(
@@ -125,9 +116,13 @@ class _SummaryPageState extends State<SummaryPage> {
               });
               final List<Widget> sections = [
                 YearsOfLifeSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
-                getUserAge() > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
+                calculateAge(widget.birthDate, DateTime.now()) > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
                 MoonPhaseSection(moonPhase: state.moonPhase),
-                BrazilCuriositySection(imageUrl: state.curiosityImage, curiosity: state.brazilCuriosity.fact),
+                BrazilCuriositySection(
+                  imageUrl: state.curiosityImage,
+                  curiosity: state.brazilCuriosity?.fact,
+                  loadFailed: state.brazilCuriosityFailed,
+                ),
               ];
               return Stack(
                 children: [
@@ -173,9 +168,6 @@ class _SummaryPageState extends State<SummaryPage> {
                   ),
                 ],
               );
-            }
-            if (state is SummaryError) {
-              return Center(child: Text(state.message));
             }
             return Container();
           },

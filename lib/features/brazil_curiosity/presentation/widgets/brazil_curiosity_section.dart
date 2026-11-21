@@ -4,13 +4,16 @@ import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 class BrazilCuriositySection extends StatelessWidget {
   final String imageUrl;
-  final String curiosity;
-  const BrazilCuriositySection({super.key, required this.imageUrl, required this.curiosity});
+
+  /// `null` mostra um estado vazio: sem curiosidade para o mês/ano ou, com [loadFailed], erro ao carregar.
+  final String? curiosity;
+  final bool loadFailed;
+  const BrazilCuriositySection({super.key, required this.imageUrl, required this.curiosity, this.loadFailed = false});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final factParagraphs = curiosity.split('. ');
+    final curiosity = this.curiosity;
 
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -32,49 +35,62 @@ class BrazilCuriositySection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 color: Theme.of(context).colorScheme.primaryContainer,
               ),
-              child: Column(
-                children: [
-                  PrimaryParagraphS(
-                    l10n.firstFactParagraph(factParagraphs.first),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(height: 15),
-                  Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                        clipBehavior: Clip.hardEdge,
-                        width: 250,
-                        child: imageUrl.isNotEmpty
-                            ? Image.network(
-                                imageUrl,
-                                loadingBuilder: (context, child, loadingProgress) => loadingProgress == null
-                                    ? child
-                                    : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimaryContainer),
-                              )
-                            : Text(l10n.noImageForFact, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
-                      ),
-                      const SizedBox(height: 5),
-                      SecondaryCaption(
-                        l10n.aiGeneratedImage,
-                        textAlign: TextAlign.center,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  PrimaryParagraphS(
-                    l10n.lastFactParagraph(factParagraphs.last),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ],
-              ),
+              child: curiosity == null
+                  ? PrimaryParagraphS(
+                      loadFailed ? l10n.historicalFactLoadError : l10n.noHistoricalFact,
+                      textAlign: TextAlign.center,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    )
+                  : _buildFact(context, l10n, curiosity),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildFact(BuildContext context, AppLocalizations l10n, String curiosity) {
+    final factParagraphs = curiosity.split('. ');
+
+    return Column(
+      children: [
+        PrimaryParagraphS(
+          l10n.firstFactParagraph(factParagraphs.first),
+          textAlign: TextAlign.center,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+        const SizedBox(height: 15),
+        Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+              clipBehavior: Clip.hardEdge,
+              width: 250,
+              child: imageUrl.isNotEmpty
+                  ? Image.network(
+                      imageUrl,
+                      loadingBuilder: (context, child, loadingProgress) => loadingProgress == null
+                          ? child
+                          : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimaryContainer),
+                      errorBuilder: (context, error, stackTrace) => Text(l10n.noImageForFact, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+                    )
+                  : Text(l10n.noImageForFact, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+            ),
+            const SizedBox(height: 5),
+            SecondaryCaption(
+              l10n.aiGeneratedImage,
+              textAlign: TextAlign.center,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        PrimaryParagraphS(
+          l10n.lastFactParagraph(factParagraphs.last),
+          textAlign: TextAlign.center,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+      ],
     );
   }
 }
