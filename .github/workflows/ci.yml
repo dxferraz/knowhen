@@ -19,13 +19,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Require actions pinned to a full commit SHA
+        run: |
+          if grep -rnE '^\s*-?\s*uses:' .github | grep -vE 'uses: [^@ ]+@[0-9a-f]{40}( |$)'; then
+            echo '::error::Pin every GitHub Action to a full 40-character commit SHA'
+            exit 1
+          fi
 
       - name: Read Flutter version from .fvmrc
         id: fvm
         run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           channel: stable
           flutter-version: ${{ steps.fvm.outputs.flutter }}
@@ -58,7 +65,7 @@ jobs:
             END { printf "### Coverage\n\n%d/%d lines (%.1f%%)\n", hit, total, total ? 100 * hit / total : 0 }
           ' coverage/lcov.info >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always() && hashFiles('coverage/lcov.info') != ''
         with:
           name: coverage
@@ -70,18 +77,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
       - name: Read Flutter version from .fvmrc
         id: fvm
         run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: "17"
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           channel: stable
           flutter-version: ${{ steps.fvm.outputs.flutter }}
