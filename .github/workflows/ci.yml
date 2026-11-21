@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Require actions pinned to a full commit SHA
+        run: |
+          if grep -rnE '^\s*-?\s*uses:' .github | grep -vE 'uses: [^@ ]+@[0-9a-f]{40}( |$)'; then
+            echo '::error::Pin every GitHub Action to a full 40-character commit SHA'
+            exit 1
+          fi
+
+      - name: Read Flutter version from .fvmrc
+        id: fvm
+        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          cache: true
+
+      # envied needs a .env to generate env.g.dart. CI only compiles, so placeholders are enough.
+      - name: Create placeholder .env
+        run: |
+          printf 'OPEN_AI_API_KEY=ci-placeholder\nFAL_AI_API_KEY=ci-placeholder\n' > .env
+
+      - run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Make sure pubspec.lock and generated l10n are up to date
+        run: git diff --exit-code -- pubspec.lock lib/core/l10n/generated
+
+      - name: make check (Flutter version, analyze, tests with coverage)
+        run: make check
+
+      - name: Coverage summary
+        if: always() && hashFiles('coverage/lcov.info') != ''
+        run: |
+          # Generated code (l10n, *.g.dart, firebase_options) is left out of the percentage.
+          awk -F: '
+            /^SF:/ { skip = ($2 ~ /(\/generated\/|\.g\.dart$|\.gr\.dart$|firebase_options\.dart$)/) }
+            /^LF:/ && !skip { total += $2 }
+            /^LH:/ && !skip { hit += $2 }
+            END { printf "### Coverage\n\n%d/%d lines (%.1f%%)\n", hit, total, total ? 100 * hit / total : 0 }
+          ' coverage/lcov.info >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always() && hashFiles('coverage/lcov.info') != ''
+        with:
+          name: coverage
+          path: coverage/lcov.info
+
+  build-android:
+    name: Build debug APK
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Read Flutter version from .fvmrc
+        id: fvm
+        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          cache: true
+
+      # No real secrets in CI: placeholder .env and google-services.json are enough to compile.
+      - name: Create placeholder .env and google-services.json
+        run: |
+          printf 'OPEN_AI_API_KEY=ci-placeholder\nFAL_AI_API_KEY=ci-placeholder\n' > .env
+          cat > android/app/google-services.json <<'EOF'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "ci-placeholder",
+              "storage_bucket": "ci-placeholder.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": { "package_name": "com.dxferraz.knowhen" }
+                },
+                "oauth_client": [],
+                "api_key": [{ "current_key": "ci-placeholder" }],
+                "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
+
+      # The project's -Xmx1536M is too small for Jetifier on a cold build.
+      - name: Gradle memory
+        run: |
+          mkdir -p ~/.gradle
+          echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g" >> ~/.gradle/gradle.properties
+
+      - run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - run: flutter build apk --debug
