@@ -44,7 +44,7 @@ void main() {
     final repository = FakeBrazilCuriositiesRepository(hasCuriosity: false);
     final state = await loadSummary(repository);
 
-    expect(state.moonPhase.phaseName, 'Lua cheia');
+    expect(state.moonPhase.type, MoonPhaseType.fullMoon);
     expect(state.brazilCuriosity, isNull);
     expect(state.brazilCuriosityFailed, isFalse);
     expect(state.curiosityImage, isEmpty);
@@ -54,7 +54,7 @@ void main() {
   test('erro ao buscar a curiosidade não derruba as outras seções', () async {
     final state = await loadSummary(FakeBrazilCuriositiesRepository(curiosityError: Exception('sem rede')));
 
-    expect(state.moonPhase.phaseName, 'Lua cheia');
+    expect(state.moonPhase.type, MoonPhaseType.fullMoon);
     expect(state.brazilCuriosity, isNull);
     expect(state.brazilCuriosityFailed, isTrue);
   });

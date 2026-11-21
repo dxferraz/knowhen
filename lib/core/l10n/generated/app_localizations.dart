@@ -339,6 +339,156 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'E viveu:'**
   String get livedTitle;
+
+  /// No description provided for @moonPhaseNewMoonName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua nova'**
+  String get moonPhaseNewMoonName;
+
+  /// No description provided for @moonPhaseNewMoonDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Lua está invisível no céu, marcando o início de um novo ciclo.'**
+  String get moonPhaseNewMoonDescription;
+
+  /// No description provided for @moonPhaseNewMoonInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoas nascidas sob a Lua Nova costumam ser visionárias, cheias de ideias e energia para começar do zero. Tendem a buscar novos caminhos e gostam de recomeços, mesmo em situações difíceis.'**
+  String get moonPhaseNewMoonInfluence;
+
+  /// No description provided for @moonPhaseWaxingCrescentName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua crescente'**
+  String get moonPhaseWaxingCrescentName;
+
+  /// No description provided for @moonPhaseWaxingCrescentDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Lua começa a ganhar luz, simbolizando crescimento e construção.'**
+  String get moonPhaseWaxingCrescentDescription;
+
+  /// No description provided for @moonPhaseWaxingCrescentInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nascidos nessa fase têm perfil determinado e progressivo. São pessoas que aprendem com o tempo, gostam de desafios e têm sede de evolução. Costumam ser persistentes e confiantes no que querem conquistar.'**
+  String get moonPhaseWaxingCrescentInfluence;
+
+  /// No description provided for @moonPhaseFirstQuarterName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua quarto crescente'**
+  String get moonPhaseFirstQuarterName;
+
+  /// No description provided for @moonPhaseFirstQuarterDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Metade da Lua está iluminada e visível. O ciclo está ganhando força.'**
+  String get moonPhaseFirstQuarterDescription;
+
+  /// No description provided for @moonPhaseFirstQuarterInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoas do Quarto Crescente têm espírito de ação. São decididas, práticas e focadas em realizar. Lidam bem com pressões e sabem transformar ideias em realidade.'**
+  String get moonPhaseFirstQuarterInfluence;
+
+  /// No description provided for @moonPhaseWaxingGibbousName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua gibosa crescente'**
+  String get moonPhaseWaxingGibbousName;
+
+  /// No description provided for @moonPhaseWaxingGibbousDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mais de metade da Lua está iluminada, aproximando-se da Lua Cheia.'**
+  String get moonPhaseWaxingGibbousDescription;
+
+  /// No description provided for @moonPhaseWaxingGibbousInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nascidos sob essa fase são visionários e idealistas. Buscam aprimoramento constante e querem deixar sua marca no mundo. São guiados por propósito e aperfeiçoamento.'**
+  String get moonPhaseWaxingGibbousInfluence;
+
+  /// No description provided for @moonPhaseFullMoonName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua cheia'**
+  String get moonPhaseFullMoonName;
+
+  /// No description provided for @moonPhaseFullMoonDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Lua está totalmente visível e oposta ao Sol. É o auge do ciclo lunar.'**
+  String get moonPhaseFullMoonDescription;
+
+  /// No description provided for @moonPhaseFullMoonInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Intensos, carismáticos e sensíveis — pessoas de Lua Cheia sentem tudo profundamente. São expressivas, envolventes e têm grande energia emocional e magnética.'**
+  String get moonPhaseFullMoonInfluence;
+
+  /// No description provided for @moonPhaseWaningGibbousName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua gibosa minguante'**
+  String get moonPhaseWaningGibbousName;
+
+  /// No description provided for @moonPhaseWaningGibbousDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Lua começa a perder luz, logo após a Lua Cheia.'**
+  String get moonPhaseWaningGibbousDescription;
+
+  /// No description provided for @moonPhaseWaningGibbousInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoas dessa fase tendem a ser analíticas e sábias. Gostam de refletir, entender o porquê das coisas e aprender com a experiência. Buscam sentido em tudo o que fazem.'**
+  String get moonPhaseWaningGibbousInfluence;
+
+  /// No description provided for @moonPhaseLastQuarterName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua quarto minguante'**
+  String get moonPhaseLastQuarterName;
+
+  /// No description provided for @moonPhaseLastQuarterDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Metade da Lua ainda está visível, mas está minguando. O ciclo se aproxima do fim.'**
+  String get moonPhaseLastQuarterDescription;
+
+  /// No description provided for @moonPhaseLastQuarterInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nascidos nessa fase são desapegados, introspectivos e bons em encerrar ciclos. Costumam ser calmos, observadores e têm uma maturidade emocional profunda.'**
+  String get moonPhaseLastQuarterInfluence;
+
+  /// No description provided for @moonPhaseWaningCrescentName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lua minguante'**
+  String get moonPhaseWaningCrescentName;
+
+  /// No description provided for @moonPhaseWaningCrescentDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apenas uma pequena parte da Lua ainda está iluminada antes da fase nova.'**
+  String get moonPhaseWaningCrescentDescription;
+
+  /// No description provided for @moonPhaseWaningCrescentInfluence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoas de Lua Minguante são intuitivas, espirituais e ligadas ao invisível. Têm sabedoria interior, são reservadas e vivem bem no silêncio e na contemplação.'**
+  String get moonPhaseWaningCrescentInfluence;
+
+  /// No description provided for @authSignInError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível entrar no app agora. Verifique sua conexão e tente novamente.'**
+  String get authSignInError;
 }
 
 class _AppLocalizationsDelegate
