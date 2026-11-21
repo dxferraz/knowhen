@@ -9,6 +9,9 @@ import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
+import 'package:knowhen/features/share/domain/share_card_content.dart';
+import 'package:knowhen/features/share/domain/share_section.dart';
+import 'package:knowhen/features/share/presentation/widgets/share_card_sheet.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
@@ -32,6 +35,7 @@ class _SummaryPageState extends State<SummaryPage> {
   late PageController _controller;
   late AdService adService;
   final Set<int> _loggedSections = {};
+  int _currentPage = 0;
 
   @override
   void initState() {
@@ -75,6 +79,22 @@ class _SummaryPageState extends State<SummaryPage> {
     }
   }
 
+  void _openShare(ShareSection section, SummaryLoaded state) {
+    AnalyticsService.instance.logShareTapped(section.analyticsName);
+    ShareCardSheet.show(
+      context,
+      section: section,
+      data: ShareCardData(
+        birthDate: widget.birthDate,
+        now: DateTime.now(),
+        moonPhase: state.moonPhase,
+        curiosity: state.brazilCuriosity?.fact,
+        curiosityImageUrl: state.curiosityImage,
+      ),
+      onShared: (section) => AnalyticsService.instance.logShareCompleted(section.analyticsName),
+    );
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -86,26 +106,33 @@ class _SummaryPageState extends State<SummaryPage> {
     final l10n = AppLocalizations.of(context)!;
     DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
-    return Scaffold(
-      appBar: AppBar(
-        title: PrimaryH4(
-          l10n.summaryPageTitle(dateFormat.format(widget.birthDate)),
-          textAlign: TextAlign.center,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-        centerTitle: true,
-        actions: [
-          ThemeButton(),
-        ],
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        surfaceTintColor: Colors.transparent,
-      ),
-      body: BlocProvider(
-        create: (context) => SummaryBloc(HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance))
-          ..add(
-            GetSummary(birthDate: widget.birthDate),
+    return BlocProvider(
+      create: (context) =>
+          SummaryBloc(HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance))..add(GetSummary(birthDate: widget.birthDate)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: PrimaryH4(
+            l10n.summaryPageTitle(dateFormat.format(widget.birthDate)),
+            textAlign: TextAlign.center,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-        child: BlocBuilder<SummaryBloc, SummaryState>(
+          centerTitle: true,
+          actions: [
+            BlocBuilder<SummaryBloc, SummaryState>(
+              builder: (context, state) => state is SummaryLoaded
+                  ? IconButton(
+                      tooltip: l10n.shareSummaryTitle,
+                      icon: Icon(Icons.ios_share_rounded, color: Theme.of(context).colorScheme.onSurface),
+                      onPressed: () => _openShare(ShareSection.summary, state),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+            ThemeButton(),
+          ],
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          surfaceTintColor: Colors.transparent,
+        ),
+        body: BlocBuilder<SummaryBloc, SummaryState>(
           builder: (context, state) {
             if (state is SummaryLoading) {
               return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurfaceVariant));
@@ -114,9 +141,18 @@ class _SummaryPageState extends State<SummaryPage> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 _logSectionIfNeeded(0);
               });
+              final isAdult = calculateAge(widget.birthDate, DateTime.now()) > 18;
+              // Seção compartilhável de cada página; `null` nas páginas sem conteúdo (concepção para menores, curiosidade ausente).
+              final shareSections = [
+                ShareSection.yearsOfLife,
+                isAdult ? ShareSection.conception : null,
+                ShareSection.moonPhase,
+                state.brazilCuriosity != null ? ShareSection.brazilCuriosity : null,
+              ];
+              final pageShareSection = shareSections[_currentPage];
               final List<Widget> sections = [
                 YearsOfLifeSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
-                calculateAge(widget.birthDate, DateTime.now()) > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
+                isAdult ? ConceptionSection(birthDate: widget.birthDate) : Container(),
                 MoonPhaseSection(moonPhase: state.moonPhase),
                 BrazilCuriositySection(
                   imageUrl: state.curiosityImage,
@@ -130,7 +166,10 @@ class _SummaryPageState extends State<SummaryPage> {
                     controller: _controller,
                     scrollBehavior: ScrollBehavior(),
                     scrollDirection: Axis.vertical,
-                    onPageChanged: _logSectionIfNeeded,
+                    onPageChanged: (index) {
+                      setState(() => _currentPage = index);
+                      _logSectionIfNeeded(index);
+                    },
                     children: sections,
                   ),
                   Positioned(
@@ -140,12 +179,21 @@ class _SummaryPageState extends State<SummaryPage> {
                       icon: Icons.arrow_downward,
                       iconColor: Theme.of(context).colorScheme.surface,
                       backgroundColor: Theme.of(context).colorScheme.secondary,
-                      onPressed: () => _controller.nextPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.ease,
-                      ),
+                      onPressed: () => _controller.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.ease),
                     ),
                   ),
+                  if (pageShareSection != null)
+                    Positioned(
+                      bottom: 50,
+                      left: 20,
+                      child: CustomIconButton(
+                        icon: Icons.ios_share_rounded,
+                        iconColor: Theme.of(context).colorScheme.surface,
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
+                        tooltip: l10n.shareButtonLabel,
+                        onPressed: () => _openShare(pageShareSection, state),
+                      ),
+                    ),
                   Positioned(
                     top: MediaQuery.of(context).size.height / 2 - 100,
                     right: 10,
