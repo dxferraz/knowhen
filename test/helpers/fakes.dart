@@ -4,6 +4,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:knowhen/core/services/ad_service.dart';
+import 'package:knowhen/features/birth_song/domain/entities/birth_song_entity.dart';
+import 'package:knowhen/features/birth_song/domain/repositories/birth_song_repository.dart';
 import 'package:knowhen/features/brazil_curiosity/data/dtos/brazil_curiosity_dto.dart';
 import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 
@@ -108,3 +110,22 @@ BrazilCuriosityDTO sampleCuriosity({String year = '1990', String month = '5'}) =
       month: month,
       year: year,
     );
+
+class FakeBirthSongRepository implements BirthSongRepository {
+  FakeBirthSongRepository({this.song, this.error});
+
+  /// `null` simulates a month/year without a song.
+  final BirthSongEntity? song;
+  final Object? error;
+
+  final List<DateTime> requestedDates = [];
+
+  @override
+  Future<BirthSongEntity?> getBirthSong(DateTime birthDate) async {
+    requestedDates.add(birthDate);
+    if (error != null) throw error!;
+    return song;
+  }
+}
+
+const sampleBirthSong = BirthSongEntity(artist: 'Tom Jobim', songName: 'Garota de Ipanema', month: '5', year: '1990');
