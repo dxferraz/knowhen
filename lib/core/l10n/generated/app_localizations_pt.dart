@@ -145,4 +145,109 @@ class AppLocalizationsPt extends AppLocalizations {
   String secondsOfLife(Object seconds) {
     return '$seconds segundos';
   }
+
+  @override
+  String get milestoneWeeks1000 => '1.000 semanas de vida';
+
+  @override
+  String get milestoneDays10000 => '10.000 dias de vida';
+
+  @override
+  String get milestoneSeconds1Billion => '1 bilhão de segundos de vida';
+
+  @override
+  String get milestoneMonths500 => '500 meses de vida';
+
+  @override
+  String get milestoneDays15000 => '15.000 dias de vida';
+
+  @override
+  String get milestoneDays20000 => '20.000 dias de vida';
+
+  @override
+  String milestoneBirthday(int age) {
+    return '$age anos de vida';
+  }
+
+  @override
+  String get milestoneNotificationTitle => 'Hoje é um dia de marco!';
+
+  @override
+  String milestoneNotificationBody(String milestone) {
+    return 'Hoje você completa $milestone. Toque para ver.';
+  }
+
+  @override
+  String get nextMilestoneTitle => 'Próximo marco';
+
+  @override
+  String milestoneCountdown(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Faltam $days dias',
+      one: 'Falta 1 dia',
+      zero: 'É hoje!',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String milestoneOnDate(String date) {
+    return 'Em $date';
+  }
+
+  @override
+  String get remindMeButton => 'Me avise';
+
+  @override
+  String get remindersEnabledInfo =>
+      'Lembrete ativado: avisamos às 9h no dia de cada marco.';
+
+  @override
+  String get disableReminders => 'Desativar lembrete';
+
+  @override
+  String get remindersSaveDateInfo =>
+      'Ao ativar, sua data fica salva só neste aparelho.';
+
+  @override
+  String get notificationPermissionDenied =>
+      'Sem a permissão de notificações não dá para avisar. Você pode ativá-la nas configurações do aparelho.';
+
+  @override
+  String get openSettings => 'Abrir configurações';
+
+  @override
+  String get reminderFailed =>
+      'Não foi possível agendar o lembrete. Tente novamente.';
+
+  @override
+  String get saveBirthdateOffer =>
+      'Quer abrir direto no seu resumo da próxima vez?';
+
+  @override
+  String get saveBirthdateShort => 'Salvar';
+
+  @override
+  String get saveBirthdateAction => 'Salvar minha data neste aparelho';
+
+  @override
+  String get birthdateSaved => 'Data salva neste aparelho.';
+
+  @override
+  String get deleteSavedBirthdate => 'Apagar data salva';
+
+  @override
+  String get birthdateDeleted => 'Data apagada deste aparelho.';
+
+  @override
+  String get chooseAnotherDate => 'Escolher outra data';
+
+  @override
+  String get milestoneChannelName => 'Marcos de vida';
+
+  @override
+  String get milestoneChannelDescription =>
+      'Avisos no dia dos marcos da sua vida';
 }
