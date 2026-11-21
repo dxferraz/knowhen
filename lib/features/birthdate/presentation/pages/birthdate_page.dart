@@ -12,7 +12,10 @@ import 'package:knowhen/core/services/analytics_service.dart';
 import 'package:provider/provider.dart';
 
 class BirthdatePage extends StatefulWidget {
-  const BirthdatePage({super.key});
+  /// Data já escolhida (ao voltar do resumo para escolher outra).
+  final DateTime? initialBirthDate;
+
+  const BirthdatePage({super.key, this.initialBirthDate});
 
   @override
   State<BirthdatePage> createState() => _BirthdatePageState();
@@ -21,6 +24,12 @@ class BirthdatePage extends StatefulWidget {
 class _BirthdatePageState extends State<BirthdatePage> {
   DateTime? birthDate;
   TimeOfDay? _birthTime;
+
+  @override
+  void initState() {
+    super.initState();
+    birthDate = widget.initialBirthDate;
+  }
 
   String formatDate(DateTime date) {
     final dateFormat = DateFormat('dd/MM/yyyy');
