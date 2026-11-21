@@ -21,7 +21,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get skip => 'Pular';
 
   @override
-  String get next => 'Próximo';
+  String get next => 'Próximo';
 
   @override
   String get start => 'Começar';
@@ -137,4 +137,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String secondsOfLife(Object seconds) {
     return '$seconds segundos';
   }
+
+  @override
+  String get birthTimeQuestion => 'Você sabe a hora exata do seu nascimento?';
+
+  @override
+  String get unknownBirthTime => 'Não sei';
+
+  @override
+  String get conceptionTitle => 'Muito provavelmente, no período de:';
+
+  @override
+  String get conceptionFooter =>
+      'Foi quando a cegonha te levou ao colo de sua mãe!';
+
+  @override
+  String get moonPhaseTitle => 'Você nasceu na:';
+
+  @override
+  String get livedTitle => 'E viveu:';
 }
