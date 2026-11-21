@@ -65,6 +65,25 @@ Knowhen aims to be both informative and fun. By simply providing a birth date, u
 
 ---
 
+## Development
+
+### Requirements
+
+- **Flutter 3.38.x** (Dart 3.10). The exact version is pinned in [`.fvmrc`](.fvmrc) and `pubspec.lock` was generated with it.
+  Newer Flutter releases (≥ 3.47) deprecate `package:flutter/material.dart` and fail `make lint`; upgrading Flutter is tracked separately.
+  - With [FVM](https://fvm.app): `fvm install` (reads `.fvmrc`) and use `fvm flutter ...`, or point your PATH/IDE to `.fvm/flutter_sdk`.
+  - Without FVM: install Flutter 3.38.x and check it with `flutter --version`.
+- `make check` and `make install` stop early if the Flutter on your PATH is not 3.38.x (`make flutter-version`).
+
+### Getting started
+
+1. Create a `.env` file from `.env.example` (`OPEN_AI_API_KEY`, `FAL_AI_API_KEY`). Placeholder values are enough to compile.
+2. For Android builds, add `android/app/google-services.json` (from the Firebase console). Both files are gitignored.
+3. `make install` (clean, `flutter pub get`, `build_runner`).
+4. `make check` (analyze + tests).
+
+---
+
 ## Contributing
 
 We welcome contributions to Knowhen! To contribute:
