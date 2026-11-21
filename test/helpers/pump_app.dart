@@ -11,11 +11,12 @@ import 'fakes.dart';
 
 /// The same providers as `main.dart`, backed by fakes.
 class TestDependencies {
-  TestDependencies({BrazilCuriositiesRepository? repository})
-      : repository = repository ?? FakeBrazilCuriositiesRepository();
+  TestDependencies({BrazilCuriositiesRepository? repository, AdService? adService})
+      : repository = repository ?? FakeBrazilCuriositiesRepository(),
+        adService = adService ?? FakeAdService();
 
   final FakeFirebaseAnalytics firebaseAnalytics = FakeFirebaseAnalytics();
-  final FakeAdService adService = FakeAdService();
+  final AdService adService;
   final BrazilCuriositiesRepository repository;
 
   late final AnalyticsService analytics = AnalyticsService(firebaseAnalytics);

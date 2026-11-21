@@ -1,6 +1,7 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/theme/widgets/app_logo.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
@@ -72,7 +73,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
               const SizedBox(height: 20),
               SizedBox(height: 20),
               DatePicker(
-                maxDate: DateTime(2024, 12, 31),
+                maxDate: DateUtils.dateOnly(DateTime.now()),
                 minDate: DateTime(1925, 1, 1),
                 initialPickerType: PickerType.years,
                 selectedDate: birthDate,
@@ -142,7 +143,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
                       }
                       _selecionarHora(context).then((value) {
                         if (context.mounted) {
-                          final age = DateTime.now().difference(birthDate!).inDays ~/ 365;
+                          final age = calculateAge(birthDate!, DateTime.now());
                           final hasBirthTime = _birthTime != null;
                           context.read<AnalyticsService>().logBirthdateSubmitted(
                             age: age,
