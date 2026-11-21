@@ -31,6 +31,7 @@ class ShareCardExporter {
       ShareParams(
         files: [XFile(file.path, mimeType: 'image/png')],
         text: text,
+        sharePositionOrigin: origin,
       ),
     );
   }
