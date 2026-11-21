@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +18,6 @@ import 'package:knowhen/core/services/ad_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 
-@RoutePage()
 class SummaryPage extends StatefulWidget {
   final DateTime birthDate;
   final TimeOfDay? birthTime;
