@@ -121,7 +121,7 @@ abstract class AppLocalizations {
   /// No description provided for @next.
   ///
   /// In pt, this message translates to:
-  /// **'Próximo'**
+  /// **'Próximo'**
   String get next;
 
   /// No description provided for @start.
@@ -303,6 +303,42 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'{seconds} segundos'**
   String secondsOfLife(Object seconds);
+
+  /// No description provided for @birthTimeQuestion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você sabe a hora exata do seu nascimento?'**
+  String get birthTimeQuestion;
+
+  /// No description provided for @unknownBirthTime.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não sei'**
+  String get unknownBirthTime;
+
+  /// No description provided for @conceptionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Muito provavelmente, no período de:'**
+  String get conceptionTitle;
+
+  /// No description provided for @conceptionFooter.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foi quando a cegonha te levou ao colo de sua mãe!'**
+  String get conceptionFooter;
+
+  /// No description provided for @moonPhaseTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você nasceu na:'**
+  String get moonPhaseTitle;
+
+  /// No description provided for @livedTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'E viveu:'**
+  String get livedTitle;
 }
 
 class _AppLocalizationsDelegate

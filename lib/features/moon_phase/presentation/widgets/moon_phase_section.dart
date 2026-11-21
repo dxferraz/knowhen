@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/functions/get_moon_phase.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 class MoonPhaseSection extends StatelessWidget {
   final MoonPhase moonPhase;
@@ -8,6 +9,8 @@ class MoonPhaseSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -19,7 +22,7 @@ class MoonPhaseSection extends StatelessWidget {
           spacing: 8.0,
           children: [
             SecondaryH2(
-              'Você nasceu na:',
+              l10n.moonPhaseTitle,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
