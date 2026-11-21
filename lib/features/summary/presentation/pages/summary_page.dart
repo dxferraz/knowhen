@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/theme/widgets/custom_icon_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
-import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
@@ -36,14 +36,15 @@ class _SummaryPageState extends State<SummaryPage> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
-    adService = AdService();
+    adService = context.read<AdService>();
 
-    final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
-    AnalyticsService.instance.logSummaryViewed(age);
+    final age = calculateAge(widget.birthDate, DateTime.now());
+    context.read<AnalyticsService>().logSummaryViewed(age);
 
     adService.loadAd().then((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        adService.showAd();
+        // The service outlives this page: a loaded ad stays queued for the next visit.
+        if (mounted) adService.showAd();
       });
     });
   }
@@ -51,7 +52,7 @@ class _SummaryPageState extends State<SummaryPage> {
   void _logSectionIfNeeded(int index) {
     if (!_loggedSections.contains(index)) {
       _loggedSections.add(index);
-      final age = DateTime.now().difference(widget.birthDate).inDays ~/ 365;
+      final age = calculateAge(widget.birthDate, DateTime.now());
       final isOver18 = age > 18;
       String sectionName;
       switch (index) {
@@ -70,7 +71,7 @@ class _SummaryPageState extends State<SummaryPage> {
         default:
           sectionName = 'unknown';
       }
-      AnalyticsService.instance.logSummarySectionViewed(sectionName, index);
+      context.read<AnalyticsService>().logSummarySectionViewed(sectionName, index);
     }
   }
 
@@ -84,14 +85,6 @@ class _SummaryPageState extends State<SummaryPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     DateFormat dateFormat = DateFormat('dd/MM/yyyy');
-
-    int getUserAge() {
-      final now = DateTime.now();
-      final difference = now.difference(widget.birthDate);
-      final age = difference.inDays ~/ 365;
-
-      return age;
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -108,7 +101,7 @@ class _SummaryPageState extends State<SummaryPage> {
         surfaceTintColor: Colors.transparent,
       ),
       body: BlocProvider(
-        create: (context) => SummaryBloc(HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance))
+        create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>())
           ..add(
             GetSummary(birthDate: widget.birthDate),
           ),
@@ -123,9 +116,13 @@ class _SummaryPageState extends State<SummaryPage> {
               });
               final List<Widget> sections = [
                 YearsOfLifeSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
-                getUserAge() > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
+                calculateAge(widget.birthDate, DateTime.now()) > 18 ? ConceptionSection(birthDate: widget.birthDate) : Container(),
                 MoonPhaseSection(moonPhase: state.moonPhase),
-                BrazilCuriositySection(imageUrl: state.curiosityImage, curiosity: state.brazilCuriosity.fact),
+                BrazilCuriositySection(
+                  imageUrl: state.curiosityImage,
+                  curiosity: state.brazilCuriosity?.fact,
+                  loadFailed: state.brazilCuriosityFailed,
+                ),
               ];
               return Stack(
                 children: [
@@ -171,9 +168,6 @@ class _SummaryPageState extends State<SummaryPage> {
                   ),
                 ],
               );
-            }
-            if (state is SummaryError) {
-              return Center(child: Text(state.message));
             }
             return Container();
           },
