@@ -5,6 +5,6 @@
     "dotenv": "^16.6.1",
     "firebase-admin": "^13.10.0",
     "node-fetch": "^3.3.2",
-    "openai": "^4.104.0"
+    "openai": "^7.60.0"
   }
 }
