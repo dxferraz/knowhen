@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:knowhen/core/services/analytics_service.dart';
 import 'package:knowhen/core/services/birthdate_storage.dart';
 import 'package:knowhen/core/services/life_profile_service.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
@@ -10,8 +11,8 @@ import 'package:knowhen/main.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/fakes.dart';
 import '../../helpers/milestone_fakes.dart';
-import '../../helpers/pump_app.dart';
 
 void main() {
   final saved = SavedBirthdate(
@@ -25,15 +26,13 @@ void main() {
     l10n: lookupAppLocalizations(const Locale('pt')),
   );
 
-  final deps = TestDependencies();
-
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   Future<void> pumpApp(WidgetTester tester, MyApp app) async {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ThemeProvider(deps.analytics)),
+          ChangeNotifierProvider(create: (_) => ThemeProvider(AnalyticsService(FakeFirebaseAnalytics()))),
           ChangeNotifierProvider.value(value: profile),
         ],
         child: app,
