@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
 
 class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -22,7 +22,7 @@ class CustomButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: GoogleFonts.inter().fontFamily,
+          fontFamily: KnFonts.sans,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: textColor ?? Theme.of(context).colorScheme.onPrimary,

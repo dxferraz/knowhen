@@ -13,19 +13,30 @@ void main() {
 
   setUp(() => firebase = FakeFirebaseAnalytics());
 
-  test('loads the saved theme', () async {
-    SharedPreferences.setMockInitialValues({'isDarkMode': true});
+  Future<ThemeProvider> load(Map<String, Object> prefs) async {
+    SharedPreferences.setMockInitialValues(prefs);
     final provider = ThemeProvider(AnalyticsService(firebase));
-
     await pumpEventQueue();
+    return provider;
+  }
 
+  test('primeira abertura segue o tema do sistema', () async {
+    final provider = await load({});
+    expect(provider.themeMode, ThemeMode.system);
+  });
+
+  test('escolha salva como escuro é respeitada', () async {
+    final provider = await load({'isDarkMode': true});
     expect(provider.themeMode, ThemeMode.dark);
   });
 
+  test('escolha salva como claro é respeitada', () async {
+    final provider = await load({'isDarkMode': false});
+    expect(provider.themeMode, ThemeMode.light);
+  });
+
   test('toggleTheme saves the choice and logs theme_changed', () async {
-    SharedPreferences.setMockInitialValues({});
-    final provider = ThemeProvider(AnalyticsService(firebase));
-    await pumpEventQueue();
+    final provider = await load({});
 
     provider.toggleTheme(false);
     await pumpEventQueue();
