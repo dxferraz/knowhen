@@ -238,6 +238,18 @@ abstract class AppLocalizations {
   /// **'Sem imagem para o fato'**
   String get noImageForFact;
 
+  /// No description provided for @noHistoricalFact.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ainda não temos um fato histórico para o mês do seu nascimento. Volte em breve!'**
+  String get noHistoricalFact;
+
+  /// No description provided for @historicalFactLoadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar o fato histórico agora. Verifique sua conexão e tente novamente mais tarde.'**
+  String get historicalFactLoadError;
+
   /// No description provided for @aiGeneratedImage.
   ///
   /// In pt, this message translates to:
