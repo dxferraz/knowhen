@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/features/years_of_life/presentation/widgets/life_clock.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
@@ -13,33 +14,10 @@ class YearsOfLifeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    int getYearsOfLife() {
-      final now = DateTime.now();
-      final difference = now.difference(birthDate);
-      final age = difference.inDays ~/ 365;
-
-      return age;
-    }
-
-    int getMonthsOfLife() {
-      final now = DateTime.now();
-      final difference = now.difference(birthDate);
-      final age = difference.inDays ~/ 30;
-
-      return age;
-    }
-
-    int getDaysOfLife() {
-      final now = DateTime.now();
-      final difference = now.difference(birthDate);
-      final age = difference.inDays;
-
-      return age;
-    }
-
-    final int yearsOfLife = getYearsOfLife();
-    final int monthsOfLife = getMonthsOfLife();
-    final int daysOfLife = getDaysOfLife();
+    final now = DateTime.now();
+    final int yearsOfLife = calculateAge(birthDate, now);
+    final int monthsOfLife = calculateMonthsOfLife(birthDate, now);
+    final int daysOfLife = calculateDaysOfLife(birthDate, now);
 
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -85,7 +63,7 @@ class YearsOfLifeSection extends StatelessWidget {
                 ? Column(
                     children: [
                       SecondaryH2(
-                        'E viveu:',
+                        l10n.livedTitle,
                         textAlign: TextAlign.center,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
