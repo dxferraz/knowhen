@@ -1,0 +1,110 @@
+import 'dart:async';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:knowhen/core/services/ad_service.dart';
+import 'package:knowhen/features/brazil_curiosity/data/dtos/brazil_curiosity_dto.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
+
+typedef LoggedEvent = ({String name, Map<String, Object>? parameters});
+
+/// Records the events instead of sending them to Firebase.
+class FakeFirebaseAnalytics extends Fake implements FirebaseAnalytics {
+  final List<LoggedEvent> events = [];
+
+  List<String> get names => events.map((e) => e.name).toList();
+
+  @override
+  Future<void> logEvent({
+    required String name,
+    Map<String, Object>? parameters,
+    List<AnalyticsEventItem>? items,
+    AnalyticsCallOptions? callOptions,
+  }) async {
+    events.add((name: name, parameters: parameters));
+  }
+}
+
+/// Never touches the Google Mobile Ads plugin.
+class FakeAdService extends Fake implements AdService {
+  int loadCalls = 0;
+  int showCalls = 0;
+
+  @override
+  Future<void> loadAd() async => loadCalls++;
+
+  @override
+  void showAd() => showCalls++;
+}
+
+/// Stands in for an ad the plugin would hand to `onAdLoaded`.
+class FakeInterstitialAd extends Fake implements InterstitialAd {
+  int showCalls = 0;
+  int disposeCalls = 0;
+
+  @override
+  FullScreenContentCallback<InterstitialAd>? fullScreenContentCallback;
+
+  @override
+  Future<void> show() async => showCalls++;
+
+  @override
+  Future<void> dispose() async => disposeCalls++;
+}
+
+/// Records each ad request; the test decides when (and how) each one finishes.
+class FakeAdLoader {
+  final List<InterstitialAdLoadCallback> requests = [];
+
+  void call(String adUnitId, InterstitialAdLoadCallback callback) => requests.add(callback);
+}
+
+class FakeBrazilCuriositiesRepository implements BrazilCuriositiesRepository {
+  FakeBrazilCuriositiesRepository({
+    this.curiosity,
+    this.hasCuriosity = true,
+    this.imageUrl = 'https://example.com/image.png',
+    this.curiosityError,
+    this.imageError,
+    this.wait,
+  });
+
+  /// The curiosity returned; defaults to [sampleCuriosity] for the requested month/year.
+  final BrazilCuriosityDTO? curiosity;
+
+  /// `false` simulates a month/year without a curiosity (the repository returns `null`).
+  final bool hasCuriosity;
+  final String imageUrl;
+  final Object? curiosityError;
+  final Object? imageError;
+
+  /// When set, the curiosity only arrives after it completes (to observe the loading state).
+  final Completer<void>? wait;
+
+  final List<DateTime> requestedDates = [];
+  int imageRequests = 0;
+
+  @override
+  Future<BrazilCuriosityDTO?> getBrazilCuriosity(DateTime birthDate) async {
+    requestedDates.add(birthDate);
+    await wait?.future;
+    if (curiosityError != null) throw curiosityError!;
+    if (!hasCuriosity) return null;
+    return curiosity ?? sampleCuriosity(year: '${birthDate.year}', month: '${birthDate.month}');
+  }
+
+  @override
+  Future<String> getCuriosityImage(String year, String month) async {
+    imageRequests++;
+    if (imageError != null) throw imageError!;
+    return imageUrl;
+  }
+}
+
+BrazilCuriosityDTO sampleCuriosity({String year = '1990', String month = '5'}) => BrazilCuriosityDTO(
+      fact: 'Um fato curioso de $month/$year',
+      imageUrl: '',
+      month: month,
+      year: year,
+    );

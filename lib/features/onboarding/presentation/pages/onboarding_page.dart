@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:provider/provider.dart';
 
 
 class OnboardingPage extends StatefulWidget {
@@ -27,8 +28,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
-    AnalyticsService.instance.logOnboardingStarted();
-    AnalyticsService.instance.logOnboardingStepViewed(0);
+    context.read<AnalyticsService>().logOnboardingStarted();
+    context.read<AnalyticsService>().logOnboardingStepViewed(0);
   }
 
   @override
@@ -59,7 +60,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             setState(() {
               isLastPage = index == 2;
             });
-            AnalyticsService.instance.logOnboardingStepViewed(index);
+            context.read<AnalyticsService>().logOnboardingStepViewed(index);
           },
           children: const [
             OnboardingStep1(),
@@ -78,7 +79,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 : CustomButton(
                     onPressed: () {
                       final currentPage = _controller.hasClients ? _controller.page?.round() ?? 0 : 0;
-                      AnalyticsService.instance.logOnboardingSkipped(currentPage);
+                      context.read<AnalyticsService>().logOnboardingSkipped(currentPage);
                       _controller.animateToPage(
                         2,
                         duration: const Duration(milliseconds: 800),
@@ -104,7 +105,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               CustomButton(
                 onPressed: () {
                   markOnboardingCompleted();
-                  AnalyticsService.instance.logOnboardingCompleted();
+                  context.read<AnalyticsService>().logOnboardingCompleted();
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const BirthdatePage(),
                   ));

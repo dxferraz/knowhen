@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:knowhen/core/theme/theme_provider.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
+import 'package:knowhen/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:knowhen/main.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'helpers/pump_app.dart';
 
 void main() {
   setUp(() {
@@ -11,15 +12,17 @@ void main() {
   });
 
   testWidgets('App builds and shows the birthdate page when onboarding was already seen', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => ThemeProvider(),
-        child: const MyApp(showOnboarding: false),
-      ),
-    );
+    await tester.pumpWidget(TestDependencies().wrap(const MyApp(showOnboarding: false)));
     await tester.pump();
 
     expect(find.byType(BirthdatePage), findsOneWidget);
     expect(find.text('Para começar selecione a sua data de nascimento:'), findsOneWidget);
+  });
+
+  testWidgets('App starts on the onboarding the first time', (WidgetTester tester) async {
+    await tester.pumpWidget(TestDependencies().wrap(const MyApp(showOnboarding: true)));
+    await tester.pump();
+
+    expect(find.byType(OnboardingPage), findsOneWidget);
   });
 }

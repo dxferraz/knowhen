@@ -16,7 +16,7 @@ class BrazilCuriosityDTO {
   factory BrazilCuriosityDTO.fromJson(Map<String, dynamic> json) {
     return BrazilCuriosityDTO(
       fact: json['fact'],
-      imageUrl: json['imageUrl'],
+      imageUrl: json['imageUrl'] ?? '',
       month: json['month'],
       year: json['year'],
     );

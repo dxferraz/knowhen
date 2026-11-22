@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/conception_window.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
@@ -9,17 +10,17 @@ class ConceptionSection extends StatelessWidget {
 
   String calculateConception(BuildContext context, DateTime birthDate) {
     final l10n = AppLocalizations.of(context)!;
-    final conceptionDate = birthDate.subtract(Duration(days: 280));
-    final startRange = conceptionDate.subtract(Duration(days: 7));
-    final endRange = conceptionDate.add(Duration(days: 7));
+    final window = conceptionWindow(birthDate);
 
     final dateFormat = DateFormat('dd/MM/yyyy');
 
-    return l10n.conceptionRange(dateFormat.format(startRange), dateFormat.format(endRange));
+    return l10n.conceptionRange(dateFormat.format(window.start), dateFormat.format(window.end));
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -30,7 +31,7 @@ class ConceptionSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SecondaryH2(
-              'Muito provavavelmente, no período de:',
+              l10n.conceptionTitle,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -51,7 +52,7 @@ class ConceptionSection extends StatelessWidget {
               ),
             ),
             SecondaryH2(
-              'Foi quando a cegonha te levou ao colo de sua mãe!',
+              l10n.conceptionFooter,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
