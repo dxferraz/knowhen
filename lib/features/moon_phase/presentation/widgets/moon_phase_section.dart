@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/functions/get_moon_phase.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
+import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/features/moon_phase/presentation/moon_phase_l10n.dart';
 
 class MoonPhaseSection extends StatelessWidget {
   final MoonPhase moonPhase;
@@ -8,6 +10,8 @@ class MoonPhaseSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -19,7 +23,7 @@ class MoonPhaseSection extends StatelessWidget {
           spacing: 8.0,
           children: [
             SecondaryH2(
-              'Você nasceu na:',
+              l10n.moonPhaseTitle,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -32,7 +36,7 @@ class MoonPhaseSection extends StatelessWidget {
               child: Column(
                 children: [
                   PrimaryH3(
-                    moonPhase.phaseName,
+                    l10n.moonPhaseName(moonPhase.type),
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   const SizedBox(height: 10),
@@ -43,16 +47,21 @@ class MoonPhaseSection extends StatelessWidget {
                           ? child
                           : CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimaryContainer);
                     },
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.nightlight_round,
+                      size: MediaQuery.of(context).size.width * 0.3,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                     width: MediaQuery.of(context).size.width * 0.4,
                   ),
                   const SizedBox(height: 10),
                   PrimaryParagraphS(
-                    moonPhase.description,
+                    l10n.moonPhaseDescription(moonPhase.type),
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   const SizedBox(height: 10),
                   PrimaryParagraphS(
-                    moonPhase.influence,
+                    l10n.moonPhaseInfluence(moonPhase.type),
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ],

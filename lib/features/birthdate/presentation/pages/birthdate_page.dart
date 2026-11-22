@@ -1,6 +1,7 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/theme/widgets/app_logo.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
@@ -8,9 +9,13 @@ import 'package:knowhen/core/theme/widgets/theme_button.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:provider/provider.dart';
 
 class BirthdatePage extends StatefulWidget {
-  const BirthdatePage({super.key});
+  /// Data já escolhida (ao voltar do resumo para escolher outra).
+  final DateTime? initialBirthDate;
+
+  const BirthdatePage({super.key, this.initialBirthDate});
 
   @override
   State<BirthdatePage> createState() => _BirthdatePageState();
@@ -20,18 +25,25 @@ class _BirthdatePageState extends State<BirthdatePage> {
   DateTime? birthDate;
   TimeOfDay? _birthTime;
 
+  @override
+  void initState() {
+    super.initState();
+    birthDate = widget.initialBirthDate;
+  }
+
   String formatDate(DateTime date) {
     final dateFormat = DateFormat('dd/MM/yyyy');
     return dateFormat.format(date);
   }
 
   Future<void> _selecionarHora(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final TimeOfDay? horaEscolhida = await showTimePicker(
       context: context,
       initialTime: _birthTime ?? TimeOfDay(hour: 12, minute: 00),
-      helpText: 'Você sabe a hora exata do seu nascimento?',
-      cancelText: 'Não sei',
-      confirmText: 'Confirmar',
+      helpText: l10n.birthTimeQuestion,
+      cancelText: l10n.unknownBirthTime,
+      confirmText: l10n.confirm,
       initialEntryMode: TimePickerEntryMode.dialOnly,
       routeSettings: RouteSettings(name: '/summary'),
       useRootNavigator: true,
@@ -71,7 +83,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
               const SizedBox(height: 20),
               SizedBox(height: 20),
               DatePicker(
-                maxDate: DateTime(2024, 12, 31),
+                maxDate: DateUtils.dateOnly(DateTime.now()),
                 minDate: DateTime(1925, 1, 1),
                 initialPickerType: PickerType.years,
                 selectedDate: birthDate,
@@ -141,9 +153,9 @@ class _BirthdatePageState extends State<BirthdatePage> {
                       }
                       _selecionarHora(context).then((value) {
                         if (context.mounted) {
-                          final age = DateTime.now().difference(birthDate!).inDays ~/ 365;
+                          final age = calculateAge(birthDate!, DateTime.now());
                           final hasBirthTime = _birthTime != null;
-                          AnalyticsService.instance.logBirthdateSubmitted(
+                          context.read<AnalyticsService>().logBirthdateSubmitted(
                             age: age,
                             hasBirthTime: hasBirthTime,
                           );

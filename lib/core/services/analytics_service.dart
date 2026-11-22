@@ -1,11 +1,24 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
-class AnalyticsService {
-  AnalyticsService._internal();
-  static final AnalyticsService instance = AnalyticsService._internal();
+/// Eventos do fluxo "data salva + marcos de vida". Uma interface à parte para os testes não
+/// precisarem do Firebase.
+abstract interface class MilestoneAnalytics {
+  /// [source]: `manual` (o usuário escolheu salvar) ou `reminder` (salva ao ativar o lembrete).
+  Future<void> logBirthdateSaved({required String source});
 
-  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  /// [milestone] é o próximo marco; [scheduled] quantos lembretes foram agendados.
+  Future<void> logMilestoneReminderEnabled({required String milestone, required int scheduled});
+
+  Future<void> logNotificationPermissionResult({required bool granted});
+
+  Future<void> logMilestoneNotificationOpened(String milestone);
+}
+
+class AnalyticsService implements MilestoneAnalytics {
+  AnalyticsService(this._analytics);
+
+  final FirebaseAnalytics _analytics;
 
   /// Helper to print debug information to console
   void _printDebug(String eventName, [Map<String, dynamic>? parameters]) {
@@ -85,6 +98,24 @@ class AnalyticsService {
     );
   }
 
+  /// Logs when the user taps a share button (opens the card preview)
+  Future<void> logShareTapped(String sectionName) async {
+    _printDebug('share_tapped', {'section_name': sectionName});
+    await _analytics.logEvent(
+      name: 'share_tapped',
+      parameters: {'section_name': sectionName},
+    );
+  }
+
+  /// Logs when the user finishes sharing a card (the native share sheet was not dismissed)
+  Future<void> logShareCompleted(String sectionName) async {
+    _printDebug('share_completed', {'section_name': sectionName});
+    await _analytics.logEvent(
+      name: 'share_completed',
+      parameters: {'section_name': sectionName},
+    );
+  }
+
   /// Logs when the user changes the application theme
   Future<void> logThemeChanged(String themeMode) async {
     _printDebug('theme_changed', {'theme_mode': themeMode});
@@ -110,5 +141,38 @@ class AnalyticsService {
   Future<void> logAdDismissed() async {
     _printDebug('ad_dismissed');
     await _analytics.logEvent(name: 'ad_dismissed');
+  }
+
+  @override
+  Future<void> logBirthdateSaved({required String source}) async {
+    _printDebug('birthdate_saved', {'source': source});
+    await _analytics.logEvent(name: 'birthdate_saved', parameters: {'source': source});
+  }
+
+  @override
+  Future<void> logMilestoneReminderEnabled({required String milestone, required int scheduled}) async {
+    _printDebug('milestone_reminder_enabled', {'milestone': milestone, 'scheduled': scheduled});
+    await _analytics.logEvent(
+      name: 'milestone_reminder_enabled',
+      parameters: {'milestone': milestone, 'scheduled': scheduled},
+    );
+  }
+
+  @override
+  Future<void> logNotificationPermissionResult({required bool granted}) async {
+    _printDebug('notification_permission_result', {'granted': granted ? 1 : 0});
+    await _analytics.logEvent(
+      name: 'notification_permission_result',
+      parameters: {'granted': granted ? 1 : 0},
+    );
+  }
+
+  @override
+  Future<void> logMilestoneNotificationOpened(String milestone) async {
+    _printDebug('milestone_notification_opened', {'milestone': milestone});
+    await _analytics.logEvent(
+      name: 'milestone_notification_opened',
+      parameters: {'milestone': milestone},
+    );
   }
 }
