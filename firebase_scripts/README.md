@@ -50,8 +50,13 @@ O preenchimento é em duas etapas, para revisar o conteúdo da IA antes de publi
    ```
 
    Cada mês vira um documento com id `AAAA-MM`; publicar de novo sobrescreve os mesmos documentos, sem duplicar.
+   O app lê direto por esse id, então documentos antigos com id aleatório são ignorados.
 
-`npm test` roda os testes das regras (parse da resposta, ids, meses a processar).
+   Antes de gravar, o `publish` valida todas as entradas (chave `AAAA-MM` igual ao ano/mês, `month` de "1" a "12",
+   `year` entre 1925 e o ano atual, `artist`/`songName` preenchidos e sem placeholder, sem campos extras). Se alguma
+   falhar, ele lista todas, com a chave, e não grava nada: corrija o JSON e rode de novo.
+
+`npm test` roda os testes das regras (parse da resposta, ids, meses a processar, validação do JSON).
 
 As credenciais também podem vir direto do shell, sem `.env`:
 
