@@ -8,7 +8,7 @@
   "@confirm": {},
   "skip": "Pular",
   "@skip": {},
-  "next": "Próximo",
+  "next": "Próximo",
   "@next": {},
   "start": "Começar",
   "@start": {},
@@ -95,6 +95,10 @@
   },
   "noImageForFact": "Sem imagem para o fato",
   "@noImageForFact": {},
+  "noHistoricalFact": "Ainda não temos um fato histórico para o mês do seu nascimento. Volte em breve!",
+  "@noHistoricalFact": {},
+  "historicalFactLoadError": "Não foi possível carregar o fato histórico agora. Verifique sua conexão e tente novamente mais tarde.",
+  "@historicalFactLoadError": {},
   "aiGeneratedImage": "Imagem gerada por I.A.",
   "@aiGeneratedImage": {},
   "lastFactParagraph": "{paragraph2}",
@@ -149,5 +153,265 @@
     "placeholders": {
       "seconds": {}
     }
-  }
+  },
+  "birthTimeQuestion": "Você sabe a hora exata do seu nascimento?",
+  "@birthTimeQuestion": {},
+  "unknownBirthTime": "Não sei",
+  "@unknownBirthTime": {},
+  "conceptionTitle": "Muito provavelmente, no período de:",
+  "@conceptionTitle": {},
+  "conceptionFooter": "Foi quando a cegonha te levou ao colo de sua mãe!",
+  "@conceptionFooter": {},
+  "moonPhaseTitle": "Você nasceu na:",
+  "@moonPhaseTitle": {},
+  "livedTitle": "E viveu:",
+  "@livedTitle": {},
+  "moonPhaseNewMoonName": "Lua nova",
+  "@moonPhaseNewMoonName": {},
+  "moonPhaseNewMoonDescription": "A Lua está invisível no céu, marcando o início de um novo ciclo.",
+  "@moonPhaseNewMoonDescription": {},
+  "moonPhaseNewMoonInfluence": "Pessoas nascidas sob a Lua Nova costumam ser visionárias, cheias de ideias e energia para começar do zero. Tendem a buscar novos caminhos e gostam de recomeços, mesmo em situações difíceis.",
+  "@moonPhaseNewMoonInfluence": {},
+  "moonPhaseWaxingCrescentName": "Lua crescente",
+  "@moonPhaseWaxingCrescentName": {},
+  "moonPhaseWaxingCrescentDescription": "A Lua começa a ganhar luz, simbolizando crescimento e construção.",
+  "@moonPhaseWaxingCrescentDescription": {},
+  "moonPhaseWaxingCrescentInfluence": "Nascidos nessa fase têm perfil determinado e progressivo. São pessoas que aprendem com o tempo, gostam de desafios e têm sede de evolução. Costumam ser persistentes e confiantes no que querem conquistar.",
+  "@moonPhaseWaxingCrescentInfluence": {},
+  "moonPhaseFirstQuarterName": "Lua quarto crescente",
+  "@moonPhaseFirstQuarterName": {},
+  "moonPhaseFirstQuarterDescription": "Metade da Lua está iluminada e visível. O ciclo está ganhando força.",
+  "@moonPhaseFirstQuarterDescription": {},
+  "moonPhaseFirstQuarterInfluence": "Pessoas do Quarto Crescente têm espírito de ação. São decididas, práticas e focadas em realizar. Lidam bem com pressões e sabem transformar ideias em realidade.",
+  "@moonPhaseFirstQuarterInfluence": {},
+  "moonPhaseWaxingGibbousName": "Lua gibosa crescente",
+  "@moonPhaseWaxingGibbousName": {},
+  "moonPhaseWaxingGibbousDescription": "Mais de metade da Lua está iluminada, aproximando-se da Lua Cheia.",
+  "@moonPhaseWaxingGibbousDescription": {},
+  "moonPhaseWaxingGibbousInfluence": "Nascidos sob essa fase são visionários e idealistas. Buscam aprimoramento constante e querem deixar sua marca no mundo. São guiados por propósito e aperfeiçoamento.",
+  "@moonPhaseWaxingGibbousInfluence": {},
+  "moonPhaseFullMoonName": "Lua cheia",
+  "@moonPhaseFullMoonName": {},
+  "moonPhaseFullMoonDescription": "A Lua está totalmente visível e oposta ao Sol. É o auge do ciclo lunar.",
+  "@moonPhaseFullMoonDescription": {},
+  "moonPhaseFullMoonInfluence": "Intensos, carismáticos e sensíveis — pessoas de Lua Cheia sentem tudo profundamente. São expressivas, envolventes e têm grande energia emocional e magnética.",
+  "@moonPhaseFullMoonInfluence": {},
+  "moonPhaseWaningGibbousName": "Lua gibosa minguante",
+  "@moonPhaseWaningGibbousName": {},
+  "moonPhaseWaningGibbousDescription": "A Lua começa a perder luz, logo após a Lua Cheia.",
+  "@moonPhaseWaningGibbousDescription": {},
+  "moonPhaseWaningGibbousInfluence": "Pessoas dessa fase tendem a ser analíticas e sábias. Gostam de refletir, entender o porquê das coisas e aprender com a experiência. Buscam sentido em tudo o que fazem.",
+  "@moonPhaseWaningGibbousInfluence": {},
+  "moonPhaseLastQuarterName": "Lua quarto minguante",
+  "@moonPhaseLastQuarterName": {},
+  "moonPhaseLastQuarterDescription": "Metade da Lua ainda está visível, mas está minguando. O ciclo se aproxima do fim.",
+  "@moonPhaseLastQuarterDescription": {},
+  "moonPhaseLastQuarterInfluence": "Nascidos nessa fase são desapegados, introspectivos e bons em encerrar ciclos. Costumam ser calmos, observadores e têm uma maturidade emocional profunda.",
+  "@moonPhaseLastQuarterInfluence": {},
+  "moonPhaseWaningCrescentName": "Lua minguante",
+  "@moonPhaseWaningCrescentName": {},
+  "moonPhaseWaningCrescentDescription": "Apenas uma pequena parte da Lua ainda está iluminada antes da fase nova.",
+  "@moonPhaseWaningCrescentDescription": {},
+  "moonPhaseWaningCrescentInfluence": "Pessoas de Lua Minguante são intuitivas, espirituais e ligadas ao invisível. Têm sabedoria interior, são reservadas e vivem bem no silêncio e na contemplação.",
+  "@moonPhaseWaningCrescentInfluence": {},
+  "authSignInError": "Não foi possível entrar no app agora. Verifique sua conexão e tente novamente.",
+  "@authSignInError": {},
+  "shareButtonLabel": "Compartilhar",
+  "@shareButtonLabel": {},
+  "shareSheetTitle": "Prévia do card",
+  "@shareSheetTitle": {},
+  "shareHideFullDate": "Esconder data completa",
+  "@shareHideFullDate": {},
+  "shareHideFullDateHint": "Mostra só o mês e o ano do nascimento no card.",
+  "@shareHideFullDateHint": {},
+  "shareAction": "Compartilhar card",
+  "@shareAction": {},
+  "shareGenerating": "Gerando card…",
+  "@shareGenerating": {},
+  "shareError": "Não foi possível gerar o card agora. Tente novamente.",
+  "@shareError": {},
+  "shareMessage": "Descubra o seu no Knowhen: {url}",
+  "@shareMessage": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "https://knowhen.app"
+      }
+    }
+  },
+  "shareWatermark": "Descubra o seu no Knowhen",
+  "@shareWatermark": {},
+  "shareSummaryTitle": "Meu Knowhen",
+  "@shareSummaryTitle": {},
+  "shareYearsTitle": "Eu já vivi",
+  "@shareYearsTitle": {},
+  "shareYearsHighlight": "{years, plural, =1{1 ano} other{{years} anos}}",
+  "@shareYearsHighlight": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "shareYearsDetail": "{months, plural, =1{1 mês} other{{months} meses}} e {days, plural, =1{1 dia} other{{days} dias}} de vida",
+  "@shareYearsDetail": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "shareYearsDetailHidden": "{months, plural, =1{1 mês} other{{months} meses}} de vida",
+  "@shareYearsDetailHidden": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "shareConceptionTitle": "Fui concebido por volta de",
+  "@shareConceptionTitle": {},
+  "shareMoonTitle": "Eu nasci na",
+  "@shareMoonTitle": {},
+  "shareMoonLine": "Nasci na {phase}",
+  "@shareMoonLine": {
+    "placeholders": {
+      "phase": {
+        "type": "String",
+        "example": "Lua cheia"
+      }
+    }
+  },
+  "shareConceptionLine": "Concebido(a) por volta de {when}",
+  "@shareConceptionLine": {
+    "placeholders": {
+      "when": {
+        "type": "String",
+        "example": "junho de 1990"
+      }
+    }
+  },
+  "shareBirthFull": "Nascimento: {date}",
+  "@shareBirthFull": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "shareBirthMonthYear": "Nascimento: {date}",
+  "@shareBirthMonthYear": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMM"
+      }
+    }
+  },
+  "shareMonthYear": "{date}",
+  "@shareMonthYear": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMM"
+      }
+    }
+  },
+  "shareConceptionRange": "{startRange} a {endRange}",
+  "@shareConceptionRange": {
+    "placeholders": {
+      "startRange": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "endRange": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "milestoneWeeks1000": "1.000 semanas de vida",
+  "@milestoneWeeks1000": {},
+  "milestoneDays10000": "10.000 dias de vida",
+  "@milestoneDays10000": {},
+  "milestoneSeconds1Billion": "1 bilhão de segundos de vida",
+  "@milestoneSeconds1Billion": {},
+  "milestoneMonths500": "500 meses de vida",
+  "@milestoneMonths500": {},
+  "milestoneDays15000": "15.000 dias de vida",
+  "@milestoneDays15000": {},
+  "milestoneDays20000": "20.000 dias de vida",
+  "@milestoneDays20000": {},
+  "milestoneBirthday": "{age} anos de vida",
+  "@milestoneBirthday": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "milestoneNotificationTitle": "Hoje é um dia de marco!",
+  "@milestoneNotificationTitle": {},
+  "milestoneNotificationBody": "Hoje você completa {milestone}. Toque para ver.",
+  "@milestoneNotificationBody": {
+    "placeholders": {
+      "milestone": {
+        "type": "String"
+      }
+    }
+  },
+  "nextMilestoneTitle": "Próximo marco",
+  "@nextMilestoneTitle": {},
+  "milestoneCountdown": "{days, plural, =0{É hoje!} =1{Falta 1 dia} other{Faltam {days} dias}}",
+  "@milestoneCountdown": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "milestoneOnDate": "Em {date}",
+  "@milestoneOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "remindMeButton": "Me avise",
+  "@remindMeButton": {},
+  "remindersEnabledInfo": "Lembrete ativado: avisamos às 9h no dia de cada marco.",
+  "@remindersEnabledInfo": {},
+  "disableReminders": "Desativar lembrete",
+  "@disableReminders": {},
+  "remindersSaveDateInfo": "Ao ativar, sua data fica salva só neste aparelho.",
+  "@remindersSaveDateInfo": {},
+  "notificationPermissionDenied": "Sem a permissão de notificações não dá para avisar. Você pode ativá-la nas configurações do aparelho.",
+  "@notificationPermissionDenied": {},
+  "openSettings": "Abrir configurações",
+  "@openSettings": {},
+  "reminderFailed": "Não foi possível agendar o lembrete. Tente novamente.",
+  "@reminderFailed": {},
+  "saveBirthdateOffer": "Quer abrir direto no seu resumo da próxima vez?",
+  "@saveBirthdateOffer": {},
+  "saveBirthdateShort": "Salvar",
+  "@saveBirthdateShort": {},
+  "saveBirthdateAction": "Salvar minha data neste aparelho",
+  "@saveBirthdateAction": {},
+  "birthdateSaved": "Data salva neste aparelho.",
+  "@birthdateSaved": {},
+  "deleteSavedBirthdate": "Apagar data salva",
+  "@deleteSavedBirthdate": {},
+  "birthdateDeleted": "Data apagada deste aparelho.",
+  "@birthdateDeleted": {},
+  "chooseAnotherDate": "Escolher outra data",
+  "@chooseAnotherDate": {},
+  "milestoneChannelName": "Marcos de vida",
+  "@milestoneChannelName": {},
+  "milestoneChannelDescription": "Avisos no dia dos marcos da sua vida",
+  "@milestoneChannelDescription": {}
 }

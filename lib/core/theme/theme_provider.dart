@@ -7,8 +7,9 @@ import 'package:knowhen/core/services/analytics_service.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
+  final AnalyticsService _analytics;
 
-  ThemeProvider() {
+  ThemeProvider(this._analytics) {
     _loadTheme();
   }
 
@@ -18,7 +19,7 @@ class ThemeProvider extends ChangeNotifier {
     _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
     _saveTheme(isDarkMode);
     _updateSystemUI();
-    AnalyticsService.instance.logThemeChanged(isDarkMode ? 'dark' : 'light');
+    _analytics.logThemeChanged(isDarkMode ? 'dark' : 'light');
     notifyListeners();
   }
 
