@@ -54,6 +54,10 @@ jobs:
       - name: make check (Flutter version, analyze, tests with coverage)
         run: make check
 
+      # Regras puras do script que popula o Firestore; só usam módulos nativos do Node, sem npm install.
+      - name: firebase_scripts tests
+        run: node --test firebase_scripts/test/*.test.js
+
       - name: Coverage summary
         if: always() && hashFiles('coverage/lcov.info') != ''
         run: |

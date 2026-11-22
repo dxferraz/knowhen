@@ -2,6 +2,9 @@
   "engines": {
     "node": ">=22"
   },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
   "dependencies": {
     "@fal-ai/client": "^1.11.0",
     "axios": "^1.21.1",
