@@ -6,6 +6,7 @@ import 'package:knowhen/core/services/analytics_service.dart';
 import 'package:knowhen/core/services/birthdate_storage.dart';
 import 'package:knowhen/core/services/life_profile_service.dart';
 import 'package:knowhen/core/theme/theme_provider.dart';
+import 'package:knowhen/features/birth_song/domain/repositories/birth_song_repository.dart';
 import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -14,8 +15,9 @@ import 'milestone_fakes.dart';
 
 /// The same providers as `main.dart`, backed by fakes.
 class TestDependencies {
-  TestDependencies({BrazilCuriositiesRepository? repository, AdService? adService})
+  TestDependencies({BrazilCuriositiesRepository? repository, BirthSongRepository? birthSongs, AdService? adService})
       : repository = repository ?? FakeBrazilCuriositiesRepository(),
+        birthSongs = birthSongs ?? FakeBirthSongRepository(),
         adService = adService ?? FakeAdService();
 
   final FakeMilestoneNotifier notifier = FakeMilestoneNotifier();
@@ -24,6 +26,7 @@ class TestDependencies {
   final FakeFirebaseAnalytics firebaseAnalytics = FakeFirebaseAnalytics();
   final AdService adService;
   final BrazilCuriositiesRepository repository;
+  final BirthSongRepository birthSongs;
 
   late final AnalyticsService analytics = AnalyticsService(firebaseAnalytics);
   late final LifeProfileService profile = LifeProfileService(
@@ -38,6 +41,7 @@ class TestDependencies {
           Provider<AnalyticsService>.value(value: analytics),
           Provider<AdService>.value(value: adService),
           Provider<BrazilCuriositiesRepository>.value(value: repository),
+          Provider<BirthSongRepository>.value(value: birthSongs),
           ChangeNotifierProvider(create: (_) => ThemeProvider(analytics)),
           ChangeNotifierProvider<LifeProfileService>.value(value: profile),
         ],
