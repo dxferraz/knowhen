@@ -7,6 +7,8 @@ import 'package:knowhen/core/config/firebase_options.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:knowhen/core/theme/app_theme.dart';
 import 'package:knowhen/core/theme/theme_provider.dart';
+import 'package:knowhen/features/birth_song/data/repositories/birth_song_repository_impl.dart';
+import 'package:knowhen/features/birth_song/domain/repositories/birth_song_repository.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/brazil_curiosity/data/repositories/brazil_curiosity_repository_impl.dart';
 import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
@@ -62,6 +64,9 @@ Future<void> main() async {
         Provider<AdService>(create: (context) => AdService(analytics)),
         Provider<BrazilCuriositiesRepository>(
           create: (context) => HistoricalFactsRepositoryImpl(firestore: FirebaseFirestore.instance),
+        ),
+        Provider<BirthSongRepository>(
+          create: (context) => BirthSongRepositoryImpl(firestore: FirebaseFirestore.instance),
         ),
         ChangeNotifierProvider(create: (context) => ThemeProvider(analytics)),
         ChangeNotifierProvider.value(value: profile),

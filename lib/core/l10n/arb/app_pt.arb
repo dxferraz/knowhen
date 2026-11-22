@@ -565,5 +565,24 @@
   "endShare": "Compartilhar meu resumo",
   "@endShare": {},
   "adLabel": "Anúncio",
-  "@adLabel": {}
+  "@adLabel": {},
+  "birthSongTitle": "A trilha do seu nascimento",
+  "@birthSongTitle": {},
+  "birthSongIntro": "Em {period}, uma das músicas em destaque no Brasil foi:",
+  "@birthSongIntro": {
+    "placeholders": {
+      "period": {
+        "type": "String",
+        "example": "03/1995"
+      }
+    }
+  },
+  "birthSongDisclaimer": "Informação gerada por I.A.; pode conter imprecisões.",
+  "@birthSongDisclaimer": {},
+  "listenOnSpotify": "Ouvir no Spotify",
+  "@listenOnSpotify": {},
+  "listenOnYoutube": "Ouvir no YouTube",
+  "@listenOnYoutube": {},
+  "birthSongOpenError": "Não foi possível abrir o link.",
+  "@birthSongOpenError": {}
 }

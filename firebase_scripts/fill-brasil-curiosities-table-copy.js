@@ -1,4 +1,5 @@
-const admin = require("firebase-admin");
+const { applicationDefault, initializeApp } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
 const OpenAIApi = require("openai").default;
 
 require("dotenv").config();
@@ -12,11 +13,11 @@ if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
   process.exit(1);
 }
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
+initializeApp({
+  credential: applicationDefault(),
 });
 
-const db = admin.firestore();
+const db = getFirestore();
 
 // OpenAI API Configuration
 const openai = new OpenAIApi({

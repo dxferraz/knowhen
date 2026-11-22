@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:knowhen/core/config/app_links.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
 import 'package:knowhen/features/share/domain/share_card_content.dart';
 
 /// Card no formato Stories (9:16).
@@ -26,7 +26,7 @@ class ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final font = GoogleFonts.inter().fontFamily;
+    const font = KnFonts.sans;
 
     return SizedBox.fromSize(
       size: logicalSize,

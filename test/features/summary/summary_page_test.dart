@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:knowhen/features/birth_song/presentation/widgets/birth_song_section.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
@@ -38,6 +39,34 @@ void main() {
     expect(adService.showCalls, 1);
     expect(deps.firebaseAnalytics.names, ['summary_viewed', 'summary_section_viewed']);
     expect(deps.firebaseAnalytics.events.last.parameters, {'section_name': 'years_of_life', 'section_index': 0});
+  });
+
+  testWidgets('shows the birth song as the last page and logs birth_song when it is viewed', (tester) async {
+    final deps = TestDependencies(birthSongs: FakeBirthSongRepository(song: sampleBirthSong));
+
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), deps);
+    await tester.pumpAndSettle();
+
+    final pageView = tester.widget<PageView>(find.byType(PageView));
+    expect(pageView.childrenDelegate.estimatedChildCount, 6);
+
+    pageView.controller!.jumpToPage(5);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BirthSongSection), findsOneWidget);
+    expect(find.text('Garota de Ipanema'), findsOneWidget);
+    expect(deps.firebaseAnalytics.events.last.parameters, {'section_name': 'birth_song', 'section_index': 5});
+  });
+
+  testWidgets('without a song for the month the page does not exist', (tester) async {
+    final deps = TestDependencies(birthSongs: FakeBirthSongRepository());
+
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), deps);
+    await tester.pumpAndSettle();
+
+    final pageView = tester.widget<PageView>(find.byType(PageView));
+    expect(pageView.childrenDelegate.estimatedChildCount, 5);
+    expect(find.byType(BirthSongSection), findsNothing);
   });
 
   testWidgets('keeps the summary when the curiosity fails to load', (tester) async {

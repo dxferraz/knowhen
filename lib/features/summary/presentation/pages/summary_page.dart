@@ -8,6 +8,8 @@ import 'package:knowhen/features/milestones/presentation/widgets/next_milestone_
 import 'package:knowhen/core/theme/widgets/custom_icon_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/theme/widgets/theme_button.dart';
+import 'package:knowhen/features/birth_song/domain/repositories/birth_song_repository.dart';
+import 'package:knowhen/features/birth_song/presentation/widgets/birth_song_section.dart';
 import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
@@ -86,6 +88,9 @@ class _SummaryPageState extends State<SummaryPage> {
           break;
         case 4:
           sectionName = 'brazil_curiosity';
+          break;
+        case 5:
+          sectionName = 'birth_song';
           break;
         default:
           sectionName = 'unknown';
@@ -174,7 +179,7 @@ class _SummaryPageState extends State<SummaryPage> {
     final l10n = AppLocalizations.of(context)!;
 
     return BlocProvider(
-      create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>())..add(GetSummary(birthDate: widget.birthDate)),
+      create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>(), context.read<BirthSongRepository>())..add(GetSummary(birthDate: widget.birthDate)),
       child: Scaffold(
         appBar: AppBar(
           title: PrimaryH4(
@@ -228,6 +233,8 @@ class _SummaryPageState extends State<SummaryPage> {
                   ),
                   share: state.brazilCuriosity != null ? ShareSection.brazilCuriosity : null,
                 ),
+                // Sem música para o mês, a página nem existe (sem placeholder vazio).
+                if (state.birthSong != null) (section: BirthSongSection(song: state.birthSong!), share: null),
               ];
               final pageShareSection = pages[_currentPage].share;
               return Stack(

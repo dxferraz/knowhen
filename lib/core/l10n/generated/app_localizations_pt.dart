@@ -689,4 +689,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get adLabel => 'Anúncio';
+
+  @override
+  String get birthSongTitle => 'A trilha do seu nascimento';
+
+  @override
+  String birthSongIntro(String period) {
+    return 'Em $period, uma das músicas em destaque no Brasil foi:';
+  }
+
+  @override
+  String get birthSongDisclaimer =>
+      'Informação gerada por I.A.; pode conter imprecisões.';
+
+  @override
+  String get listenOnSpotify => 'Ouvir no Spotify';
+
+  @override
+  String get listenOnYoutube => 'Ouvir no YouTube';
+
+  @override
+  String get birthSongOpenError => 'Não foi possível abrir o link.';
 }
