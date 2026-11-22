@@ -1,9 +1,12 @@
 {
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "@fal-ai/client": "^1.11.0",
     "axios": "^1.21.1",
     "dotenv": "^18.0.10",
-    "firebase-admin": "^13.10.0",
+    "firebase-admin": "^14.5.1",
     "node-fetch": "^3.3.2",
     "openai": "^4.104.0"
   }
