@@ -10,7 +10,7 @@ void main() {
   final birthDate = DateTime(2000, 1, 21);
 
   Future<SummaryLoaded> loadSummary(FakeBrazilCuriositiesRepository repository) async {
-    final bloc = SummaryBloc(repository);
+    final bloc = SummaryBloc(repository, FakeBirthSongRepository());
     final states = bloc.stream.take(2).toList();
     bloc.add(GetSummary(birthDate: birthDate));
 
@@ -22,7 +22,7 @@ void main() {
   }
 
   test('starts in SummaryInitial', () {
-    final bloc = SummaryBloc(FakeBrazilCuriositiesRepository());
+    final bloc = SummaryBloc(FakeBrazilCuriositiesRepository(), FakeBirthSongRepository());
     addTearDown(bloc.close);
 
     expect(bloc.state, isA<SummaryInitial>());
