@@ -2,6 +2,8 @@
 
 Scripts Node.js que populam o Firestore do projeto `knowhen` usando a OpenAI.
 
+Requer Node.js 22 ou superior.
+
 ## Configuração
 
 1. Gere uma chave de service account no console do Firebase/GCP

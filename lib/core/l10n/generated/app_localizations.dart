@@ -789,6 +789,42 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Avisos no dia dos marcos da sua vida'**
   String get milestoneChannelDescription;
+
+  /// No description provided for @birthSongTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'A trilha do seu nascimento'**
+  String get birthSongTitle;
+
+  /// No description provided for @birthSongIntro.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em {period}, uma das músicas em destaque no Brasil foi:'**
+  String birthSongIntro(String period);
+
+  /// No description provided for @birthSongDisclaimer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informação gerada por I.A.; pode conter imprecisões.'**
+  String get birthSongDisclaimer;
+
+  /// No description provided for @listenOnSpotify.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ouvir no Spotify'**
+  String get listenOnSpotify;
+
+  /// No description provided for @listenOnYoutube.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ouvir no YouTube'**
+  String get listenOnYoutube;
+
+  /// No description provided for @birthSongOpenError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível abrir o link.'**
+  String get birthSongOpenError;
 }
 
 class _AppLocalizationsDelegate

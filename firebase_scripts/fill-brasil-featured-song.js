@@ -77,9 +77,10 @@ async function publish({ in: file = "brasil-songs.json" }) {
   if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     throw new Error("GOOGLE_APPLICATION_CREDENTIALS não definido. Veja firebase_scripts/README.md.");
   }
-  const admin = require("firebase-admin");
-  admin.initializeApp({ credential: admin.credential.applicationDefault() });
-  const db = admin.firestore();
+  const { applicationDefault, initializeApp } = require("firebase-admin/app");
+  const { getFirestore } = require("firebase-admin/firestore");
+  initializeApp({ credential: applicationDefault() });
+  const db = getFirestore();
 
   const entries = Object.entries(readSongs(file));
   if (entries.length === 0) throw new Error(`Nada para publicar em ${file}.`);
@@ -95,7 +96,7 @@ async function publish({ in: file = "brasil-songs.json" }) {
 }
 
 if (require.main === module) {
-  require("dotenv").config();
+  require("dotenv").config({ quiet: true });
   const { command, options } = parseArgs(process.argv.slice(2));
   const commands = { generate, publish };
   if (!commands[command]) {
