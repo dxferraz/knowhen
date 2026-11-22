@@ -3,11 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:knowhen/core/services/birthdate_storage.dart';
+import 'package:knowhen/core/services/life_profile_service.dart';
 import 'package:knowhen/core/theme/theme_provider.dart';
 import 'package:knowhen/features/brazil_curiosity/domain/repositories/brazil_curiosity_repository.dart';
 import 'package:provider/provider.dart';
 
 import 'fakes.dart';
+import 'milestone_fakes.dart';
 
 /// The same providers as `main.dart`, backed by fakes.
 class TestDependencies {
@@ -15,11 +18,20 @@ class TestDependencies {
       : repository = repository ?? FakeBrazilCuriositiesRepository(),
         adService = adService ?? FakeAdService();
 
+  final FakeMilestoneNotifier notifier = FakeMilestoneNotifier();
+  final FakeMilestoneAnalytics milestoneAnalytics = FakeMilestoneAnalytics();
+
   final FakeFirebaseAnalytics firebaseAnalytics = FakeFirebaseAnalytics();
   final AdService adService;
   final BrazilCuriositiesRepository repository;
 
   late final AnalyticsService analytics = AnalyticsService(firebaseAnalytics);
+  late final LifeProfileService profile = LifeProfileService(
+    storage: BirthdateStorage(),
+    notifier: notifier,
+    analytics: milestoneAnalytics,
+    l10n: lookupAppLocalizations(const Locale('pt')),
+  );
 
   Widget wrap(Widget child) => MultiProvider(
         providers: [
@@ -27,6 +39,7 @@ class TestDependencies {
           Provider<AdService>.value(value: adService),
           Provider<BrazilCuriositiesRepository>.value(value: repository),
           ChangeNotifierProvider(create: (_) => ThemeProvider(analytics)),
+          ChangeNotifierProvider<LifeProfileService>.value(value: profile),
         ],
         child: child,
       );

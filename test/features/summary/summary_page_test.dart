@@ -98,9 +98,16 @@ void main() {
     final adultBirthDate = DateTime(1990, 5, 20);
     final minorBirthDate = DateTime.now().subtract(const Duration(days: 365 * 10));
 
-    Future<List<bool>> pageThroughSummary(WidgetTester tester, DateTime birth, FakeBrazilCuriositiesRepository repository, int pageCount) async {
-      await tester.pumpApp(SummaryPage(birthDate: birth), TestDependencies(repository: repository));
+    // The offer to save the date sits over the bottom buttons until it is dismissed.
+    Future<void> openSummary(WidgetTester tester, DateTime birth, TestDependencies deps) async {
+      await tester.pumpApp(SummaryPage(birthDate: birth), deps);
       await tester.pumpAndSettle();
+      ScaffoldMessenger.of(tester.element(find.byType(Scaffold).first)).hideCurrentSnackBar();
+      await tester.pumpAndSettle();
+    }
+
+    Future<List<bool>> pageThroughSummary(WidgetTester tester, DateTime birth, FakeBrazilCuriositiesRepository repository, int pageCount) async {
+      await openSummary(tester, birth, TestDependencies(repository: repository));
       final hasShareButton = <bool>[];
       for (var page = 0; page < pageCount; page++) {
         hasShareButton.add(shareButton.evaluate().isNotEmpty);
@@ -113,33 +120,32 @@ void main() {
       return hasShareButton;
     }
 
-    testWidgets('adult with curiosity: all four pages offer a card', (tester) async {
-      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(), 4);
+    testWidgets('adult with curiosity: every page but the milestone offers a card', (tester) async {
+      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(), 5);
 
-      expect(hasShareButton, [true, true, true, true]);
+      expect(hasShareButton, [true, false, true, true, true]);
       expect(find.byType(BrazilCuriositySection), findsOneWidget);
     });
 
     testWidgets('adult without curiosity: the last page has no card', (tester) async {
-      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(hasCuriosity: false), 4);
+      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(hasCuriosity: false), 5);
 
-      expect(hasShareButton, [true, true, true, false]);
+      expect(hasShareButton, [true, false, true, true, false]);
     });
 
     testWidgets('minor: the conception page is empty and has no card', (tester) async {
-      final hasShareButton = await pageThroughSummary(tester, minorBirthDate, FakeBrazilCuriositiesRepository(), 4);
+      final hasShareButton = await pageThroughSummary(tester, minorBirthDate, FakeBrazilCuriositiesRepository(), 5);
 
-      expect(hasShareButton, [true, false, true, true]);
+      expect(hasShareButton, [true, false, false, true, true]);
       expect(find.byType(ConceptionSection), findsNothing);
     });
 
     testWidgets('tapping share opens the card preview of the current page', (tester) async {
-      await tester.pumpApp(SummaryPage(birthDate: adultBirthDate), TestDependencies());
-      await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(Icons.arrow_downward));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(Icons.arrow_downward));
-      await tester.pumpAndSettle();
+      await openSummary(tester, adultBirthDate, TestDependencies());
+      for (var i = 0; i < 3; i++) {
+        await tester.tap(find.byIcon(Icons.arrow_downward));
+        await tester.pumpAndSettle();
+      }
       expect(find.byType(MoonPhaseSection), findsOneWidget);
 
       await tester.tap(shareButton);

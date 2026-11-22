@@ -621,6 +621,174 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'{startRange} a {endRange}'**
   String shareConceptionRange(DateTime startRange, DateTime endRange);
+
+  /// No description provided for @milestoneWeeks1000.
+  ///
+  /// In pt, this message translates to:
+  /// **'1.000 semanas de vida'**
+  String get milestoneWeeks1000;
+
+  /// No description provided for @milestoneDays10000.
+  ///
+  /// In pt, this message translates to:
+  /// **'10.000 dias de vida'**
+  String get milestoneDays10000;
+
+  /// No description provided for @milestoneSeconds1Billion.
+  ///
+  /// In pt, this message translates to:
+  /// **'1 bilhão de segundos de vida'**
+  String get milestoneSeconds1Billion;
+
+  /// No description provided for @milestoneMonths500.
+  ///
+  /// In pt, this message translates to:
+  /// **'500 meses de vida'**
+  String get milestoneMonths500;
+
+  /// No description provided for @milestoneDays15000.
+  ///
+  /// In pt, this message translates to:
+  /// **'15.000 dias de vida'**
+  String get milestoneDays15000;
+
+  /// No description provided for @milestoneDays20000.
+  ///
+  /// In pt, this message translates to:
+  /// **'20.000 dias de vida'**
+  String get milestoneDays20000;
+
+  /// No description provided for @milestoneBirthday.
+  ///
+  /// In pt, this message translates to:
+  /// **'{age} anos de vida'**
+  String milestoneBirthday(int age);
+
+  /// No description provided for @milestoneNotificationTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje é um dia de marco!'**
+  String get milestoneNotificationTitle;
+
+  /// No description provided for @milestoneNotificationBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje você completa {milestone}. Toque para ver.'**
+  String milestoneNotificationBody(String milestone);
+
+  /// No description provided for @nextMilestoneTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo marco'**
+  String get nextMilestoneTitle;
+
+  /// No description provided for @milestoneCountdown.
+  ///
+  /// In pt, this message translates to:
+  /// **'{days, plural, =0{É hoje!} =1{Falta 1 dia} other{Faltam {days} dias}}'**
+  String milestoneCountdown(int days);
+
+  /// No description provided for @milestoneOnDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em {date}'**
+  String milestoneOnDate(String date);
+
+  /// No description provided for @remindMeButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Me avise'**
+  String get remindMeButton;
+
+  /// No description provided for @remindersEnabledInfo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lembrete ativado: avisamos às 9h no dia de cada marco.'**
+  String get remindersEnabledInfo;
+
+  /// No description provided for @disableReminders.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desativar lembrete'**
+  String get disableReminders;
+
+  /// No description provided for @remindersSaveDateInfo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ao ativar, sua data fica salva só neste aparelho.'**
+  String get remindersSaveDateInfo;
+
+  /// No description provided for @notificationPermissionDenied.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem a permissão de notificações não dá para avisar. Você pode ativá-la nas configurações do aparelho.'**
+  String get notificationPermissionDenied;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir configurações'**
+  String get openSettings;
+
+  /// No description provided for @reminderFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível agendar o lembrete. Tente novamente.'**
+  String get reminderFailed;
+
+  /// No description provided for @saveBirthdateOffer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quer abrir direto no seu resumo da próxima vez?'**
+  String get saveBirthdateOffer;
+
+  /// No description provided for @saveBirthdateShort.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar'**
+  String get saveBirthdateShort;
+
+  /// No description provided for @saveBirthdateAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar minha data neste aparelho'**
+  String get saveBirthdateAction;
+
+  /// No description provided for @birthdateSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data salva neste aparelho.'**
+  String get birthdateSaved;
+
+  /// No description provided for @deleteSavedBirthdate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apagar data salva'**
+  String get deleteSavedBirthdate;
+
+  /// No description provided for @birthdateDeleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data apagada deste aparelho.'**
+  String get birthdateDeleted;
+
+  /// No description provided for @chooseAnotherDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolher outra data'**
+  String get chooseAnotherDate;
+
+  /// No description provided for @milestoneChannelName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Marcos de vida'**
+  String get milestoneChannelName;
+
+  /// No description provided for @milestoneChannelDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Avisos no dia dos marcos da sua vida'**
+  String get milestoneChannelDescription;
 }
 
 class _AppLocalizationsDelegate
