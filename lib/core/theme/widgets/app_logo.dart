@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:knowhen/core/theme/app_theme.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
 
 class AppLogo extends StatelessWidget {
   final double? size;
@@ -14,7 +13,7 @@ class AppLogo extends StatelessWidget {
           TextSpan(
             text: 'Kno',
             style: TextStyle(
-              fontFamily: GoogleFonts.yatraOne().fontFamily,
+              fontFamily: KnFonts.logo,
               color: Theme.of(context).colorScheme.onSurface,
               fontSize: size ?? 28,
             ),
@@ -22,15 +21,15 @@ class AppLogo extends StatelessWidget {
           TextSpan(
             text: 'w',
             style: TextStyle(
-              fontFamily: GoogleFonts.yatraOne().fontFamily,
-              color: LightAppColors.tertiary,
+              fontFamily: KnFonts.logo,
+              color: context.kn.isDark ? context.kn.primary : context.kn.accentText,
               fontSize: size ?? 28,
             ),
           ),
           TextSpan(
             text: 'hen',
             style: TextStyle(
-              fontFamily: GoogleFonts.yatraOne().fontFamily,
+              fontFamily: KnFonts.logo,
               color: Theme.of(context).colorScheme.onSurface,
               fontSize: size ?? 28,
             ),

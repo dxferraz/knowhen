@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
 
 class PrimaryH1 extends StatelessWidget {
   const PrimaryH1(this.text, {super.key, this.textAlign = TextAlign.start, this.color});
@@ -14,7 +14,7 @@ class PrimaryH1 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 32,
         fontWeight: FontWeight.w700,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -37,7 +37,7 @@ class PrimaryH2 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 28,
         fontWeight: FontWeight.w700,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -60,7 +60,7 @@ class PrimaryH3 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 24,
         fontWeight: FontWeight.w700,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -83,7 +83,7 @@ class PrimaryH4 extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 16,
         fontWeight: FontWeight.w700,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -108,7 +108,7 @@ class SecondaryH1 extends StatelessWidget {
       style: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.w700,
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: KnFonts.legacyPoppins,
         color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
@@ -131,7 +131,7 @@ class SecondaryH2 extends StatelessWidget {
       style: TextStyle(
         fontSize: 28,
         fontWeight: FontWeight.w700,
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: KnFonts.legacyPoppins,
         color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
@@ -154,7 +154,7 @@ class SecondaryH3 extends StatelessWidget {
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w700,
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: KnFonts.legacyPoppins,
         color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
@@ -177,7 +177,7 @@ class SecondaryH4 extends StatelessWidget {
       style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w700,
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: KnFonts.legacyPoppins,
         color: color ?? Theme.of(context).colorScheme.secondary,
         height: 1.5,
       ),
@@ -198,7 +198,7 @@ class PrimaryParagraphL extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 18,
         fontWeight: FontWeight.w400,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -221,7 +221,7 @@ class PrimaryParagraphM extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 18,
         fontWeight: FontWeight.w400,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -244,7 +244,7 @@ class PrimaryParagraphS extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 14,
         fontWeight: FontWeight.w600,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -267,7 +267,7 @@ class SecondaryParagraphL extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: KnFonts.legacyPoppins,
         fontSize: 18,
         fontWeight: FontWeight.w400,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -290,7 +290,7 @@ class PrimaryCaption extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily: KnFonts.sans,
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: color ?? Theme.of(context).colorScheme.onSurface,
@@ -313,7 +313,7 @@ class SecondaryCaption extends StatelessWidget {
       textAlign: textAlign,
       style: TextStyle(
         fontSize: 10,
-        fontFamily: GoogleFonts.poppins().fontFamily,
+        fontFamily: KnFonts.legacyPoppins,
         fontWeight: FontWeight.w600,
         color: color ?? Theme.of(context).colorScheme.onSurface,
         height: 1.5,
@@ -341,7 +341,7 @@ class PrimaryRichText extends StatelessWidget {
       return TextSpan(
         text: text,
         style: TextStyle(
-          fontFamily: GoogleFonts.inter().fontFamily,
+          fontFamily: KnFonts.sans,
           color: color,
           fontSize: 18,
           fontWeight: FontWeight.w600,
@@ -355,8 +355,10 @@ class PrimaryRichText extends StatelessWidget {
       textAlign: textAlign,
       text: TextSpan(
         children: List.generate(
-            text.length, (index) => buildTextSpan(text[index].text, text[index].color),
-            growable: false),
+          text.length,
+          (index) => buildTextSpan(text[index].text, text[index].color),
+          growable: false,
+        ),
       ),
     );
   }
@@ -374,7 +376,7 @@ class SecondaryRichText extends StatelessWidget {
       return TextSpan(
         text: text,
         style: TextStyle(
-          fontFamily: GoogleFonts.poppins().fontFamily,
+          fontFamily: KnFonts.legacyPoppins,
           color: color,
           fontSize: 18,
           fontWeight: FontWeight.w600,
@@ -388,8 +390,10 @@ class SecondaryRichText extends StatelessWidget {
       textAlign: textAlign,
       text: TextSpan(
         children: List.generate(
-            text.length, (index) => buildTextSpan(text[index].text, text[index].color),
-            growable: false),
+          text.length,
+          (index) => buildTextSpan(text[index].text, text[index].color),
+          growable: false,
+        ),
       ),
     );
   }
