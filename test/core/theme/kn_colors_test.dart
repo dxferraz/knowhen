@@ -73,6 +73,40 @@ void main() {
     });
   });
 
+  group('pares do ColorScheme que usam as cores da paleta', () {
+    for (final c in [KnColors.night, KnColors.dawn]) {
+      final name = c.isDark ? 'Noite' : 'Amanhecer';
+      final scheme = (c.isDark ? darkTheme : lightTheme).colorScheme;
+
+      test('$name: onPrimary sobre secondary e sobre inkMuted', () {
+        expect(
+          contrastRatio(c.onPrimary, scheme.secondary),
+          greaterThanOrEqualTo(aaText),
+          reason: 'onPrimary/secondary',
+        );
+        expect(contrastRatio(c.onPrimary, c.inkMuted), greaterThanOrEqualTo(aaText), reason: 'onPrimary/inkMuted');
+      });
+
+      test('$name: ícone secondary sobre surface passa em 3:1', () {
+        expect(contrastRatio(scheme.secondary, c.surface), greaterThanOrEqualTo(aaUi));
+      });
+    }
+  });
+
+  group('SnackBar', () {
+    for (final entry in {'Noite': darkTheme, 'Amanhecer': lightTheme}.entries) {
+      final theme = entry.value.snackBarTheme;
+
+      test('${entry.key}: texto do conteúdo sobre o fundo passa no AA', () {
+        expect(contrastRatio(theme.contentTextStyle!.color!, theme.backgroundColor!), greaterThanOrEqualTo(aaText));
+      });
+
+      test('${entry.key}: texto da ação sobre o fundo passa no AA', () {
+        expect(contrastRatio(theme.actionTextColor!, theme.backgroundColor!), greaterThanOrEqualTo(aaText));
+      });
+    }
+  });
+
   group('ColorScheme do ThemeData', () {
     for (final entry in {'claro': lightTheme, 'escuro': darkTheme}.entries) {
       final s = entry.value.colorScheme;

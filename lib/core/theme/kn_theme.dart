@@ -118,6 +118,7 @@ ThemeData buildKnTheme(KnColors colors) {
         systemNavigationBarColor: c.bg,
       ),
     ),
+    // A sombra índigo do tema claro (seção 2.3: 6%, blur 24) fica para o PR de componentes, que desenha os cartões.
     cardTheme: CardThemeData(
       color: c.surface,
       surfaceTintColor: Colors.transparent,
@@ -215,7 +216,8 @@ ThemeData buildKnTheme(KnColors colors) {
       behavior: SnackBarBehavior.floating,
       backgroundColor: c.ink,
       contentTextStyle: text.body.copyWith(color: c.bg),
-      actionTextColor: dark ? c.primary : c.lavender,
+      // O fundo do SnackBar é `ink` (invertido em relação ao tema), então a ação usa o lavender do tema oposto.
+      actionTextColor: dark ? KnColors.dawn.lavender : KnColors.night.lavender,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(KnRadius.sm)),
     ),
     tooltipTheme: TooltipThemeData(
