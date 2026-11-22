@@ -1,6 +1,6 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/date_text.dart';
 import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/theme/widgets/app_logo.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
@@ -32,8 +32,7 @@ class _BirthdatePageState extends State<BirthdatePage> {
   }
 
   String formatDate(DateTime date) {
-    final dateFormat = DateFormat('dd/MM/yyyy');
-    return dateFormat.format(date);
+    return DateText.numeric(date);
   }
 
   Future<void> _selecionarHora(BuildContext context) async {

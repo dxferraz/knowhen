@@ -18,12 +18,14 @@ import 'package:knowhen/core/services/life_profile_service.dart';
 import 'package:knowhen/core/services/local_milestone_notifier.dart';
 import 'package:knowhen/core/services/milestone_notifier.dart';
 import 'package:knowhen/core/services/notification_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -140,7 +142,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
-          title: 'Knowhen',
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           themeMode: themeProvider.themeMode,
