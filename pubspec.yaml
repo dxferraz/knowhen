@@ -50,6 +50,7 @@ dev_dependencies:
   envied_generator: ^1.1.0
   flutter_launcher_icons: ^0.14.3
   build_runner: ^2.15.0
+  fake_cloud_firestore: ^4.4.0
 
 flutter_icons:
   android: true

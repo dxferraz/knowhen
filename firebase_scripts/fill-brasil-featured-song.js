@@ -6,13 +6,14 @@
 //     os meses que já estão no arquivo são pulados. Não toca no Firestore.
 //
 //   node fill-brasil-featured-song.js publish [--in brasil-songs.json]
-//     Grava o JSON (já revisado) no Firestore, um documento por mês (id `AAAA-MM`). Rodar de novo sobrescreve
-//     os mesmos documentos, sem duplicar.
+//     Valida todas as entradas do JSON (já revisado) e só então grava no Firestore, um documento por mês (id
+//     `AAAA-MM`). Se alguma entrada for inválida, lista todas e não grava nada. Rodar de novo sobrescreve os
+//     mesmos documentos, sem duplicar.
 //
 // Veja firebase_scripts/README.md para as credenciais.
 
 const fs = require("node:fs");
-const { FIRST_YEAR, monthsToProcess, docId, parseSongResponse, toDocument, buildPrompt } = require("./brasil-songs");
+const { FIRST_YEAR, monthsToProcess, docId, parseSongResponse, toDocument, buildPrompt, validateSongs } = require("./brasil-songs");
 
 const MODEL = "gpt-4o-mini";
 const BATCH_SIZE = 400; // o Firestore aceita até 500 operações por batch
@@ -27,7 +28,12 @@ function parseArgs(argv) {
 }
 
 function readSongs(file) {
-  return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : {};
+  if (!fs.existsSync(file)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (error) {
+    throw new Error(`${file} não é um JSON válido: ${error.message}`);
+  }
 }
 
 async function askModel(openai, date) {
@@ -74,6 +80,15 @@ async function generate({ from = FIRST_YEAR, to = new Date().getFullYear(), out 
 }
 
 async function publish({ in: file = "brasil-songs.json" }) {
+  const songs = readSongs(file);
+  const errors = validateSongs(songs);
+  if (errors.length > 0) {
+    const lines = errors.map(({ key, message }) => `  ${key}: ${message}`).join("\n");
+    throw new Error(`${errors.length} problema(s) em ${file}, nada foi gravado:\n${lines}`);
+  }
+  const entries = Object.entries(songs);
+  if (entries.length === 0) throw new Error(`Nada para publicar em ${file}.`);
+
   if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     throw new Error("GOOGLE_APPLICATION_CREDENTIALS não definido. Veja firebase_scripts/README.md.");
   }
@@ -81,9 +96,6 @@ async function publish({ in: file = "brasil-songs.json" }) {
   const { getFirestore } = require("firebase-admin/firestore");
   initializeApp({ credential: applicationDefault() });
   const db = getFirestore();
-
-  const entries = Object.entries(readSongs(file));
-  if (entries.length === 0) throw new Error(`Nada para publicar em ${file}.`);
 
   for (let i = 0; i < entries.length; i += BATCH_SIZE) {
     const batch = db.batch();

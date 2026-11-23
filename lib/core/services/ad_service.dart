@@ -61,7 +61,7 @@ class AdService {
     return completer.future;
   }
 
-  void showAd() async {
+  Future<void> showAd() async {
     final ad = _interstitialAd;
     if (ad == null) {
       debugPrint("Anúncio não está pronto");

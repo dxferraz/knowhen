@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:knowhen/core/theme/widgets/app_logo.dart';
-import 'package:knowhen/core/theme/widgets/custom_button.dart';
-import 'package:knowhen/core/theme/widgets/theme_button.dart';
-import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
-import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_1.dart';
-import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_2.dart';
-import 'package:knowhen/features/onboarding/presentation/widgets/onboarding_step_3.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:knowhen/core/theme/components/kn_background.dart';
+import 'package:knowhen/core/theme/components/kn_button.dart';
+import 'package:knowhen/core/theme/components/kn_moon.dart';
+import 'package:knowhen/core/theme/components/kn_top_bar.dart';
+import 'package:knowhen/core/theme/tokens/kn_spacing.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
+import 'package:knowhen/core/theme/widgets/app_logo.dart';
+import 'package:knowhen/core/theme/widgets/theme_button.dart';
+import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
+/// Primeira abertura: uma tela só, com as quatro revelações que o usuário vai receber (DXF-9, 4.1).
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
 
@@ -21,109 +22,150 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  late PageController _controller;
-  bool isLastPage = false;
+  /// Lua crescente fina: já sugere o céu sem cravar uma fase.
+  static const double _moonPhase = 0.18;
+
+  /// Um segundo toque em "Começar" antes de a primeira chamada terminar não pode repetir o evento nem
+  /// empilhar outra tela de data.
+  bool _starting = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = PageController(initialPage: 0);
-    context.read<AnalyticsService>().logOnboardingStarted();
-    context.read<AnalyticsService>().logOnboardingStepViewed(0);
+    final analytics = context.read<AnalyticsService>();
+    analytics.logOnboardingStarted();
+    analytics.logOnboardingStepViewed(0);
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  Future<void> _start() async {
+    if (_starting) return;
+    setState(() => _starting = true);
 
-  void markOnboardingCompleted() async {
+    final analytics = context.read<AnalyticsService>();
+    final navigator = Navigator.of(context);
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
     await prefs.setBool('showOnboarding', false);
+    if (!mounted) return;
+
+    analytics.logOnboardingCompleted();
+    await navigator.push(
+      MaterialPageRoute(builder: (_) => const BirthdatePage()),
+    );
+    // Se o usuário voltar do formulário de data, o botão volta a funcionar.
+    if (mounted) setState(() => _starting = false);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final c = context.kn;
+    final text = context.knText;
+    // Em telas baixas (celulares pequenos) a lua encolhe para caberem mais revelações sem rolar.
+    final compact = MediaQuery.sizeOf(context).height < 700;
+
+    final reveals = [
+      (Icons.hourglass_bottom_rounded, l10n.onboardingRevealLife),
+      (Icons.favorite_border_rounded, l10n.onboardingRevealConception),
+      (Icons.nightlight_round, l10n.onboardingRevealMoon),
+      (Icons.history_edu_rounded, l10n.onboardingRevealFact),
+    ];
+
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const AppLogo(),
-        actions: [ThemeButton()],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: 80),
-        child: PageView(
-          controller: _controller,
-          onPageChanged: (index) {
-            setState(() {
-              isLastPage = index == 2;
-            });
-            context.read<AnalyticsService>().logOnboardingStepViewed(index);
-          },
-          children: const [
-            OnboardingStep1(),
-            OnboardingStep2(),
-            OnboardingStep3(),
-          ],
+      backgroundColor: c.bg,
+      body: KnBackground(
+        child: SafeArea(
+          child: Column(
+            children: [
+              KnTopBar(center: const AppLogo(), trailing: const ThemeButton()),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: KnSpace.xl),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: compact ? KnSpace.md : KnSpace.xl),
+                      Center(
+                        child: KnMoon(
+                          phase: _moonPhase,
+                          size: compact ? 88 : 132,
+                        ),
+                      ),
+                      SizedBox(height: compact ? KnSpace.lg : KnSpace.xl),
+                      Semantics(
+                        header: true,
+                        child: Text(l10n.onboardingTitle, style: text.title),
+                      ),
+                      const SizedBox(height: KnSpace.md),
+                      Text(l10n.onboardingIntro, style: text.bodyMuted),
+                      const SizedBox(height: KnSpace.lg),
+                      for (final (icon, label) in reveals)
+                        _RevealRow(icon: icon, label: label),
+                      const SizedBox(height: KnSpace.lg),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  KnSpace.xl,
+                  KnSpace.sm,
+                  KnSpace.xl,
+                  KnSpace.lg,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    KnButton(
+                      label: l10n.start,
+                      icon: Icons.arrow_forward_rounded,
+                      onPressed: _starting ? null : _start,
+                    ),
+                    const SizedBox(height: KnSpace.sm),
+                    Text(
+                      l10n.onboardingTakesLess,
+                      style: text.caption,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      bottomSheet: SizedBox(
-        height: 80,
+    );
+  }
+}
+
+class _RevealRow extends StatelessWidget {
+  const _RevealRow({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.kn;
+
+    return MergeSemantics(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: KnSpace.sm),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            isLastPage
-                ? Container(width: 85)
-                : CustomButton(
-                    onPressed: () {
-                      final currentPage = _controller.hasClients ? _controller.page?.round() ?? 0 : 0;
-                      context.read<AnalyticsService>().logOnboardingSkipped(currentPage);
-                      _controller.animateToPage(
-                        2,
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.ease,
-                      );
-                    },
-                    backgroundColor: Colors.transparent,
-                    textColor: Theme.of(context).colorScheme.onSurface,
-                    text: l10n.skip,
-                  ),
-            SmoothPageIndicator(
-              controller: _controller,
-              count: 3,
-              effect: WormEffect(
-                dotHeight: 14,
-                dotWidth: 14,
-                dotColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
-                activeDotColor: isLastPage ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.secondary,
+            ExcludeSemantics(
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: c.surfaceHi,
+                  borderRadius: BorderRadius.circular(KnRadius.sm),
+                ),
+                child: Icon(icon, size: 20, color: c.accentText),
               ),
-              onDotClicked: (index) => _controller.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease),
             ),
-            if (isLastPage)
-              CustomButton(
-                onPressed: () {
-                  markOnboardingCompleted();
-                  context.read<AnalyticsService>().logOnboardingCompleted();
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const BirthdatePage(),
-                  ));
-                },
-                text: l10n.start,
-                backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-              )
-            else
-              CustomButton(
-                onPressed: () {
-                  _controller.nextPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.ease,
-                  );
-                },
-                text: l10n.next,
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-              ),
+            const SizedBox(width: KnSpace.md),
+            Expanded(child: Text(label, style: context.knText.label)),
           ],
         ),
       ),

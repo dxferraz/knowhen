@@ -124,42 +124,6 @@ abstract class AppLocalizations {
   /// **'Começar'**
   String get start;
 
-  /// No description provided for @onboarding1Title.
-  ///
-  /// In pt, this message translates to:
-  /// **'Bem-vindo ao Knowhen!'**
-  String get onboarding1Title;
-
-  /// No description provided for @onboarding1Description.
-  ///
-  /// In pt, this message translates to:
-  /// **'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento'**
-  String get onboarding1Description;
-
-  /// No description provided for @onboarding2Title.
-  ///
-  /// In pt, this message translates to:
-  /// **'Desvendando o que sua data de nascimento revela!'**
-  String get onboarding2Title;
-
-  /// No description provided for @onboarding2Description.
-  ///
-  /// In pt, this message translates to:
-  /// **'Explore dados personalizados sobre sua personalidade, curiosidades históricas e insights únicos baseados na sua data de nascimento.'**
-  String get onboarding2Description;
-
-  /// No description provided for @onboarding3Title.
-  ///
-  /// In pt, this message translates to:
-  /// **'Vamos descobrir?'**
-  String get onboarding3Title;
-
-  /// No description provided for @onboarding3Description.
-  ///
-  /// In pt, this message translates to:
-  /// **'Insira sua data de nascimento e veja o que o universo tem reservado para você!'**
-  String get onboarding3Description;
-
   /// No description provided for @selectADate.
   ///
   /// In pt, this message translates to:
@@ -789,6 +753,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Leva menos de um minuto'**
   String get onboardingTakesLess;
+
+  /// No description provided for @onboardingIntro.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe sua data de nascimento e veja quatro revelações sobre ela.'**
+  String get onboardingIntro;
+
+  /// No description provided for @themeSwitchToLight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mudar para o tema claro'**
+  String get themeSwitchToLight;
+
+  /// No description provided for @themeSwitchToDark.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mudar para o tema escuro'**
+  String get themeSwitchToDark;
 
   /// No description provided for @birthdateTitle.
   ///
