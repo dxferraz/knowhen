@@ -1,20 +1,30 @@
 // Regras puras do preenchimento de `brasil-songs`, separadas do script para serem testadas sem rede.
 
 const FIRST_YEAR = 1925;
+// O modelo não conhece bem a música brasileira antes de ~1930 nem depois do seu corte de conhecimento.
+const DEFAULT_FROM_YEAR = 1930;
+const DEFAULT_TO_YEAR = 2023;
+const SONGS_PER_YEAR = 12;
+// Menos que isso e o ano fica de fora: preferimos um mês sem música (o app esconde a seção) a um chute.
+const MIN_SONGS_PER_YEAR = 8;
+const MAX_ATTEMPTS_PER_YEAR = 2;
 
 // Respostas que o modelo dá quando não sabe (ou que não são uma música de verdade).
 const PLACEHOLDERS = new Set(["unknown", "desconhecido", "desconhecida", "n/a", "na", "nenhum", "nenhuma", "-", "?"]);
+const ARTICLES = new Set(["o", "a", "os", "as", "um", "uma", "the"]);
 
-/** Todos os meses de `fromYear` até `toYear`, sem ultrapassar o mês de `now`. Mês e ano como string, como o app lê. */
-function monthsToProcess(fromYear, toYear, now = new Date()) {
-  const months = [];
-  for (let year = fromYear; year <= toYear; year++) {
-    for (let month = 1; month <= 12; month++) {
-      const isFuture = year > now.getFullYear() || (year === now.getFullYear() && month > now.getMonth() + 1);
-      if (!isFuture) months.push({ year: String(year), month: String(month) });
+/** Valida `--from`/`--to`: anos de quatro dígitos, de FIRST_YEAR até o ano atual, com `from <= to`. */
+function parseYearRange(from = DEFAULT_FROM_YEAR, to = DEFAULT_TO_YEAR, now = new Date()) {
+  const last = now.getFullYear();
+  const parse = (value, name) => {
+    if (!/^\d{4}$/.test(String(value)) || Number(value) < FIRST_YEAR || Number(value) > last) {
+      throw new Error(`--${name} deve ser um ano de ${FIRST_YEAR} a ${last}, recebi "${value}".`);
     }
-  }
-  return months;
+    return Number(value);
+  };
+  const range = { from: parse(from, "from"), to: parse(to, "to") };
+  if (range.from > range.to) throw new Error(`--from (${range.from}) não pode ser maior que --to (${range.to}).`);
+  return range;
 }
 
 /** Id determinístico: rodar duas vezes sobrescreve o mesmo documento em vez de duplicar. */
@@ -29,17 +39,87 @@ function clean(value) {
     .trim();
 }
 
-/** Lê "Cantor: ..." e "Música: ..." da resposta. Devolve `null` se faltar um campo ou se for um placeholder. */
-function parseSongResponse(text) {
-  if (typeof text !== "string") return null;
-  const artistMatch = text.match(/Cantor:\s*(.+)/i);
-  const songMatch = text.match(/M[úu]sica:\s*(.+)/i);
-  if (!artistMatch || !songMatch) return null;
+/** Chave de comparação: sem caixa, acento, pontuação nem artigos, para "O Amor É o Meu País" = "O Amor É Meu País". */
+function normalize(text) {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((word) => word && !ARTICLES.has(word))
+    .join(" ");
+}
 
-  const artist = clean(artistMatch[1]);
-  const songName = clean(songMatch[1]);
-  if (!isValidField(artist) || !isValidField(songName)) return null;
-  return { artist, songName };
+function songKey({ artist, songName }) {
+  return `${normalize(artist)}|${normalize(songName)}`;
+}
+
+/**
+ * Lê a resposta JSON de um ano e devolve só as músicas bem formadas cujo `releaseYear` é o ano pedido.
+ * Resposta que não é JSON, ou sem a lista `songs`, vira lista vazia.
+ */
+function parseYearResponse(text, year) {
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(data?.songs)) return [];
+  return data.songs.flatMap((item) => {
+    if (item === null || typeof item !== "object") return [];
+    if (typeof item.artist !== "string" || typeof item.songName !== "string") return [];
+    if (Number(item.releaseYear) !== Number(year)) return [];
+    const artist = clean(item.artist);
+    const songName = clean(item.songName);
+    return isValidField(artist) && isValidField(songName) ? [{ artist, songName }] : [];
+  });
+}
+
+/** Separa as músicas novas das repetidas (entre si ou em `seen`, o conjunto de `songKey` já usados). */
+function dedupeSongs(candidates, seen) {
+  const taken = new Set(seen);
+  const accepted = [];
+  const rejected = [];
+  for (const song of candidates) {
+    const key = songKey(song);
+    if (taken.has(key)) {
+      rejected.push(song);
+    } else {
+      taken.add(key);
+      accepted.push(song);
+    }
+  }
+  return { accepted, rejected };
+}
+
+/**
+ * Pergunta ao modelo (`ask(prompt, attempt)` devolve o texto da resposta) as músicas de um ano. Tenta de novo uma
+ * vez, juntando o que veio de novo, se faltar música válida e inédita. Devolve `null` se, depois disso, ainda
+ * houver menos de MIN_SONGS_PER_YEAR: o ano fica de fora. Erros de rede de `ask` sobem para quem chamou.
+ */
+async function generateYear({ year, ask, seen, minSongs = MIN_SONGS_PER_YEAR }) {
+  const songs = [];
+  const asked = [];
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS_PER_YEAR; attempt++) {
+    const candidates = parseYearResponse(await ask(buildYearPrompt(year, asked), attempt), year);
+    asked.push(...candidates);
+    const taken = new Set([...seen, ...songs.map(songKey)]);
+    songs.push(...dedupeSongs(candidates, taken).accepted);
+    if (songs.length >= SONGS_PER_YEAR) break;
+  }
+  return songs.length >= minSongs ? songs.slice(0, SONGS_PER_YEAR) : null;
+}
+
+/** Espalha as músicas do ano pelos meses (uma por mês, a partir de janeiro se forem 12). Devolve `{ AAAA-MM: doc }`. */
+function yearDocuments(year, songs) {
+  const documents = {};
+  songs.slice(0, SONGS_PER_YEAR).forEach((song, index) => {
+    const date = { year: String(year), month: String(Math.floor((index * 12) / songs.length) + 1) };
+    documents[docId(date)] = toDocument(date, song);
+  });
+  return documents;
 }
 
 function isValidField(value) {
@@ -66,8 +146,15 @@ function validateSongs(songs, now = new Date()) {
     return [{ key: "(arquivo)", message: "o JSON deve ser um objeto com uma entrada por mês" }];
   }
   const errors = [];
-  for (const [key, entry] of Object.entries(songs)) {
+  const firstKeyBySong = new Map();
+  for (const [key, entry] of Object.entries(songs).sort(([a], [b]) => a.localeCompare(b))) {
     for (const message of validateEntry(key, entry, now)) errors.push({ key, message });
+    if (typeof entry?.artist === "string" && typeof entry?.songName === "string") {
+      const songId = songKey(entry);
+      const first = firstKeyBySong.get(songId);
+      if (first) errors.push({ key, message: `música repetida (já usada em ${first})` });
+      else firstKeyBySong.set(songId, key);
+    }
   }
   return errors;
 }
@@ -108,16 +195,55 @@ function validateEntry(key, entry, now) {
   return problems;
 }
 
-function buildPrompt({ year, month }) {
-  return `Qual lançamento de música foi um sucesso no Brasil no mês ${month} de ${year}? Responda apenas com o nome do cantor e o nome da música, neste formato:
-
-Cantor: [Nome do cantor]
-Música: [Nome da música]
-
-Só responda se tiver certeza de que a música existe e foi sucesso no Brasil nesse período. Se não tiver certeza, responda exatamente:
-
-Cantor: Desconhecido
-Música: Desconhecido`;
+function buildYearPrompt(year, asked = []) {
+  const avoid = asked.length
+    ? `\n\nNão repita nenhuma destas, já listadas: ${asked.map((song) => `${song.artist} - ${song.songName}`).join("; ")}.`
+    : "";
+  return `Liste ${SONGS_PER_YEAR} músicas diferentes que foram sucesso no Brasil e que foram LANÇADAS em ${year}. Cada música deve ter sido lançada exatamente nesse ano: não use músicas lançadas antes ou depois, nem regravações posteriores. Não repita músicas. Informe o ano de lançamento de cada uma em releaseYear. Só inclua músicas que você tem certeza que existem, com cantor e título corretos; se não souber ${SONGS_PER_YEAR}, devolva menos.${avoid}`;
 }
 
-module.exports = { FIRST_YEAR, monthsToProcess, docId, parseSongResponse, toDocument, buildPrompt, validateSongs };
+/** Formato estruturado da resposta, para o `response_format` da OpenAI. */
+const YEAR_RESPONSE_SCHEMA = {
+  name: "year_songs",
+  strict: true,
+  schema: {
+    type: "object",
+    additionalProperties: false,
+    required: ["songs"],
+    properties: {
+      songs: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["artist", "songName", "releaseYear"],
+          properties: {
+            artist: { type: "string" },
+            songName: { type: "string" },
+            releaseYear: { type: "integer" },
+          },
+        },
+      },
+    },
+  },
+};
+
+module.exports = {
+  FIRST_YEAR,
+  DEFAULT_FROM_YEAR,
+  DEFAULT_TO_YEAR,
+  SONGS_PER_YEAR,
+  MIN_SONGS_PER_YEAR,
+  YEAR_RESPONSE_SCHEMA,
+  parseYearRange,
+  docId,
+  normalize,
+  songKey,
+  parseYearResponse,
+  dedupeSongs,
+  generateYear,
+  yearDocuments,
+  toDocument,
+  buildYearPrompt,
+  validateSongs,
+};
