@@ -1,0 +1,31 @@
+rules_version = '2';
+
+// Regras do Firestore do Knowhen. O app só usa duas coleções e faz login anônimo (main.dart), então
+// "autenticado" aqui significa "qualquer instalação do app". Os scripts de firebase_scripts/ usam o
+// Admin SDK, que ignora estas regras.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Música do mês: o app só lê (birth_song_repository_impl.dart). Escrita só pelo Admin SDK.
+    match /brasil-songs/{songId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Curiosidade do mês: o app lê e, depois de gerar a imagem, grava só o imageUrl
+    // (brazil_curiosity_repository_impl.dart). Nada de create/delete nem de alterar o texto.
+    match /brasil-curiosities/{curiosityId} {
+      allow read: if request.auth != null;
+      allow create, delete: if false;
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['imageUrl'])
+        && request.resource.data.imageUrl is string
+        && request.resource.data.imageUrl.size() <= 2048;
+    }
+
+    // Todo o resto fica negado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
