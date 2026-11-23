@@ -192,7 +192,7 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           theme: lightTheme,
-          home: Center(child: ShareCard(content: _content())),
+          home: Material(type: MaterialType.transparency, child: Center(child: ShareCard(content: _content()))),
         ),
       );
       await tester.pumpAndSettle();
