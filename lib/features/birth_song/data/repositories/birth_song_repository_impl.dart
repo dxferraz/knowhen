@@ -8,15 +8,15 @@ class BirthSongRepositoryImpl implements BirthSongRepository {
 
   BirthSongRepositoryImpl({required this.firestore});
 
+  /// Reads the document `AAAA-MM` directly: deterministic, and it ignores documents with random ids
+  /// written by older versions of the fill script.
   @override
   Future<BirthSongEntity?> getBirthSong(DateTime birthDate) async {
-    final result = await firestore
-        .collection('brasil-songs')
-        .where('year', isEqualTo: birthDate.year.toString())
-        .where('month', isEqualTo: birthDate.month.toString())
-        .limit(1)
-        .get();
-    if (result.docs.isEmpty) return null;
-    return BirthSongDTO.fromJson(result.docs.first.data()).toEntity();
+    final id =
+        '${birthDate.year}-${birthDate.month.toString().padLeft(2, '0')}';
+    final snapshot = await firestore.collection('brasil-songs').doc(id).get();
+    final data = snapshot.data();
+    if (data == null) return null;
+    return BirthSongDTO.fromJson(data).toEntity();
   }
 }
