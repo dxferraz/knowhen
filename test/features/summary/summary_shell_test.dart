@@ -39,6 +39,7 @@ Future<_Harness> _pumpShell(
   double scale = 1,
   bool disableAnimations = false,
   int initialPage = 0,
+  PageController? controller,
   Size size = const Size(360, 640),
 }) async {
   tester.view
@@ -62,6 +63,7 @@ Future<_Harness> _pumpShell(
           birthDate: _birthDate,
           cards: cards ?? _cards(),
           initialPage: initialPage,
+          controller: controller,
           menu: const SizedBox(key: Key('menu'), width: 48, height: 48),
           onClose: () => harness.closed++,
           onShare: harness.shared.add,
@@ -145,6 +147,23 @@ void main() {
       expect(find.text('Conteúdo 1'), findsOneWidget);
       expect(_currentCard(tester), 1);
       expect(harness.viewed, [1]);
+    });
+
+    testWidgets('com um controller de fora, abre na página dele e a casca não o descarta', (tester) async {
+      final controller = PageController(initialPage: 2);
+      final harness = await _pumpShell(tester, controller: controller);
+
+      expect(find.text('Conteúdo 2'), findsOneWidget);
+      expect(_currentCard(tester), 2);
+      expect(harness.viewed, [2]);
+
+      controller.jumpToPage(0);
+      await tester.pumpAndSettle();
+      expect(_currentCard(tester), 0);
+
+      await tester.pumpWidget(const SizedBox());
+      // Descartar duas vezes falharia: quem criou o controller é quem o descarta.
+      controller.dispose();
     });
 
     testWidgets('com movimento reduzido a troca é imediata, sem animação', (tester) async {

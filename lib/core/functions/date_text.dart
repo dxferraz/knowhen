@@ -20,4 +20,10 @@ abstract final class DateText {
 
   /// `14 mar 1991`, without the period `intl` puts after the abbreviated month.
   static String compact(DateTime date) => DateFormat('d MMM y', _locale).format(date).replaceAll('.', '');
+
+  /// `14 mar`, without the period `intl` puts after the abbreviated month.
+  static String dayMonthShort(DateTime date) => DateFormat('d MMM', _locale).format(date).replaceAll('.', '');
+
+  /// `março de 1991`.
+  static String monthYear(DateTime date) => DateFormat("MMMM 'de' y", _locale).format(date);
 }

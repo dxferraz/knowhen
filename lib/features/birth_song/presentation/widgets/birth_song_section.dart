@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/components/kn_story_page.dart';
 import 'package:knowhen/core/theme/widgets/custom_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/features/birth_song/domain/birth_song_links.dart';
@@ -33,36 +34,27 @@ class BirthSongSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
 
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 16.0,
-          children: [
-            SecondaryH1(l10n.birthSongTitle, textAlign: TextAlign.center, color: colors.onSurface),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: colors.primaryContainer),
-              child: Column(
-                spacing: 12.0,
-                children: [
-                  PrimaryParagraphS(l10n.birthSongIntro(song.period), textAlign: TextAlign.center, color: colors.onPrimaryContainer),
-                  Icon(Icons.music_note, size: 48, color: colors.onPrimaryContainer),
-                  PrimaryH3(song.songName, textAlign: TextAlign.center, color: colors.onPrimaryContainer),
-                  PrimaryParagraphM(song.artist, textAlign: TextAlign.center, color: colors.onPrimaryContainer),
-                  SecondaryCaption(l10n.birthSongDisclaimer, textAlign: TextAlign.center, color: colors.onPrimaryContainer),
-                ],
-              ),
-            ),
-            CustomButton(text: l10n.listenOnSpotify, onPressed: () => _open(context, BirthSongLinks.spotify(song))),
-            CustomButton(text: l10n.listenOnYoutube, onPressed: () => _open(context, BirthSongLinks.youtube(song))),
-          ],
+    return KnStoryPage(
+      centered: true,
+      children: [
+        SecondaryH1(l10n.birthSongTitle, textAlign: TextAlign.center, color: colors.onSurface),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: colors.primaryContainer),
+          child: Column(
+            spacing: 12.0,
+            children: [
+              PrimaryParagraphS(l10n.birthSongIntro(song.period), textAlign: TextAlign.center, color: colors.onPrimaryContainer),
+              Icon(Icons.music_note, size: 48, color: colors.onPrimaryContainer),
+              PrimaryH3(song.songName, textAlign: TextAlign.center, color: colors.onPrimaryContainer),
+              PrimaryParagraphM(song.artist, textAlign: TextAlign.center, color: colors.onPrimaryContainer),
+              SecondaryCaption(l10n.birthSongDisclaimer, textAlign: TextAlign.center, color: colors.onPrimaryContainer),
+            ],
+          ),
         ),
-      ),
+        CustomButton(text: l10n.listenOnSpotify, onPressed: () => _open(context, BirthSongLinks.spotify(song))),
+        CustomButton(text: l10n.listenOnYoutube, onPressed: () => _open(context, BirthSongLinks.youtube(song))),
+      ],
     );
   }
 }

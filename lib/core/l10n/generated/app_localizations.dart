@@ -154,119 +154,11 @@ abstract class AppLocalizations {
   /// **'E {days} dias em toda a sua vida.'**
   String daysOld(String days);
 
-  /// No description provided for @conceptionRange.
-  ///
-  /// In pt, this message translates to:
-  /// **'{startRange} a {endRange}'**
-  String conceptionRange(String startRange, String endRange);
-
-  /// No description provided for @historicalFact.
-  ///
-  /// In pt, this message translates to:
-  /// **'Fato histórico'**
-  String get historicalFact;
-
-  /// No description provided for @firstFactParagraph.
-  ///
-  /// In pt, this message translates to:
-  /// **'{paragraph1}.'**
-  String firstFactParagraph(String paragraph1);
-
-  /// No description provided for @noImageForFact.
-  ///
-  /// In pt, this message translates to:
-  /// **'Sem imagem para o fato'**
-  String get noImageForFact;
-
-  /// No description provided for @noHistoricalFact.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ainda não temos um fato histórico para o mês do seu nascimento. Volte em breve!'**
-  String get noHistoricalFact;
-
-  /// No description provided for @historicalFactLoadError.
-  ///
-  /// In pt, this message translates to:
-  /// **'Não foi possível carregar o fato histórico agora. Verifique sua conexão e tente novamente mais tarde.'**
-  String get historicalFactLoadError;
-
-  /// No description provided for @aiGeneratedImage.
-  ///
-  /// In pt, this message translates to:
-  /// **'Imagem gerada por I.A.'**
-  String get aiGeneratedImage;
-
-  /// No description provided for @lastFactParagraph.
-  ///
-  /// In pt, this message translates to:
-  /// **'{paragraph2}'**
-  String lastFactParagraph(String paragraph2);
-
-  /// No description provided for @yearsOfLifeTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Caso você não saiba, você tem:'**
-  String get yearsOfLifeTitle;
-
-  /// No description provided for @yearsOfLife.
-  ///
-  /// In pt, this message translates to:
-  /// **'{years} anos,'**
-  String yearsOfLife(int years);
-
-  /// No description provided for @monthsOfLife.
-  ///
-  /// In pt, this message translates to:
-  /// **'{months} meses'**
-  String monthsOfLife(int months);
-
-  /// No description provided for @daysOfLife.
-  ///
-  /// In pt, this message translates to:
-  /// **'e {days} dias.'**
-  String daysOfLife(int days);
-
-  /// No description provided for @hoursOfLife.
-  ///
-  /// In pt, this message translates to:
-  /// **'{hours} horas'**
-  String hoursOfLife(Object hours);
-
-  /// No description provided for @minutesOfLife.
-  ///
-  /// In pt, this message translates to:
-  /// **'{minutes} minutos'**
-  String minutesOfLife(Object minutes);
-
-  /// No description provided for @secondsOfLife.
-  ///
-  /// In pt, this message translates to:
-  /// **'{seconds} segundos'**
-  String secondsOfLife(Object seconds);
-
-  /// No description provided for @conceptionTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Muito provavelmente, no período de:'**
-  String get conceptionTitle;
-
   /// No description provided for @conceptionNote.
   ///
   /// In pt, this message translates to:
-  /// **'Estimativa baseada na duração média de uma gestação, com margem de uma semana.'**
+  /// **'Estimativa: cerca de 38 semanas antes do nascimento, com margem de uma semana para cada lado.'**
   String get conceptionNote;
-
-  /// No description provided for @moonPhaseTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Você nasceu na:'**
-  String get moonPhaseTitle;
-
-  /// No description provided for @livedTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'E viveu:'**
-  String get livedTitle;
 
   /// No description provided for @moonPhaseNewMoonName.
   ///
@@ -1027,26 +919,14 @@ abstract class AppLocalizations {
   /// No description provided for @moonCycleLabel.
   ///
   /// In pt, this message translates to:
-  /// **'Ciclo da Lua'**
-  String get moonCycleLabel;
+  /// **'Ciclo da Lua: {phase} em destaque'**
+  String moonCycleLabel(String phase);
 
   /// No description provided for @factEyebrow.
   ///
   /// In pt, this message translates to:
   /// **'Fato histórico'**
   String get factEyebrow;
-
-  /// No description provided for @factDaysAfterBirth.
-  ///
-  /// In pt, this message translates to:
-  /// **'{days, plural, =0{No dia do seu nascimento} =1{1 dia depois do seu nascimento} other{{days} dias depois do seu nascimento}}'**
-  String factDaysAfterBirth(int days);
-
-  /// No description provided for @factDaysBeforeBirth.
-  ///
-  /// In pt, this message translates to:
-  /// **'{days, plural, =1{1 dia antes do seu nascimento} other{{days} dias antes do seu nascimento}}'**
-  String factDaysBeforeBirth(int days);
 
   /// No description provided for @factAiBadge.
   ///
@@ -1119,6 +999,78 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Não foi possível abrir o link.'**
   String get birthSongOpenError;
+
+  /// No description provided for @lifeMonths.
+  ///
+  /// In pt, this message translates to:
+  /// **'{months, plural, =1{1 mês} other{{months} meses}}'**
+  String lifeMonths(int months);
+
+  /// No description provided for @lifeDays.
+  ///
+  /// In pt, this message translates to:
+  /// **'{days, plural, =1{1 dia} other{{days} dias}}'**
+  String lifeDays(int days);
+
+  /// No description provided for @lifeAndDays.
+  ///
+  /// In pt, this message translates to:
+  /// **'e {days, plural, =1{1 dia} other{{days} dias}}'**
+  String lifeAndDays(int days);
+
+  /// No description provided for @conceptionFrom.
+  ///
+  /// In pt, this message translates to:
+  /// **'de'**
+  String get conceptionFrom;
+
+  /// No description provided for @conceptionTo.
+  ///
+  /// In pt, this message translates to:
+  /// **'a'**
+  String get conceptionTo;
+
+  /// No description provided for @factEyebrowDated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fato histórico · {date}'**
+  String factEyebrowDated(String date);
+
+  /// No description provided for @factErrorBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pode ser a conexão. O resto do seu resumo já está pronto.'**
+  String get factErrorBody;
+
+  /// No description provided for @factEmptyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ainda não temos um fato para esse mês'**
+  String get factEmptyTitle;
+
+  /// No description provided for @factEmptyBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Volte em breve: estamos juntando mais fatos históricos.'**
+  String get factEmptyBody;
+
+  /// No description provided for @historicalFact.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fato histórico'**
+  String get historicalFact;
+
+  /// No description provided for @firstFactParagraph.
+  ///
+  /// In pt, this message translates to:
+  /// **'{paragraph1}.'**
+  String firstFactParagraph(String paragraph1);
+
+  /// No description provided for @lastFactParagraph.
+  ///
+  /// In pt, this message translates to:
+  /// **'{paragraph2}'**
+  String lastFactParagraph(String paragraph2);
 }
 
 class _AppLocalizationsDelegate

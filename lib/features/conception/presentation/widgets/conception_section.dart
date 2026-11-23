@@ -1,62 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/functions/conception_window.dart';
 import 'package:knowhen/core/functions/date_text.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/components/kn_card.dart';
+import 'package:knowhen/core/theme/components/kn_story_page.dart';
+import 'package:knowhen/core/theme/tokens/kn_spacing.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
 
+/// Cartão "Concepção" (DXF-9, 4.6): a janela estimada de duas semanas, 38 semanas antes do nascimento.
 class ConceptionSection extends StatelessWidget {
-  final DateTime birthDate;
   const ConceptionSection({super.key, required this.birthDate});
 
-  String calculateConception(BuildContext context, DateTime birthDate) {
-    final l10n = AppLocalizations.of(context)!;
-    final window = conceptionWindow(birthDate);
-
-    return l10n.conceptionRange(DateText.numeric(window.start), DateText.numeric(window.end));
-  }
+  final DateTime birthDate;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final text = context.knText;
+    final c = context.kn;
+    final window = conceptionWindow(birthDate);
 
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return KnStoryPage(
+      eyebrow: l10n.conceptionEyebrow,
+      title: l10n.conceptionLead,
+      children: [
+        KnCard(
+          child: Row(
+            children: [
+              Expanded(child: _ConceptionDate(label: l10n.conceptionFrom, date: window.start)),
+              ExcludeSemantics(child: Icon(Icons.arrow_forward_rounded, color: c.inkMuted)),
+              const SizedBox(width: KnSpace.lg),
+              Expanded(child: _ConceptionDate(label: l10n.conceptionTo, date: window.end)),
+            ],
+          ),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SecondaryH2(
-              l10n.conceptionTitle,
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              child: Column(
-                children: [
-                  PrimaryH3(
-                    calculateConception(context, birthDate),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ],
-              ),
-            ),
-            SecondaryH2(
-              l10n.conceptionNote,
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+            ExcludeSemantics(child: Icon(Icons.info_outline_rounded, size: 18, color: c.inkMuted)),
+            const SizedBox(width: KnSpace.sm),
+            Expanded(child: Text(l10n.conceptionNote, style: text.caption)),
           ],
         ),
-      ),
+      ],
+    );
+  }
+}
+
+class _ConceptionDate extends StatelessWidget {
+  const _ConceptionDate({required this.label, required this.date});
+
+  final String label;
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = context.knText;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: text.caption),
+        FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(DateText.dayMonthShort(date), style: text.stat)),
+        Text('${date.year}', style: text.bodyMuted),
+      ],
     );
   }
 }

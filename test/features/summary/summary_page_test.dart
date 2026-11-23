@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:knowhen/core/functions/date_text.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
+import 'package:knowhen/core/theme/components/kn_moon.dart';
 import 'package:knowhen/features/birth_song/presentation/widgets/birth_song_section.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
@@ -204,15 +205,60 @@ void main() {
       await tester.tap(find.text(l10n.next));
       await tester.pumpAndSettle();
     }
-    expect(find.text(l10n.historicalFactLoadError), findsOneWidget);
+    expect(find.text(l10n.factErrorTitle), findsOneWidget);
 
     await tester.tap(find.text(l10n.factRetry));
     await tester.pumpAndSettle();
 
-    expect(find.text(l10n.historicalFactLoadError), findsNothing);
+    expect(find.text(l10n.factErrorTitle), findsNothing);
     expect(find.textContaining('Um fato curioso'), findsWidgets);
     expect(repository.requestedDates, hasLength(2));
     expect(deps.firebaseAnalytics.names.where((n) => n == 'summary_viewed'), hasLength(1));
+  });
+
+  testWidgets('"Ver o que já está pronto" no cartão do fato volta ao primeiro cartão, sem refazer a busca', (tester) async {
+    final repository = FakeBrazilCuriositiesRepository(failFirstCuriosity: true);
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), TestDependencies(repository: repository));
+    await tester.pumpAndSettle();
+    final controller = tester.widget<PageView>(find.byType(PageView)).controller!;
+    controller.jumpToPage(4);
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.factErrorTitle), findsOneWidget);
+
+    await tester.tap(find.text(l10n.factSeeWhatIsReady));
+    await tester.pumpAndSettle();
+
+    expect(controller.page, 0);
+    expect(find.byType(YearsOfLifeSection), findsOneWidget);
+    expect(repository.requestedDates, hasLength(1));
+  });
+
+  testWidgets('"Ver o que já está pronto" com movimento reduzido volta direto', (tester) async {
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), TestDependencies(repository: FakeBrazilCuriositiesRepository(failFirstCuriosity: true)));
+    await tester.pumpAndSettle();
+    final controller = tester.widget<PageView>(find.byType(PageView)).controller!;
+    controller.jumpToPage(4);
+    await tester.pumpAndSettle();
+    tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await tester.pump();
+
+    await tester.tap(find.text(l10n.factSeeWhatIsReady));
+    await tester.pump();
+
+    expect(controller.page, 0);
+  });
+
+  testWidgets('o cartão da lua desenha a fase pelo app, sem baixar a imagem', (tester) async {
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), TestDependencies());
+    await tester.pumpAndSettle();
+
+    tester.widget<PageView>(find.byType(PageView)).controller!.jumpToPage(3);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MoonPhaseSection), findsOneWidget);
+    expect(find.byType(KnMoon), findsNWidgets(9));
+    expect(find.byType(Image), findsNothing);
   });
 
   testWidgets('"Escolher outra data" no último cartão volta para a data e esconde o convite de salvar', (tester) async {
