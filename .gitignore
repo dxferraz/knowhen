@@ -50,7 +50,8 @@ app.*.map.json
 .firebase/
 lib/firebase_options.dart
 firebase-debug.log
-firebase.json
+firestore-debug.log
+ui-debug.log
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 
@@ -60,6 +61,7 @@ lib/env/env.g.dart
 
 # Firebase scripts
 /firebase_scripts/node_modules
+/firebase_rules_tests/node_modules
 firebase_scripts/.env
 /android/app/.cxx
 

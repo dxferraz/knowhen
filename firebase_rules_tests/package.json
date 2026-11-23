@@ -1,0 +1,16 @@
+{
+  "name": "knowhen-firebase-rules-tests",
+  "private": true,
+  "description": "Testes das regras do Firestore no emulador",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "firebase emulators:exec --only firestore --project demo-knowhen --config ../firebase.json \"node --test\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
+    "firebase": "^13.0.0",
+    "firebase-tools": "^15.0.0"
+  }
+}

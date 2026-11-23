@@ -10,6 +10,16 @@ updates:
       firebase-scripts:
         update-types: ["minor", "patch"]
 
+  # Firestore rules tests (emulator). Dev tooling only.
+  - package-ecosystem: "npm"
+    directory: "/firebase_rules_tests"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    groups:
+      firebase-rules-tests:
+        update-types: ["minor", "patch"]
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

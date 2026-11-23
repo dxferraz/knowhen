@@ -86,6 +86,20 @@ Ads (AdMob): debug and profile builds use Google's test units. A release build u
 
 CI (GitHub Actions, `.github/workflows/ci.yml`) runs the same steps on every pull request and on pushes to `main`/`develop`: codegen, `make check` (coverage is shown in the job summary and uploaded as an artifact) and a debug APK build. It uses placeholder `.env`/`google-services.json`, never real secrets.
 
+### Firebase security rules
+
+`firestore.rules` and `firebase.json` are versioned. The app signs in anonymously, so "authenticated" means "any install of the app": `brasil-songs` is read-only, `brasil-curiosities` is readable and accepts only an `imageUrl` string update (what the app writes after generating the image), and everything else is denied. The Admin SDK scripts in `firebase_scripts/` ignore the rules.
+
+Tests run against the Firestore emulator (needs Node 22+ and Java 21+; the emulator jar is downloaded on the first run):
+
+```sh
+cd firebase_rules_tests
+npm ci
+npm test
+```
+
+CI runs the same command in the `Firestore rules` job. **Deploying the rules to production is a manual step and needs the founder's approval:** `firebase deploy --only firestore:rules`.
+
 ---
 
 ## Contributing
