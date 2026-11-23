@@ -104,7 +104,8 @@ async function generateYear({ year, ask, seen, minSongs = MIN_SONGS_PER_YEAR }) 
   const asked = [];
   for (let attempt = 1; attempt <= MAX_ATTEMPTS_PER_YEAR; attempt++) {
     const candidates = parseYearResponse(await ask(buildYearPrompt(year, asked), attempt, year), year);
-    asked.push(...candidates);
+    // No máximo SONGS_PER_YEAR vão para o prompt da próxima tentativa: é a premissa do teto de custo de `estimateRun`.
+    asked.push(...candidates.slice(0, Math.max(0, SONGS_PER_YEAR - asked.length)));
     const taken = new Set([...seen, ...songs.map(songKey)]);
     songs.push(...dedupeSongs(candidates, taken).accepted);
     if (songs.length >= SONGS_PER_YEAR) break;
