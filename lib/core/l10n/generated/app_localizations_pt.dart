@@ -570,6 +570,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get summaryShareCard => 'Compartilhar este cartão';
 
   @override
+  String get summaryMenu => 'Mais opções';
+
+  @override
   String get lifeEyebrow => 'Tempo de vida';
 
   @override

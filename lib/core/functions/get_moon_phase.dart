@@ -26,6 +26,9 @@ double getMoonAge(DateTime date) {
   return days % _synodicMonth;
 }
 
+/// Fração do ciclo lunar em [date], de 0 (lua nova) a 1 (próxima lua nova): 0,5 é a lua cheia. Alimenta o `KnMoon`.
+double getMoonPhaseFraction(DateTime date) => getMoonAge(date) / _synodicMonth;
+
 /// Fase da Lua em [date], entre as 8 fases, cada uma cobrindo ~3,69 dias centrados nela.
 MoonPhase getMoonPhase(DateTime date) {
   final index = (getMoonAge(date) / _synodicMonth * _moonPhases.length).round() % _moonPhases.length;

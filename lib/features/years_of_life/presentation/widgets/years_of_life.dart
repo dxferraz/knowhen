@@ -19,10 +19,9 @@ class YearsOfLifeSection extends StatelessWidget {
     final int monthsOfLife = calculateMonthsOfLife(birthDate, now);
     final int daysOfLife = calculateDaysOfLife(birthDate, now);
 
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(bottom: 100),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
