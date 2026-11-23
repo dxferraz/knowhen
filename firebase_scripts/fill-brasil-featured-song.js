@@ -1,9 +1,11 @@
 // Preenche a coleção `brasil-songs` (música em destaque de cada mês) em duas etapas, para dar tempo de revisar
 // o conteúdo gerado pela IA antes de publicar:
 //
-//   node fill-brasil-featured-song.js generate [--from 1925] [--to 2026] [--out brasil-songs.json]
-//     Pergunta ao modelo, mês a mês, e grava só as respostas válidas no JSON. Dá para interromper e rodar de novo:
-//     os meses que já estão no arquivo são pulados. Não toca no Firestore.
+//   node fill-brasil-featured-song.js generate [--from 1930] [--to 2023] [--out brasil-songs.json] [--model gpt-4o-mini]
+//     Pergunta ao modelo, ano a ano, 12 sucessos diferentes lançados naquele ano e distribui um por mês. Descarta
+//     músicas repetidas (no ano e entre anos) e as que o modelo diz ter outro ano de lançamento. Se o ano não
+//     render músicas suficientes em duas tentativas, ele fica de fora. Dá para interromper e rodar de novo: os
+//     anos que já estão no arquivo são pulados. Não toca no Firestore.
 //
 //   node fill-brasil-featured-song.js publish [--in brasil-songs.json]
 //     Valida todas as entradas do JSON (já revisado) e só então grava no Firestore, um documento por mês (id
@@ -13,9 +15,9 @@
 // Veja firebase_scripts/README.md para as credenciais.
 
 const fs = require("node:fs");
-const { FIRST_YEAR, monthsToProcess, docId, parseSongResponse, toDocument, buildPrompt, validateSongs } = require("./brasil-songs");
+const { parseYearRange, songKey, generateYear, yearDocuments, validateSongs, YEAR_RESPONSE_SCHEMA } = require("./brasil-songs");
 
-const MODEL = "gpt-4o-mini";
+const DEFAULT_MODEL = "gpt-4o-mini";
 const BATCH_SIZE = 400; // o Firestore aceita até 500 operações por batch
 
 function parseArgs(argv) {
@@ -36,47 +38,53 @@ function readSongs(file) {
   }
 }
 
-async function askModel(openai, date) {
-  const response = await openai.chat.completions.create({
-    model: MODEL,
-    temperature: 0,
-    messages: [
-      { role: "system", content: "Você é um historiador dos sucessos musicais brasileiros." },
-      { role: "user", content: buildPrompt(date) },
-    ],
-  });
-  return response.choices[0].message.content;
-}
-
-async function generate({ from = FIRST_YEAR, to = new Date().getFullYear(), out = "brasil-songs.json" }) {
+async function generate({ from, to, out = "brasil-songs.json", model = DEFAULT_MODEL }) {
+  const range = parseYearRange(from, to);
   const OpenAIApi = require("openai").default;
   const apiKey = process.env.OPENAI_API_KEY || process.env.OPEN_AI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY não definido. Veja firebase_scripts/README.md.");
   const openai = new OpenAIApi({ apiKey, project: process.env.OPEN_AI_PROJECT_KEY || undefined });
 
-  const songs = readSongs(out);
-  const pending = monthsToProcess(Number(from), Number(to)).filter((date) => !songs[docId(date)]);
-  let skipped = 0;
-  console.log(`${pending.length} meses para gerar (${Object.keys(songs).length} já no arquivo ${out}).`);
+  const ask = async (prompt, attempt) => {
+    const response = await openai.chat.completions.create({
+      model,
+      temperature: attempt === 1 ? 0 : 0.5,
+      response_format: { type: "json_schema", json_schema: YEAR_RESPONSE_SCHEMA },
+      messages: [
+        { role: "system", content: "Você é um historiador dos sucessos musicais brasileiros. Prefira dizer menos músicas a inventar." },
+        { role: "user", content: prompt },
+      ],
+    });
+    return response.choices[0].message.content;
+  };
 
-  for (const date of pending) {
+  const songs = readSongs(out);
+  const seen = new Set(Object.values(songs).map(songKey));
+  const doneYears = new Set(Object.values(songs).map((entry) => String(entry.year)));
+  const years = [];
+  for (let year = range.from; year <= range.to; year++) if (!doneYears.has(String(year))) years.push(year);
+  console.log(`${years.length} anos para gerar de ${range.from} a ${range.to} (${doneYears.size} já no arquivo ${out}).`);
+
+  const skipped = [];
+  for (const year of years) {
     try {
-      const song = parseSongResponse(await askModel(openai, date));
-      if (song) {
-        songs[docId(date)] = toDocument(date, song);
-        fs.writeFileSync(out, JSON.stringify(songs, null, 2));
-      } else {
-        skipped++;
-        console.log(`${docId(date)}: sem resposta válida, mês ignorado.`);
+      const yearSongs = await generateYear({ year, ask, seen });
+      if (!yearSongs) {
+        skipped.push(year);
+        console.log(`${year}: poucas músicas válidas e inéditas, ano ignorado.`);
+        continue;
       }
+      Object.assign(songs, yearDocuments(year, yearSongs));
+      yearSongs.forEach((song) => seen.add(songKey(song)));
+      fs.writeFileSync(out, JSON.stringify(songs, null, 2));
     } catch (error) {
       // Falha de rede/cota: para aqui; o que já foi gerado fica no arquivo e a próxima rodada continua dele.
-      console.error(`${docId(date)}: erro ao consultar o modelo (${error.message}). Rode de novo para continuar.`);
+      console.error(`${year}: erro ao consultar o modelo (${error.message}). Rode de novo para continuar.`);
       process.exitCode = 1;
       break;
     }
   }
-  console.log(`Fim: ${Object.keys(songs).length} músicas em ${out}, ${skipped} meses ignorados.`);
+  console.log(`Fim: ${Object.keys(songs).length} músicas em ${out}. Anos ignorados: ${skipped.join(", ") || "nenhum"}.`);
 }
 
 async function publish({ in: file = "brasil-songs.json" }) {

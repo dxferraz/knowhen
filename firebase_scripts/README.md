@@ -30,15 +30,22 @@ Requer Node.js 22 ou superior.
 
 O preenchimento é em duas etapas, para revisar o conteúdo da IA antes de publicar.
 
-1. **Gerar** (usa a OpenAI, `gpt-4o-mini`, uma chamada por mês; não toca no Firestore):
+1. **Gerar** (usa a OpenAI, uma chamada por ano; não toca no Firestore):
 
    ```sh
-   node fill-brasil-featured-song.js generate --from 1925 --to 2026 --out brasil-songs.json
+   node fill-brasil-featured-song.js generate --from 1930 --to 2023 --out brasil-songs.json
    ```
 
-   Só entram no JSON as respostas válidas: o modelo é instruído a responder `Desconhecido` quando não tem
-   certeza, e essas respostas (e qualquer resposta fora do formato) são descartadas, nunca gravadas. Se a
-   rodada cair (cota, rede), rode de novo: os meses que já estão no arquivo são pulados.
+   Para cada ano o modelo lista 12 sucessos diferentes lançados nele, e o script põe um por mês. Entram só as
+   músicas bem formadas, com `releaseYear` igual ao ano pedido e que não repetem outra do mesmo ano nem de outro
+   ano (a comparação ignora caixa, acento, pontuação e artigos). Se o ano não render pelo menos 8 músicas assim,
+   o script tenta de novo uma vez e, se continuar faltando, deixa o ano de fora (o app esconde a seção para os
+   meses sem música). `--from`/`--to` só aceitam anos de 1925 até o ano atual; o padrão é 1930 a 2023, porque
+   fora disso o modelo não conhece bem a música brasileira. `--model` troca o modelo (padrão `gpt-4o-mini`). Se a
+   rodada cair (cota, rede), rode de novo: os anos que já estão no arquivo são pulados.
+
+   **Atenção:** o `releaseYear` é o próprio modelo que informa, então não prova nada. Em teste, o `gpt-4o-mini`
+   ainda atribui música ao artista ou ao ano errado; a revisão do passo 2 é obrigatória.
 
 2. **Revisar** o `brasil-songs.json`: confira por amostragem, pelo menos de 1960 em diante, se a música existe
    e foi sucesso no mês. Apague do JSON as entradas erradas.
@@ -53,10 +60,10 @@ O preenchimento é em duas etapas, para revisar o conteúdo da IA antes de publi
    O app lê direto por esse id, então documentos antigos com id aleatório são ignorados.
 
    Antes de gravar, o `publish` valida todas as entradas (chave `AAAA-MM` igual ao ano/mês, `month` de "1" a "12",
-   `year` entre 1925 e o ano atual, `artist`/`songName` preenchidos e sem placeholder, sem campos extras). Se alguma
+   `year` entre 1925 e o ano atual, `artist`/`songName` preenchidos e sem placeholder, nenhuma música repetida, sem campos extras). Se alguma
    falhar, ele lista todas, com a chave, e não grava nada: corrija o JSON e rode de novo.
 
-`npm test` roda os testes das regras (parse da resposta, ids, meses a processar, validação do JSON).
+`npm test` roda os testes das regras (intervalo de anos, parse da resposta, deduplicação, distribuição pelos meses, validação do JSON).
 
 As credenciais também podem vir direto do shell, sem `.env`:
 
