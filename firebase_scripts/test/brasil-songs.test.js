@@ -111,6 +111,13 @@ test("generateYear devolve as 12 músicas na primeira tentativa", async () => {
   assert.equal(prompts.length, 1);
 });
 
+test("generateYear passa a tentativa e o ano para o ask", async () => {
+  const calls = [];
+  const ask = async (prompt, attempt, year) => (calls.push([attempt, year]), yearJson(1995, songsOf("a", 5)));
+  await generateYear({ year: 1995, ask, seen: new Set() });
+  assert.deepEqual(calls, [[1, 1995], [2, 1995]]);
+});
+
 test("generateYear tenta de novo uma vez e junta o que veio de novo, sem repetir", async () => {
   const prompts = [];
   const answers = [yearJson(1995, songsOf("a", 5)), yearJson(1995, [...songsOf("a", 5), ...songsOf("b", 4)])];

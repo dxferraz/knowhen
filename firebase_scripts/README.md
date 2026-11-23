@@ -30,10 +30,22 @@ Requer Node.js 22 ou superior.
 
 O preenchimento é em duas etapas, para revisar o conteúdo da IA antes de publicar.
 
+0. **Estimar o custo** (sem rede, não gasta nada):
+
+   ```sh
+   node fill-brasil-featured-song.js estimate --from 1930 --to 2023 --model gpt-5.5-pro --tier flex --max-output-tokens 16000
+   ```
+
+   Imprime o número de anos, o máximo de chamadas (2 por ano: a 2ª só acontece se a 1ª não render 12 músicas) e o
+   teto de custo, que supõe `max-output-tokens` inteiros em toda chamada. Os preços (US$ por 1M de tokens,
+   entrada/saída) estão em `openai-usage.js`: `gpt-5.5-pro` 30/180, `gpt-5.5` 5/30, `gpt-4o-mini` 0,15/0,60; o tier
+   `flex` custa metade. Modelo fora dessa tabela é recusado (o nome com data, como `gpt-5.5-pro-2026-04-23`, usa o
+   preço do modelo base).
+
 1. **Gerar** (usa a OpenAI, uma chamada por ano; não toca no Firestore):
 
    ```sh
-   node fill-brasil-featured-song.js generate --from 1930 --to 2023 --out brasil-songs.json
+   node fill-brasil-featured-song.js generate --budget 5 --from 1930 --to 2023 --out brasil-songs.json
    ```
 
    Para cada ano o modelo lista 12 sucessos diferentes lançados nele, e o script põe um por mês. Entram só as
@@ -41,8 +53,29 @@ O preenchimento é em duas etapas, para revisar o conteúdo da IA antes de publi
    ano (a comparação ignora caixa, acento, pontuação e artigos). Se o ano não render pelo menos 8 músicas assim,
    o script tenta de novo uma vez e, se continuar faltando, deixa o ano de fora (o app esconde a seção para os
    meses sem música). `--from`/`--to` só aceitam anos de 1925 até o ano atual; o padrão é 1930 a 2023, porque
-   fora disso o modelo não conhece bem a música brasileira. `--model` troca o modelo (padrão `gpt-4o-mini`). Se a
-   rodada cair (cota, rede), rode de novo: os anos que já estão no arquivo são pulados.
+   fora disso o modelo não conhece bem a música brasileira. Se a rodada cair (cota, rede), rode de novo: os anos
+   que já estão no arquivo são pulados.
+
+   A chamada usa a Responses API (a única que o `gpt-5.5-pro` aceita), com resposta em JSON schema strict e sem
+   `temperature`. Opções:
+
+   | Opção | Padrão | O que faz |
+   | --- | --- | --- |
+   | `--budget <US$>` | obrigatório | Teto de gasto da rodada (veja abaixo). |
+   | `--model` | `gpt-4o-mini` | Só aceita os modelos da tabela de preços. |
+   | `--tier flex\|default` | `flex` | `service_tier`; o flex custa metade e pode demorar na fila. Se a API recusar o flex para o modelo, use `--tier default`. |
+   | `--effort` | `high` | `reasoning.effort`; ignorado nos modelos sem raciocínio (`gpt-4o-mini`). |
+   | `--max-output-tokens` | `16000` | `max_output_tokens`; no `gpt-5.5-pro` os tokens de raciocínio contam aqui e são cobrados como saída. |
+
+   **Custo.** Depois de cada chamada o script mostra o ano, a tentativa, `input_tokens`, `output_tokens` (já com os
+   de raciocínio), `reasoning_tokens`, o custo da chamada e o total da rodada, e grava tudo em `<out>.usage.json`
+   (as rodadas seguintes acrescentam ao mesmo arquivo). Antes de cada chamada, se o gasto da rodada mais o pior caso
+   da próxima (entrada estimada + `--max-output-tokens` × preço de saída) passar de `--budget`, o script **para sem
+   chamar**, mantém o que já gerou e sai com código 2; rodar de novo com mais orçamento continua de onde parou (um
+   ano parado entre a 1ª e a 2ª tentativa é refeito). A entrada é estimada por excesso (3 caracteres por token).
+   Resposta `incomplete` (cortada por `max_output_tokens`) é cobrada e conta como resposta vazia: o script tenta a
+   2ª vez e, se também falhar, deixa o ano de fora; se isso acontecer muito, aumente `--max-output-tokens` ou
+   baixe `--effort`.
 
    **Atenção:** o `releaseYear` é o próprio modelo que informa, então não prova nada. Em teste, o `gpt-4o-mini`
    ainda atribui música ao artista ou ao ano errado; a revisão do passo 2 é obrigatória.
@@ -63,7 +96,7 @@ O preenchimento é em duas etapas, para revisar o conteúdo da IA antes de publi
    `year` entre 1925 e o ano atual, `artist`/`songName` preenchidos e sem placeholder, nenhuma música repetida, sem campos extras). Se alguma
    falhar, ele lista todas, com a chave, e não grava nada: corrija o JSON e rode de novo.
 
-`npm test` roda os testes das regras (intervalo de anos, parse da resposta, deduplicação, distribuição pelos meses, validação do JSON).
+`npm test` roda os testes das regras (intervalo de anos, parse da resposta, deduplicação, distribuição pelos meses, validação do JSON, cálculo de custo, orçamento e `estimate`), todos sem rede.
 
 As credenciais também podem vir direto do shell, sem `.env`:
 
