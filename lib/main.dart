@@ -33,10 +33,7 @@ Future<void> main() async {
   );
   await AuthService().signInUserAnonymously();
   await MobileAds.instance.initialize();
-  RequestConfiguration configuration = RequestConfiguration(
-    testDeviceIds: ['9C1FE904906DF4C7D5C7E2287B821399'],
-  );
-  MobileAds.instance.updateRequestConfiguration(configuration);
+  MobileAds.instance.updateRequestConfiguration(AdService.requestConfiguration());
   final prefs = await SharedPreferences.getInstance();
   final showOnboarding = prefs.getBool('showOnboarding') ?? true;
   final analytics = AnalyticsService(FirebaseAnalytics.instance);

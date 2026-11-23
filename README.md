@@ -82,6 +82,8 @@ Knowhen aims to be both informative and fun. By simply providing a birth date, u
 3. `make install` (clean, `flutter pub get`, `build_runner`).
 4. `make check` (analyze + tests).
 
+Ads (AdMob): debug and profile builds use Google's test units. A release build uses the interstitial unit in `lib/core/services/ad_service.dart` and takes the native unit from the build: `flutter build ... --dart-define=NATIVE_AD_UNIT_ID=ca-app-pub-...`. Without it the release build shows no native ad. The policy (no ad before the first card, native ad on the last card, one interstitial at most every 3 minutes and only when leaving after the last card) is described in `AdService`.
+
 CI (GitHub Actions, `.github/workflows/ci.yml`) runs the same steps on every pull request and on pushes to `main`/`develop`: codegen, `make check` (coverage is shown in the job summary and uploaded as an artifact) and a debug APK build. It uses placeholder `.env`/`google-services.json`, never real secrets.
 
 ---

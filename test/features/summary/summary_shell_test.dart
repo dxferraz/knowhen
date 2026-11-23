@@ -8,8 +8,10 @@ import 'package:knowhen/core/theme/components/kn_story_progress.dart';
 import 'package:knowhen/core/theme/components/kn_top_bar.dart';
 import 'package:knowhen/core/theme/tokens/kn_spacing.dart';
 import 'package:knowhen/features/share/domain/share_section.dart';
+import 'package:knowhen/features/summary/presentation/widgets/native_ad_slot.dart';
 import 'package:knowhen/features/summary/presentation/widgets/summary_shell.dart';
 
+import '../../helpers/fakes.dart';
 import '../../helpers/load_app_fonts.dart';
 import '../../helpers/pump_app.dart';
 
@@ -41,6 +43,7 @@ Future<_Harness> _pumpShell(
   int initialPage = 0,
   PageController? controller,
   Size size = const Size(360, 640),
+  Widget? endSlot,
 }) async {
   tester.view
     ..physicalSize = size
@@ -69,6 +72,7 @@ Future<_Harness> _pumpShell(
           onShare: harness.shared.add,
           onChooseAnotherDate: () => harness.otherDate++,
           onPageViewed: harness.viewed.add,
+          endSlot: endSlot,
         ),
       ),
     ),
@@ -300,6 +304,47 @@ void main() {
     });
   });
 
+  group('espaço final (anúncio nativo)', () {
+    const slot = SizedBox(key: Key('end_slot'), height: 100, width: double.infinity);
+    final slotFinder = find.byKey(const Key('end_slot'));
+
+    testWidgets('aparece só no último cartão, abaixo das ações', (tester) async {
+      await _pumpShell(tester, endSlot: slot);
+
+      expect(slotFinder, findsNothing);
+      await tester.tap(find.text(l10n.next));
+      await tester.pumpAndSettle();
+      expect(slotFinder, findsNothing);
+      await tester.tap(find.text(l10n.next));
+      await tester.pumpAndSettle();
+
+      expect(slotFinder, findsOneWidget);
+      expect(tester.getTopLeft(slotFinder).dy, greaterThan(tester.getBottomLeft(find.text(l10n.chooseAnotherDate)).dy));
+    });
+
+    testWidgets('sem o espaço o último cartão termina nas ações', (tester) async {
+      await _pumpShell(tester, initialPage: 2);
+
+      expect(slotFinder, findsNothing);
+      expect(find.text(l10n.chooseAnotherDate), findsOneWidget);
+    });
+
+    for (final scale in [1.0, 2.0]) {
+      for (final brightness in Brightness.values) {
+        testWidgets('360x640, ${(scale * 100).round()}% de fonte, tema ${brightness.name}: sem overflow e a ação de outra data na tela', (tester) async {
+          // O espaço de verdade: rótulo "Anúncio" e o anúncio de 100 dp.
+          await _pumpShell(tester, initialPage: 2, scale: scale, brightness: brightness, endSlot: NativeAdSlot(ad: FakeNativeAd()));
+
+          expect(tester.takeException(), isNull);
+          const screen = Rect.fromLTWH(0, 0, 360, 640);
+          expect(screen.contains(tester.getRect(find.text(l10n.chooseAnotherDate)).bottomRight), isTrue);
+          expect(screen.contains(tester.getRect(find.byKey(const Key('fake_native_ad_view'))).bottomRight), isTrue);
+          expect(find.text(l10n.adLabel), findsOneWidget);
+        });
+      }
+    }
+  });
+
   group('goldens', () {
     // Imagens geradas no Linux (o mesmo ambiente do CI) com as fontes empacotadas. Para regenerar depois de
     // uma mudança intencional: `flutter test test/features/summary --update-goldens`.
@@ -310,6 +355,13 @@ void main() {
 
         expect(tester.takeException(), isNull);
         await expectLater(find.byType(SummaryShell), matchesGoldenFile('goldens/summary_shell_$name.png'));
+      });
+
+      testWidgets('último cartão com o espaço do anúncio nativo, tema $name', (tester) async {
+        await _pumpShell(tester, initialPage: 2, brightness: brightness, endSlot: NativeAdSlot(ad: FakeNativeAd()));
+
+        expect(tester.takeException(), isNull);
+        await expectLater(find.byType(SummaryShell), matchesGoldenFile('goldens/summary_shell_anuncio_$name.png'));
       });
     }
   });
