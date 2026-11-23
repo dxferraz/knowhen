@@ -30,28 +30,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get continueLabel => 'Continuar';
 
   @override
-  String get onboarding1Title => 'Bem-vindo ao Knowhen!';
-
-  @override
-  String get onboarding1Description =>
-      'Descubra informações únicas, surpreendentes e personalizadas com base na sua data de nascimento';
-
-  @override
-  String get onboarding2Title =>
-      'Desvendando o que sua data de nascimento revela!';
-
-  @override
-  String get onboarding2Description =>
-      'Explore dados personalizados sobre sua personalidade, curiosidades históricas e insights únicos baseados na sua data de nascimento.';
-
-  @override
-  String get onboarding3Title => 'Vamos descobrir?';
-
-  @override
-  String get onboarding3Description =>
-      'Insira sua data de nascimento e veja o que o universo tem reservado para você!';
-
-  @override
   String get selectBirthdateTitle =>
       'Para começar selecione a sua data de nascimento:';
 
@@ -508,6 +486,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get onboardingTakesLess => 'Leva menos de um minuto';
+
+  @override
+  String get onboardingIntro =>
+      'Informe sua data de nascimento e veja quatro revelações sobre ela.';
+
+  @override
+  String get themeSwitchToLight => 'Mudar para o tema claro';
+
+  @override
+  String get themeSwitchToDark => 'Mudar para o tema escuro';
 
   @override
   String get birthdateTitle => 'Quando você nasceu?';
