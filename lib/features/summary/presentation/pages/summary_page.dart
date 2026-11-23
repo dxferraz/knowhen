@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/date_text.dart';
 import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/services/life_profile_service.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
@@ -177,14 +177,13 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
     return BlocProvider(
       create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>(), context.read<BirthSongRepository>())..add(GetSummary(birthDate: widget.birthDate)),
       child: Scaffold(
         appBar: AppBar(
           title: PrimaryH4(
-            l10n.summaryPageTitle(dateFormat.format(widget.birthDate)),
+            l10n.summaryPageTitle(DateText.numeric(widget.birthDate)),
             textAlign: TextAlign.center,
             color: Theme.of(context).colorScheme.onSurface,
           ),

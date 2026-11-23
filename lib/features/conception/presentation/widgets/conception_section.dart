@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:knowhen/core/functions/conception_window.dart';
+import 'package:knowhen/core/functions/date_text.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
@@ -12,9 +12,7 @@ class ConceptionSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final window = conceptionWindow(birthDate);
 
-    final dateFormat = DateFormat('dd/MM/yyyy');
-
-    return l10n.conceptionRange(dateFormat.format(window.start), dateFormat.format(window.end));
+    return l10n.conceptionRange(DateText.numeric(window.start), DateText.numeric(window.end));
   }
 
   @override
@@ -52,7 +50,7 @@ class ConceptionSection extends StatelessWidget {
               ),
             ),
             SecondaryH2(
-              l10n.conceptionFooter,
+              l10n.conceptionNote,
               textAlign: TextAlign.center,
               color: Theme.of(context).colorScheme.onSurface,
             ),

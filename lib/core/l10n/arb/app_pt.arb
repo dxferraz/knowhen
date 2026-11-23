@@ -160,8 +160,8 @@
   "@unknownBirthTime": {},
   "conceptionTitle": "Muito provavelmente, no período de:",
   "@conceptionTitle": {},
-  "conceptionFooter": "Foi quando a cegonha te levou ao colo de sua mãe!",
-  "@conceptionFooter": {},
+  "conceptionNote": "Estimativa baseada na duração média de uma gestação, com margem de uma semana.",
+  "@conceptionNote": {},
   "moonPhaseTitle": "Você nasceu na:",
   "@moonPhaseTitle": {},
   "livedTitle": "E viveu:",
@@ -414,6 +414,158 @@
   "@milestoneChannelName": {},
   "milestoneChannelDescription": "Avisos no dia dos marcos da sua vida",
   "@milestoneChannelDescription": {},
+  "onboardingTitle": "O que o dia em que você nasceu tem a contar?",
+  "@onboardingTitle": {},
+  "onboardingRevealLife": "Quanto tempo você já viveu",
+  "@onboardingRevealLife": {},
+  "onboardingRevealConception": "Quando a sua história começou",
+  "@onboardingRevealConception": {},
+  "onboardingRevealMoon": "Em que fase estava a Lua",
+  "@onboardingRevealMoon": {},
+  "onboardingRevealFact": "Um fato histórico perto do seu nascimento",
+  "@onboardingRevealFact": {},
+  "onboardingTakesLess": "Leva menos de um minuto",
+  "@onboardingTakesLess": {},
+  "birthdateTitle": "Quando você nasceu?",
+  "@birthdateTitle": {},
+  "birthdateDay": "Dia",
+  "@birthdateDay": {},
+  "birthdateMonth": "Mês",
+  "@birthdateMonth": {},
+  "birthdateYear": "Ano",
+  "@birthdateYear": {},
+  "birthdatePickFromCalendar": "Escolher no calendário",
+  "@birthdatePickFromCalendar": {},
+  "birthdateTimeTitle": "Hora do nascimento",
+  "@birthdateTimeTitle": {},
+  "birthdateTimeOptional": "Opcional",
+  "@birthdateTimeOptional": {},
+  "birthdateTimeToggle": "Sei a hora em que nasci",
+  "@birthdateTimeToggle": {},
+  "birthdateReveal": "Revelar meu resumo",
+  "@birthdateReveal": {},
+  "birthdateErrorInvalid": "Essa data não existe. Confira o dia e o mês.",
+  "@birthdateErrorInvalid": {},
+  "birthdateErrorFuture": "A data não pode estar no futuro.",
+  "@birthdateErrorFuture": {},
+  "birthdateErrorTooOld": "Digite um ano a partir de 1900.",
+  "@birthdateErrorTooOld": {},
+  "revealTitle": "Olhando o céu de {date}…",
+  "@revealTitle": {
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "14 de março de 1991"
+      }
+    }
+  },
+  "revealStepLife": "Calculando o seu tempo de vida",
+  "@revealStepLife": {},
+  "revealStepMoon": "Encontrando a fase da Lua",
+  "@revealStepMoon": {},
+  "revealStepFact": "Buscando um fato histórico",
+  "@revealStepFact": {},
+  "summaryClose": "Fechar o resumo",
+  "@summaryClose": {},
+  "summaryProgress": "Cartão {current} de {total}",
+  "@summaryProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryShareCard": "Compartilhar este cartão",
+  "@summaryShareCard": {},
+  "lifeEyebrow": "Tempo de vida",
+  "@lifeEyebrow": {},
+  "lifeYears": "{years, plural, =1{1 ano} other{{years} anos}}",
+  "@lifeYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "lifeMonthsAndDays": "{months, plural, =1{1 mês} other{{months} meses}} e {days, plural, =1{1 dia} other{{days} dias}}",
+  "@lifeMonthsAndDays": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "lifeSoFar": "Até agora você viveu",
+  "@lifeSoFar": {},
+  "lifeUnitDays": "dias",
+  "@lifeUnitDays": {},
+  "lifeUnitHours": "horas",
+  "@lifeUnitHours": {},
+  "lifeUnitMinutes": "minutos",
+  "@lifeUnitMinutes": {},
+  "lifeUnitSeconds": "segundos",
+  "@lifeUnitSeconds": {},
+  "lifeNextBirthday": "{days, plural, =0{Hoje é o seu aniversário!} =1{Falta 1 dia para o seu próximo aniversário} other{Faltam {days} dias para o seu próximo aniversário}}",
+  "@lifeNextBirthday": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "conceptionEyebrow": "Concepção",
+  "@conceptionEyebrow": {},
+  "conceptionLead": "Sua história começou entre",
+  "@conceptionLead": {},
+  "moonEyebrow": "Fase da Lua",
+  "@moonEyebrow": {},
+  "moonBornUnder": "Você nasceu numa {phase}",
+  "@moonBornUnder": {
+    "placeholders": {
+      "phase": {
+        "type": "String",
+        "example": "Lua nova"
+      }
+    }
+  },
+  "moonCycleLabel": "Ciclo da Lua",
+  "@moonCycleLabel": {},
+  "factEyebrow": "Fato histórico",
+  "@factEyebrow": {},
+  "factDaysAfterBirth": "{days, plural, =0{No dia do seu nascimento} =1{1 dia depois do seu nascimento} other{{days} dias depois do seu nascimento}}",
+  "@factDaysAfterBirth": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "factDaysBeforeBirth": "{days, plural, =1{1 dia antes do seu nascimento} other{{days} dias antes do seu nascimento}}",
+  "@factDaysBeforeBirth": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "factAiBadge": "Ilustração gerada por IA",
+  "@factAiBadge": {},
+  "factErrorTitle": "Não conseguimos buscar o fato histórico",
+  "@factErrorTitle": {},
+  "factRetry": "Tentar de novo",
+  "@factRetry": {},
+  "factSeeWhatIsReady": "Ver o que já está pronto",
+  "@factSeeWhatIsReady": {},
+  "endShare": "Compartilhar meu resumo",
+  "@endShare": {},
+  "adLabel": "Anúncio",
+  "@adLabel": {},
   "birthSongTitle": "A trilha do seu nascimento",
   "@birthSongTitle": {},
   "birthSongIntro": "Em {period}, uma das músicas em destaque no Brasil foi:",
