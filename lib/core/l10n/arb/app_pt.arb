@@ -529,6 +529,8 @@
       }
     }
   },
+  "factBirthMonthBridge": "No mês em que você nasceu.",
+  "@factBirthMonthBridge": {},
   "factErrorBody": "Pode ser a conexão. O resto do seu resumo já está pronto.",
   "@factErrorBody": {},
   "factEmptyTitle": "Ainda não temos um fato para esse mês",

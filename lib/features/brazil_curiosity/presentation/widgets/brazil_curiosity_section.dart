@@ -8,8 +8,9 @@ import 'package:knowhen/core/theme/tokens/kn_text.dart';
 
 typedef ImageProviderFor = ImageProvider Function(String url);
 
-/// Cartão "Fato histórico" (DXF-9, 4.8 e 4.10): o fato do mês do nascimento, com a ilustração quando há. Se só a
-/// parte remota falhar, o cartão explica e oferece tentar de novo ou voltar ao que já está pronto.
+/// Cartão "Fato histórico" (DXF-9, 4.8 e 4.10): o fato do mês do nascimento, com a ilustração quando há, e a linha
+/// fixa que o liga à pessoa (o fato vem do mês e ano, então a ponte em dias não se calcula). Se só a parte remota
+/// falhar, o cartão explica e oferece tentar de novo ou voltar ao que já está pronto.
 class BrazilCuriositySection extends StatelessWidget {
   const BrazilCuriositySection({
     super.key,
@@ -69,6 +70,7 @@ class BrazilCuriositySection extends StatelessWidget {
       children: [
         if (imageUrl.isNotEmpty) _FactImage(provider: imageProviderFor(imageUrl), badge: l10n.factAiBadge),
         if (body.isNotEmpty) Text(body, style: text.body),
+        Text(l10n.factBirthMonthBridge, style: text.bodyMuted),
       ],
     );
   }

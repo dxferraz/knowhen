@@ -662,6 +662,9 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get factBirthMonthBridge => 'No mês em que você nasceu.';
+
+  @override
   String get factErrorBody =>
       'Pode ser a conexão. O resto do seu resumo já está pronto.';
 

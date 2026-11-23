@@ -117,8 +117,8 @@ class ShareCardContent {
   }
 
   static String _conceptionLabel(AppLocalizations l10n, ShareCardData data, bool hideFullDate) {
-    final center = data.conceptionDate;
-    if (hideFullDate) return l10n.shareMonthYear(center);
-    return l10n.shareConceptionRange(center.subtract(const Duration(days: 7)), center.add(const Duration(days: 7)));
+    if (hideFullDate) return l10n.shareMonthYear(data.conceptionDate);
+    final window = conceptionWindow(data.birthDate);
+    return l10n.shareConceptionRange(window.start, window.end);
   }
 }

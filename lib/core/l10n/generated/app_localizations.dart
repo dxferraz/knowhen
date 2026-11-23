@@ -1036,6 +1036,12 @@ abstract class AppLocalizations {
   /// **'Fato histórico · {date}'**
   String factEyebrowDated(String date);
 
+  /// No description provided for @factBirthMonthBridge.
+  ///
+  /// In pt, this message translates to:
+  /// **'No mês em que você nasceu.'**
+  String get factBirthMonthBridge;
+
   /// No description provided for @factErrorBody.
   ///
   /// In pt, this message translates to:

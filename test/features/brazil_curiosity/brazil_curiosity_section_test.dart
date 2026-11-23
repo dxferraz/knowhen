@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 
 import '../../helpers/load_app_fonts.dart';
@@ -70,7 +71,7 @@ void main() {
       await pumpCard(tester, _section(curiosity: 'Nasce o Mercosul.', imageUrl: ''));
 
       expect(find.text('Nasce o Mercosul'), findsOneWidget);
-      expect(find.byType(Text), findsNWidgets(2), reason: 'só o eyebrow e o título');
+      expect(find.byType(Text), findsNWidgets(3), reason: 'o eyebrow, o título e a ponte com a pessoa');
     });
 
     testWidgets('o título é um cabeçalho para o leitor de tela', (tester) async {
@@ -80,6 +81,48 @@ void main() {
       final title = find.text('Nasce o Mercosul');
       expect(tester.getSemantics(title).flagsCollection.isHeader, isTrue);
       handle.dispose();
+    });
+  });
+
+  group('a ponte com a pessoa (spec 4.8)', () {
+    final bridge = find.text(l10n.factBirthMonthBridge);
+
+    const withLead = (
+      label: 'com título derivado',
+      fact: _shortLeadFact,
+      body: 'Brasil, Argentina, Paraguai e Uruguai assinaram o Tratado de Assunção. Até hoje o bloco reúne os quatro países.',
+    );
+    const withoutLead = (label: 'sem título derivado', fact: _fact, body: _fact);
+
+    for (final withImage in [true, false]) {
+      for (final c in [withLead, withoutLead]) {
+        testWidgets('aparece depois do texto, em bodyMuted, ${c.label} e ${withImage ? 'com' : 'sem'} imagem', (tester) async {
+          await pumpCard(tester, _section(curiosity: c.fact, imageUrl: withImage ? 'https://example.com/fato.png' : ''));
+
+          expect(l10n.factBirthMonthBridge, 'No mês em que você nasceu.');
+          expect(bridge, findsOneWidget);
+          expect(tester.getTopLeft(bridge).dy, greaterThanOrEqualTo(tester.getBottomLeft(find.text(c.body)).dy), reason: 'depois do texto');
+          expect(tester.widget<Text>(bridge).style, tester.element(bridge).knText.bodyMuted);
+        });
+      }
+    }
+
+    testWidgets('um fato de uma frase só também traz a ponte', (tester) async {
+      await pumpCard(tester, _section(curiosity: 'Nasce o Mercosul.', imageUrl: ''));
+
+      expect(bridge, findsOneWidget);
+    });
+
+    testWidgets('não aparece no estado vazio', (tester) async {
+      await pumpCard(tester, _section(curiosity: null, imageUrl: ''));
+
+      expect(bridge, findsNothing);
+    });
+
+    testWidgets('não aparece no estado de erro', (tester) async {
+      await pumpCard(tester, _section(curiosity: null, imageUrl: '', loadFailed: true, onRetry: () {}, onSeeReady: () {}));
+
+      expect(bridge, findsNothing);
     });
   });
 
