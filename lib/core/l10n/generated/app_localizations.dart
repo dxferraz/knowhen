@@ -106,12 +106,6 @@ abstract class AppLocalizations {
   /// **'Cancelar'**
   String get cancel;
 
-  /// No description provided for @confirm.
-  ///
-  /// In pt, this message translates to:
-  /// **'Confirmar'**
-  String get confirm;
-
   /// No description provided for @skip.
   ///
   /// In pt, this message translates to:
@@ -129,12 +123,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Começar'**
   String get start;
-
-  /// No description provided for @continueLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Continuar'**
-  String get continueLabel;
 
   /// No description provided for @onboarding1Title.
   ///
@@ -172,23 +160,11 @@ abstract class AppLocalizations {
   /// **'Insira sua data de nascimento e veja o que o universo tem reservado para você!'**
   String get onboarding3Description;
 
-  /// No description provided for @selectBirthdateTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Para começar selecione a sua data de nascimento:'**
-  String get selectBirthdateTitle;
-
   /// No description provided for @selectADate.
   ///
   /// In pt, this message translates to:
   /// **'Selecione uma data'**
   String get selectADate;
-
-  /// No description provided for @selectABirthdate.
-  ///
-  /// In pt, this message translates to:
-  /// **'Selecione uma data de nascimento'**
-  String get selectABirthdate;
 
   /// Resumo da data selecionada
   ///
@@ -303,18 +279,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'{seconds} segundos'**
   String secondsOfLife(Object seconds);
-
-  /// No description provided for @birthTimeQuestion.
-  ///
-  /// In pt, this message translates to:
-  /// **'Você sabe a hora exata do seu nascimento?'**
-  String get birthTimeQuestion;
-
-  /// No description provided for @unknownBirthTime.
-  ///
-  /// In pt, this message translates to:
-  /// **'Não sei'**
-  String get unknownBirthTime;
 
   /// No description provided for @conceptionTitle.
   ///
@@ -862,11 +826,65 @@ abstract class AppLocalizations {
   /// **'Hora do nascimento'**
   String get birthdateTimeTitle;
 
-  /// No description provided for @birthdateTimeOptional.
+  /// No description provided for @birthdateEyebrow.
   ///
   /// In pt, this message translates to:
-  /// **'Opcional'**
-  String get birthdateTimeOptional;
+  /// **'Só falta isso'**
+  String get birthdateEyebrow;
+
+  /// No description provided for @birthdateHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite só os números. Ex.: 14 03 1991'**
+  String get birthdateHint;
+
+  /// No description provided for @birthdateDayHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'DD'**
+  String get birthdateDayHint;
+
+  /// No description provided for @birthdateMonthHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'MM'**
+  String get birthdateMonthHint;
+
+  /// No description provided for @birthdateYearHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'AAAA'**
+  String get birthdateYearHint;
+
+  /// No description provided for @birthdateBack.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar'**
+  String get birthdateBack;
+
+  /// No description provided for @birthdateTimeHelpOff.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional · deixa o relógio mais preciso'**
+  String get birthdateTimeHelpOff;
+
+  /// No description provided for @birthdateTimeHelpOn.
+  ///
+  /// In pt, this message translates to:
+  /// **'{time} · deixa o relógio mais preciso'**
+  String birthdateTimeHelpOn(String time);
+
+  /// No description provided for @birthdateTimeHour.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hora'**
+  String get birthdateTimeHour;
+
+  /// No description provided for @birthdateTimeMinute.
+  ///
+  /// In pt, this message translates to:
+  /// **'Minuto'**
+  String get birthdateTimeMinute;
 
   /// No description provided for @birthdateTimeToggle.
   ///

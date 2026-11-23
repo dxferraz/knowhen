@@ -16,7 +16,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(BirthdatePage), findsOneWidget);
-    expect(find.text('Para começar selecione a sua data de nascimento:'), findsOneWidget);
+    expect(find.text(l10n.birthdateTitle), findsOneWidget);
   });
 
   testWidgets('App starts on the onboarding the first time', (WidgetTester tester) async {
