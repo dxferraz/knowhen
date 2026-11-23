@@ -3,6 +3,7 @@ import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/functions/conception_window.dart';
 import 'package:knowhen/core/functions/get_moon_phase.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/fact_text.dart';
 import 'package:knowhen/features/moon_phase/presentation/moon_phase_l10n.dart';
 import 'package:knowhen/features/share/domain/share_section.dart';
 
@@ -18,8 +19,14 @@ class ShareCardData {
 
   const ShareCardData({required this.birthDate, required this.now, required this.moonPhase, this.curiosity, this.curiosityImageUrl = ''});
 
-  /// A seção de concepção só aparece no app para maiores de 18 anos.
-  bool get showsConception => shouldShowConception(birthDate, now);
+  /// Fração do ciclo lunar no dia do nascimento, para desenhar a lua na fase exata.
+  double get moonFraction => getMoonPhaseFraction(birthDate);
+
+  /// Título curto do fato do mês, o gancho do card-resumo; `null` sem fato ou quando a primeira frase é longa demais.
+  String? get factTitle {
+    final fact = curiosity;
+    return fact == null ? null : splitFact(fact).title;
+  }
 
   /// Data central da concepção (a mesma janela do resumo, em dias de calendário).
   DateTime get conceptionDate => DateTime(birthDate.year, birthDate.month, birthDate.day - conceptionDaysBeforeBirth);
@@ -34,6 +41,9 @@ class ShareCardContent {
   final String birthLabel;
   final IconData icon;
 
+  /// Fase da lua (fração do ciclo) a desenhar no lugar de [icon]; `null` quando o card não tem lua.
+  final double? moonFraction;
+
   /// Imagem remota opcional; [icon] é o fallback quando ela falta ou falha.
   final String? imageUrl;
 
@@ -44,6 +54,7 @@ class ShareCardContent {
     required this.details,
     required this.birthLabel,
     required this.icon,
+    this.moonFraction,
     this.imageUrl,
   });
 
@@ -54,7 +65,7 @@ class ShareCardContent {
   /// denunciariam.
   factory ShareCardContent.build(AppLocalizations l10n, ShareSection section, ShareCardData data, {required bool hideFullDate}) {
     final birthLabel = hideFullDate ? l10n.shareBirthMonthYear(data.birthDate) : l10n.shareBirthFull(data.birthDate);
-    final years = calculateAge(data.birthDate, data.now);
+    final age = _ageHighlight(l10n, data);
     final totalMonths = calculateMonthsOfLife(data.birthDate, data.now);
     final days = calculateDaysOfLife(data.birthDate, data.now);
     final yearsDetail = hideFullDate ? l10n.shareYearsDetailHidden(totalMonths) : l10n.shareYearsDetail(totalMonths, days);
@@ -65,7 +76,7 @@ class ShareCardContent {
         return ShareCardContent(
           section: section,
           title: l10n.shareYearsTitle,
-          highlight: l10n.shareYearsHighlight(years),
+          highlight: age,
           details: [yearsDetail],
           birthLabel: birthLabel,
           icon: Icons.cake_rounded,
@@ -87,7 +98,7 @@ class ShareCardContent {
           details: [l10n.moonPhaseDescription(data.moonPhase.type)],
           birthLabel: birthLabel,
           icon: Icons.nightlight_round,
-          imageUrl: data.moonPhase.imageUrl,
+          moonFraction: data.moonFraction,
         );
       case ShareSection.brazilCuriosity:
         final paragraphs = (data.curiosity ?? '').split('. ');
@@ -104,16 +115,25 @@ class ShareCardContent {
         return ShareCardContent(
           section: section,
           title: l10n.shareSummaryTitle,
-          highlight: l10n.shareYearsHighlight(years),
+          highlight: age,
           details: [
             yearsDetail,
             l10n.shareMoonLine(l10n.moonPhaseName(data.moonPhase.type)),
-            if (data.showsConception) l10n.shareConceptionLine(conception),
+            if (data.factTitle != null) l10n.shareFactLine(data.factTitle!),
           ],
           birthLabel: birthLabel,
           icon: Icons.auto_awesome_rounded,
+          moonFraction: data.moonFraction,
         );
     }
+  }
+
+  /// A idade como no cartão "Tempo de vida": anos e, antes do primeiro aniversário, meses ou dias (sem "0 anos").
+  static String _ageHighlight(AppLocalizations l10n, ShareCardData data) {
+    final (:years, :months, :days) = calculateAgeParts(data.birthDate, data.now);
+    if (years > 0) return l10n.lifeYears(years);
+    if (months > 0) return l10n.lifeMonths(months);
+    return l10n.lifeDays(days);
   }
 
   static String _conceptionLabel(AppLocalizations l10n, ShareCardData data, bool hideFullDate) {

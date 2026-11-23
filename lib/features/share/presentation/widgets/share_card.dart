@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/config/app_links.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/components/kn_background.dart';
+import 'package:knowhen/core/theme/components/kn_moon.dart';
+import 'package:knowhen/core/theme/components/kn_stat.dart';
+import 'package:knowhen/core/theme/tokens/kn_colors.dart';
+import 'package:knowhen/core/theme/tokens/kn_spacing.dart';
 import 'package:knowhen/core/theme/tokens/kn_text.dart';
 import 'package:knowhen/features/share/domain/share_card_content.dart';
 
-/// Card no formato Stories (9:16).
+/// Card no formato Stories (9:16), no "Céu de Nascimento" (DXF-9, 4.9).
 ///
-/// Desenhado em [logicalSize] (360×640) com cores fixas, independentes do tema do app, para ficar
-/// legível nos temas claro e escuro. Capturado com `pixelRatio` [exportPixelRatio] vira 1080×1920.
+/// Desenhado em [logicalSize] (360×640) sempre com a paleta noturna, qualquer que seja o tema do app, e sem acompanhar
+/// a escala de fonte do aparelho: a imagem compartilhada é a mesma para todo mundo. Capturado com `pixelRatio`
+/// [exportPixelRatio] vira 1080×1920.
 class ShareCard extends StatelessWidget {
   static const logicalSize = Size(360, 640);
   static const exportPixelRatio = 3.0;
-
-  static const background = Color(0xFF14142B);
-  static const onBackground = Color(0xFFF8FAFC);
-  static const muted = Color(0xFFB4B8D0);
-  static const accent = Color(0xFF60A5FA);
 
   static const _horizontalPadding = 32.0;
 
@@ -25,28 +26,34 @@ class ShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    const night = KnColors.night;
+    return Theme(
+      data: theme.copyWith(brightness: Brightness.dark, extensions: [night, KnTextStyles.from(night)]),
+      child: MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+        child: Builder(builder: _buildCard),
+      ),
+    );
+  }
+
+  Widget _buildCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    const font = KnFonts.sans;
+    final c = context.kn;
+    final text = context.knText;
 
     return SizedBox.fromSize(
       size: logicalSize,
-      child: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [background, Color(0xFF1F1F46)]),
-        ),
+      child: KnBackground(
         child: Padding(
           // Margens maiores em cima e embaixo: a interface do Stories cobre essas faixas.
           padding: const EdgeInsets.fromLTRB(_horizontalPadding, 72, _horizontalPadding, 56),
           child: Column(
             children: [
-              Text(
-                content.title,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: font, fontSize: 20, fontWeight: FontWeight.w600, color: muted),
-              ),
-              const SizedBox(height: 24),
+              KnEyebrow(content.title),
+              const SizedBox(height: KnSpace.xl),
               _Illustration(content: content),
-              const SizedBox(height: 24),
+              const SizedBox(height: KnSpace.xl),
               // Destaque e detalhes encolhem para caber, em vez de estourar ou cortar o texto.
               Expanded(
                 child: FittedBox(
@@ -56,50 +63,23 @@ class ShareCard extends StatelessWidget {
                     width: logicalSize.width - _horizontalPadding * 2,
                     child: Column(
                       children: [
-                        Text(
-                          content.highlight,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontFamily: font, fontSize: 32, height: 1.2, fontWeight: FontWeight.w800, color: onBackground),
-                        ),
-                        const SizedBox(height: 16),
+                        Text(content.highlight, textAlign: TextAlign.center, style: text.display),
+                        const SizedBox(height: KnSpace.lg),
                         for (final line in content.details)
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              line,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: font,
-                                fontSize: 16,
-                                height: 1.4,
-                                fontWeight: FontWeight.w500,
-                                color: onBackground,
-                              ),
-                            ),
+                            padding: const EdgeInsets.only(bottom: KnSpace.sm),
+                            child: Text(line, textAlign: TextAlign.center, style: text.body),
                           ),
                       ],
                     ),
                   ),
                 ),
               ),
-              Text(
-                content.birthLabel,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: font, fontSize: 14, fontWeight: FontWeight.w500, color: muted),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.shareWatermark,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: font, fontSize: 16, fontWeight: FontWeight.w700, color: accent),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                AppLinks.storeUrl,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: TextStyle(fontFamily: font, fontSize: 9, fontWeight: FontWeight.w500, color: muted),
-              ),
+              Text(content.birthLabel, textAlign: TextAlign.center, style: text.caption.copyWith(color: c.inkMuted)),
+              const SizedBox(height: KnSpace.lg),
+              Text(l10n.shareWatermark, textAlign: TextAlign.center, style: text.label.copyWith(color: c.accentText)),
+              const SizedBox(height: KnSpace.xs),
+              Text(AppLinks.storeUrl, textAlign: TextAlign.center, maxLines: 2, style: text.caption.copyWith(fontSize: 9, color: c.inkMuted)),
             ],
           ),
         ),
@@ -117,7 +97,12 @@ class _Illustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = Icon(content.icon, size: 96, color: ShareCard.accent);
+    final c = context.kn;
+    final moonFraction = content.moonFraction;
+    // A lua é desenhada na fase exata, sem baixar imagem. O Brasil fica no hemisfério sul: a Lua se vê espelhada.
+    if (moonFraction != null) return KnMoon(phase: moonFraction, size: _size, southernHemisphere: true);
+
+    final icon = Icon(content.icon, size: 96, color: c.primary);
     final imageUrl = content.imageUrl;
 
     return Container(
@@ -125,7 +110,7 @@ class _Illustration extends StatelessWidget {
       height: _size,
       alignment: Alignment.center,
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(color: ShareCard.accent.withAlpha(30), borderRadius: BorderRadius.circular(32)),
+      decoration: BoxDecoration(color: c.surfaceHi, borderRadius: BorderRadius.circular(KnRadius.lg), border: Border.all(color: c.outline)),
       child: imageUrl == null
           ? icon
           : Image.network(imageUrl, width: _size, height: _size, fit: BoxFit.cover, errorBuilder: (_, _, _) => icon),

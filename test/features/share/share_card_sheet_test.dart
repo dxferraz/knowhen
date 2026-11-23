@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:knowhen/core/functions/get_moon_phase.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/theme/app_theme.dart';
+import 'package:knowhen/core/theme/tokens/kn_colors.dart';
 import 'package:knowhen/features/share/domain/share_card_content.dart';
 import 'package:knowhen/features/share/domain/share_section.dart';
 import 'package:knowhen/features/share/presentation/widgets/share_card_sheet.dart';
@@ -48,7 +49,7 @@ void main() {
   testWidgets('mostra o card com título, destaque e marca d\'água', (tester) async {
     await pumpSheet(tester, shareImage: (_, _, _) async => ShareResultStatus.success);
 
-    expect(find.text('Meu Knowhen'), findsOneWidget);
+    expect(find.text('MEU KNOWHEN'), findsOneWidget);
     expect(find.text('36 anos'), findsOneWidget);
     expect(find.text('Descubra o seu no Knowhen'), findsOneWidget);
     expect(find.textContaining('play.google.com'), findsOneWidget);
@@ -148,7 +149,7 @@ void main() {
   });
 
   for (final entry in {'claro': lightTheme, 'escuro': darkTheme}.entries) {
-    testWidgets('card tem as mesmas cores nos temas ${entry.key} (fundo #14142B)', (tester) async {
+    testWidgets('card tem as mesmas cores nos temas ${entry.key} (paleta noturna)', (tester) async {
       await pumpSheet(tester, theme: entry.value, shareImage: (_, _, _) async => ShareResultStatus.success);
 
       final decorated = tester.widgetList<DecoratedBox>(
@@ -160,7 +161,7 @@ void main() {
           .map((d) => d.gradient)
           .whereType<LinearGradient>()
           .first;
-      expect(gradient.colors.first, const Color(0xFF14142B));
+      expect(gradient.colors, [KnColors.night.bgTop, KnColors.night.bg]);
     });
   }
 }
