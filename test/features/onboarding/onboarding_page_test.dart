@@ -115,6 +115,42 @@ void main() {
     },
   );
 
+  testWidgets(
+    'two activations of "Começar" before it finishes log one completion and open one birthdate page',
+    (tester) async {
+      await tester.pumpApp(const OnboardingPage(), deps);
+
+      // As duas ativações chegam antes de qualquer future resolver (o SharedPreferences ainda não respondeu).
+      final onPressed = tester
+          .widget<KnButton>(find.byType(KnButton))
+          .onPressed!;
+      onPressed();
+      onPressed();
+      await tester.pumpAndSettle();
+
+      expect(
+        deps.firebaseAnalytics.names.where((n) => n == 'onboarding_completed'),
+        hasLength(1),
+      );
+      expect(find.byType(BirthdatePage), findsOneWidget);
+
+      // Um único pop sai da tela de data: não há outra por baixo.
+      tester.state<NavigatorState>(find.byType(Navigator)).pop();
+      await tester.pumpAndSettle();
+      expect(find.byType(BirthdatePage), findsNothing);
+      expect(find.byType(OnboardingPage), findsOneWidget);
+    },
+  );
+
+  testWidgets('the CTA is disabled while "Começar" runs', (tester) async {
+    await tester.pumpApp(const OnboardingPage(), deps);
+
+    await tester.tap(find.text(l10n.start));
+    await tester.pump();
+
+    expect(tester.widget<KnButton>(find.byType(KnButton)).onPressed, isNull);
+  });
+
   testWidgets('does not log onboarding_skipped: there is nothing to skip', (
     tester,
   ) async {

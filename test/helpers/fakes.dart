@@ -37,7 +37,7 @@ class FakeAdService extends Fake implements AdService {
   Future<void> loadAd() async => loadCalls++;
 
   @override
-  void showAd() => showCalls++;
+  Future<void> showAd() async => showCalls++;
 }
 
 /// Stands in for an ad the plugin would hand to `onAdLoaded`.

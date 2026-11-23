@@ -25,6 +25,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
   /// Lua crescente fina: já sugere o céu sem cravar uma fase.
   static const double _moonPhase = 0.18;
 
+  /// Um segundo toque em "Começar" antes de a primeira chamada terminar não pode repetir o evento nem
+  /// empilhar outra tela de data.
+  bool _starting = false;
+
   @override
   void initState() {
     super.initState();
@@ -34,12 +38,22 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Future<void> _start() async {
+    if (_starting) return;
+    setState(() => _starting = true);
+
     final analytics = context.read<AnalyticsService>();
     final navigator = Navigator.of(context);
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
     await prefs.setBool('showOnboarding', false);
+    if (!mounted) return;
+
     analytics.logOnboardingCompleted();
-    navigator.push(MaterialPageRoute(builder: (_) => const BirthdatePage()));
+    await navigator.push(
+      MaterialPageRoute(builder: (_) => const BirthdatePage()),
+    );
+    // Se o usuário voltar do formulário de data, o botão volta a funcionar.
+    if (mounted) setState(() => _starting = false);
   }
 
   @override
@@ -105,7 +119,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     KnButton(
                       label: l10n.start,
                       icon: Icons.arrow_forward_rounded,
-                      onPressed: _start,
+                      onPressed: _starting ? null : _start,
                     ),
                     const SizedBox(height: KnSpace.sm),
                     Text(

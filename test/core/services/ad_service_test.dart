@@ -55,8 +55,7 @@ void main() {
     expect(loader.requests, hasLength(1));
     expect(ad.disposeCalls, 0);
 
-    service.showAd();
-    await pumpEventQueue();
+    await service.showAd();
     expect(ad.showCalls, 1);
   });
 
@@ -91,9 +90,7 @@ void main() {
     loader.requests.single.onAdLoaded(ad);
     await loading;
 
-    service.showAd();
-    service.showAd();
-    await pumpEventQueue();
+    await Future.wait([service.showAd(), service.showAd()]);
 
     expect(ad.showCalls, 1);
     expect(service.isAdLoaded, isFalse);
@@ -106,8 +103,7 @@ void main() {
     loader.requests.single.onAdLoaded(ad);
     await loading;
 
-    service.showAd();
-    await pumpEventQueue();
+    await service.showAd();
     ad.fullScreenContentCallback!.onAdDismissedFullScreenContent!(ad);
     await pumpEventQueue();
 
@@ -122,8 +118,7 @@ void main() {
     loader.requests.single.onAdLoaded(ad);
     await loading;
 
-    service.showAd();
-    await pumpEventQueue();
+    await service.showAd();
     ad.fullScreenContentCallback!.onAdDismissedFullScreenContent!(ad);
     await pumpEventQueue();
 
@@ -139,8 +134,7 @@ void main() {
   });
 
   test('showAd without a loaded ad does nothing', () async {
-    service.showAd();
-    await pumpEventQueue();
+    await service.showAd();
 
     expect(firebaseAnalytics.events, isEmpty);
   });
