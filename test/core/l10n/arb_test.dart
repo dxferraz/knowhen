@@ -18,4 +18,24 @@ void main() {
 
     expect(decomposed, isEmpty);
   });
+
+  test('every message has its metadata entry', () {
+    final missing = messages.keys.where((key) => !arb.containsKey('@$key'));
+
+    expect(missing, isEmpty);
+  });
+
+  // Typos and copy we already replaced; they must not come back.
+  test('retired copy stays out', () {
+    const retired = ['provavavelmente', 'cegonha'];
+    final offenders = messages.entries.where((e) => retired.any(e.value.toLowerCase().contains)).map((e) => e.key);
+
+    expect(offenders, isEmpty);
+  });
+
+  test('copy has no double spaces or stray edge whitespace', () {
+    final offenders = messages.entries.where((e) => e.value.contains('  ') || e.value != e.value.trim()).map((e) => e.key);
+
+    expect(offenders, isEmpty);
+  });
 }

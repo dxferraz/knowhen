@@ -156,8 +156,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get conceptionTitle => 'Muito provavelmente, no período de:';
 
   @override
-  String get conceptionFooter =>
-      'Foi quando a cegonha te levou ao colo de sua mãe!';
+  String get conceptionNote =>
+      'Estimativa baseada na duração média de uma gestação, com margem de uma semana.';
 
   @override
   String get moonPhaseTitle => 'Você nasceu na:';
@@ -489,6 +489,206 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get milestoneChannelDescription =>
       'Avisos no dia dos marcos da sua vida';
+
+  @override
+  String get onboardingTitle => 'O que o dia em que você nasceu tem a contar?';
+
+  @override
+  String get onboardingRevealLife => 'Quanto tempo você já viveu';
+
+  @override
+  String get onboardingRevealConception => 'Quando a sua história começou';
+
+  @override
+  String get onboardingRevealMoon => 'Em que fase estava a Lua';
+
+  @override
+  String get onboardingRevealFact =>
+      'Um fato histórico perto do seu nascimento';
+
+  @override
+  String get onboardingTakesLess => 'Leva menos de um minuto';
+
+  @override
+  String get birthdateTitle => 'Quando você nasceu?';
+
+  @override
+  String get birthdateDay => 'Dia';
+
+  @override
+  String get birthdateMonth => 'Mês';
+
+  @override
+  String get birthdateYear => 'Ano';
+
+  @override
+  String get birthdatePickFromCalendar => 'Escolher no calendário';
+
+  @override
+  String get birthdateTimeTitle => 'Hora do nascimento';
+
+  @override
+  String get birthdateTimeOptional => 'Opcional';
+
+  @override
+  String get birthdateTimeToggle => 'Sei a hora em que nasci';
+
+  @override
+  String get birthdateReveal => 'Revelar meu resumo';
+
+  @override
+  String get birthdateErrorInvalid =>
+      'Essa data não existe. Confira o dia e o mês.';
+
+  @override
+  String get birthdateErrorFuture => 'A data não pode estar no futuro.';
+
+  @override
+  String get birthdateErrorTooOld => 'Digite um ano a partir de 1900.';
+
+  @override
+  String revealTitle(String date) {
+    return 'Olhando o céu de $date…';
+  }
+
+  @override
+  String get revealStepLife => 'Calculando o seu tempo de vida';
+
+  @override
+  String get revealStepMoon => 'Encontrando a fase da Lua';
+
+  @override
+  String get revealStepFact => 'Buscando um fato histórico';
+
+  @override
+  String get summaryClose => 'Fechar o resumo';
+
+  @override
+  String summaryProgress(int current, int total) {
+    return 'Cartão $current de $total';
+  }
+
+  @override
+  String get summaryShareCard => 'Compartilhar este cartão';
+
+  @override
+  String get lifeEyebrow => 'Tempo de vida';
+
+  @override
+  String lifeYears(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years anos',
+      one: '1 ano',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lifeMonthsAndDays(int months, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months meses',
+      one: '1 mês',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days dias',
+      one: '1 dia',
+    );
+    return '$_temp0 e $_temp1';
+  }
+
+  @override
+  String get lifeSoFar => 'Até agora você viveu';
+
+  @override
+  String get lifeUnitDays => 'dias';
+
+  @override
+  String get lifeUnitHours => 'horas';
+
+  @override
+  String get lifeUnitMinutes => 'minutos';
+
+  @override
+  String get lifeUnitSeconds => 'segundos';
+
+  @override
+  String lifeNextBirthday(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Faltam $days dias para o seu próximo aniversário',
+      one: 'Falta 1 dia para o seu próximo aniversário',
+      zero: 'Hoje é o seu aniversário!',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get conceptionEyebrow => 'Concepção';
+
+  @override
+  String get conceptionLead => 'Sua história começou entre';
+
+  @override
+  String get moonEyebrow => 'Fase da Lua';
+
+  @override
+  String moonBornUnder(String phase) {
+    return 'Você nasceu numa $phase';
+  }
+
+  @override
+  String get moonCycleLabel => 'Ciclo da Lua';
+
+  @override
+  String get factEyebrow => 'Fato histórico';
+
+  @override
+  String factDaysAfterBirth(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days dias depois do seu nascimento',
+      one: '1 dia depois do seu nascimento',
+      zero: 'No dia do seu nascimento',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String factDaysBeforeBirth(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days dias antes do seu nascimento',
+      one: '1 dia antes do seu nascimento',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get factAiBadge => 'Ilustração gerada por IA';
+
+  @override
+  String get factErrorTitle => 'Não conseguimos buscar o fato histórico';
+
+  @override
+  String get factRetry => 'Tentar de novo';
+
+  @override
+  String get factSeeWhatIsReady => 'Ver o que já está pronto';
+
+  @override
+  String get endShare => 'Compartilhar meu resumo';
+
+  @override
+  String get adLabel => 'Anúncio';
 
   @override
   String get birthSongTitle => 'A trilha do seu nascimento';
