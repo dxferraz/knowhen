@@ -130,14 +130,6 @@
   "@shareSummaryTitle": {},
   "shareYearsTitle": "Eu já vivi",
   "@shareYearsTitle": {},
-  "shareYearsHighlight": "{years, plural, =1{1 ano} other{{years} anos}}",
-  "@shareYearsHighlight": {
-    "placeholders": {
-      "years": {
-        "type": "int"
-      }
-    }
-  },
   "shareYearsDetail": "{months, plural, =1{1 mês} other{{months} meses}} e {days, plural, =1{1 dia} other{{days} dias}} de vida",
   "@shareYearsDetail": {
     "placeholders": {
@@ -170,12 +162,12 @@
       }
     }
   },
-  "shareConceptionLine": "Concebido(a) por volta de {when}",
-  "@shareConceptionLine": {
+  "shareFactLine": "No mês em que nasci: {fact}",
+  "@shareFactLine": {
     "placeholders": {
-      "when": {
+      "fact": {
         "type": "String",
-        "example": "junho de 1990"
+        "example": "Nasce o Mercosul"
       }
     }
   },
@@ -472,6 +464,19 @@
   "@factSeeWhatIsReady": {},
   "endShare": "Compartilhar meu resumo",
   "@endShare": {},
+  "endEyebrow": "Seu resumo",
+  "@endEyebrow": {},
+  "endTitle": "{date}, em um cartão",
+  "@endTitle": {
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "14 de março de 1991"
+      }
+    }
+  },
+  "endPreviewLabel": "Prévia do cartão para compartilhar",
+  "@endPreviewLabel": {},
   "adLabel": "Anúncio",
   "@adLabel": {},
   "birthSongTitle": "A trilha do seu nascimento",

@@ -376,12 +376,6 @@ abstract class AppLocalizations {
   /// **'Eu já vivi'**
   String get shareYearsTitle;
 
-  /// No description provided for @shareYearsHighlight.
-  ///
-  /// In pt, this message translates to:
-  /// **'{years, plural, =1{1 ano} other{{years} anos}}'**
-  String shareYearsHighlight(int years);
-
   /// No description provided for @shareYearsDetail.
   ///
   /// In pt, this message translates to:
@@ -412,11 +406,11 @@ abstract class AppLocalizations {
   /// **'Nasci na {phase}'**
   String shareMoonLine(String phase);
 
-  /// No description provided for @shareConceptionLine.
+  /// No description provided for @shareFactLine.
   ///
   /// In pt, this message translates to:
-  /// **'Concebido(a) por volta de {when}'**
-  String shareConceptionLine(String when);
+  /// **'No mês em que nasci: {fact}'**
+  String shareFactLine(String fact);
 
   /// No description provided for @shareBirthFull.
   ///
@@ -957,6 +951,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Compartilhar meu resumo'**
   String get endShare;
+
+  /// No description provided for @endEyebrow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu resumo'**
+  String get endEyebrow;
+
+  /// No description provided for @endTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'{date}, em um cartão'**
+  String endTitle(String date);
+
+  /// No description provided for @endPreviewLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prévia do cartão para compartilhar'**
+  String get endPreviewLabel;
 
   /// No description provided for @adLabel.
   ///

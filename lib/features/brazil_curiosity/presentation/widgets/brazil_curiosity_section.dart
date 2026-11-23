@@ -5,6 +5,7 @@ import 'package:knowhen/core/theme/components/kn_button.dart';
 import 'package:knowhen/core/theme/components/kn_story_page.dart';
 import 'package:knowhen/core/theme/tokens/kn_spacing.dart';
 import 'package:knowhen/core/theme/tokens/kn_text.dart';
+import 'package:knowhen/features/brazil_curiosity/domain/fact_text.dart';
 
 typedef ImageProviderFor = ImageProvider Function(String url);
 
@@ -43,9 +44,6 @@ class BrazilCuriositySection extends StatelessWidget {
   /// Só para testes: troca o download da imagem.
   final ImageProviderFor imageProviderFor;
 
-  /// Maior primeira frase que ainda cabe como título do cartão.
-  static const int _maxTitleLength = 60;
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -56,13 +54,7 @@ class BrazilCuriositySection extends StatelessWidget {
       return loadFailed ? _buildError(context, l10n) : _buildEmpty(l10n, text);
     }
 
-    // O título do cartão é curto ("Nasce o Mercosul"). Enquanto o Firestore não traz um, a primeira frase serve se for
-    // curta; senão o fato inteiro vira o texto, em vez de um título de cinco linhas.
-    final sentences = curiosity.split('. ');
-    final lead = sentences.first.trim().replaceFirst(RegExp(r'\.$'), '');
-    final hasShortLead = lead.length <= _maxTitleLength;
-    final title = hasShortLead ? lead : null;
-    final body = hasShortLead ? sentences.skip(1).join('. ').trim() : curiosity.trim();
+    final (:title, :body) = splitFact(curiosity);
 
     return KnStoryPage(
       eyebrow: l10n.factEyebrowDated(DateText.monthYear(birthDate)),

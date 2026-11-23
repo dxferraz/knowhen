@@ -10,10 +10,11 @@ import 'package:knowhen/core/theme/components/kn_moon.dart';
 import 'package:knowhen/core/theme/tokens/kn_text.dart';
 import 'package:knowhen/features/birth_song/presentation/widgets/birth_song_section.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
-import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
+import 'package:knowhen/features/share/presentation/widgets/share_card_sheet.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
+import 'package:knowhen/features/summary/presentation/widgets/summary_end_section.dart';
 import 'package:knowhen/features/summary/presentation/widgets/summary_reveal.dart';
 import 'package:knowhen/features/years_of_life/presentation/widgets/years_of_life.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,14 +51,14 @@ void main() {
     expect(deps.firebaseAnalytics.events.last.parameters, {'section_name': 'years_of_life', 'section_index': 0});
   });
 
-  testWidgets('shows the birth song as the last page and logs birth_song when it is viewed', (tester) async {
+  testWidgets('shows the birth song before the end card and logs birth_song when it is viewed', (tester) async {
     final deps = TestDependencies(birthSongs: FakeBirthSongRepository(song: sampleBirthSong));
 
     await tester.pumpApp(SummaryPage(birthDate: birthDate), deps);
     await tester.pumpAndSettle();
 
     final pageView = tester.widget<PageView>(find.byType(PageView));
-    expect(pageView.childrenDelegate.estimatedChildCount, 6);
+    expect(pageView.childrenDelegate.estimatedChildCount, 7);
 
     pageView.controller!.jumpToPage(5);
     await tester.pumpAndSettle();
@@ -74,8 +75,28 @@ void main() {
     await tester.pumpAndSettle();
 
     final pageView = tester.widget<PageView>(find.byType(PageView));
-    expect(pageView.childrenDelegate.estimatedChildCount, 5);
+    expect(pageView.childrenDelegate.estimatedChildCount, 6);
     expect(find.byType(BirthSongSection), findsNothing);
+  });
+
+  testWidgets('o cartão final fecha a sequência e "Compartilhar meu resumo" abre o compartilhamento do resumo', (tester) async {
+    final deps = TestDependencies(birthSongs: FakeBirthSongRepository());
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), deps);
+    await tester.pumpAndSettle();
+
+    tester.widget<PageView>(find.byType(PageView)).controller!.jumpToPage(5);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SummaryEndSection), findsOneWidget);
+    expect(deps.firebaseAnalytics.events.last.parameters, {'section_name': 'summary_end', 'section_index': 5});
+
+    await tester.tap(find.text(l10n.endShare));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ShareCardSheet), findsOneWidget);
+    expect(deps.firebaseAnalytics.events.where((e) => e.name == 'share_tapped').map((e) => e.parameters), [
+      {'section_name': 'summary'},
+    ]);
   });
 
   testWidgets('keeps the summary when the curiosity fails to load', (tester) async {
@@ -89,7 +110,7 @@ void main() {
   });
 
   group('política de anúncios (DXF-9, 4.11)', () {
-    // Adulto com fato e sem música: 5 cartões (tempo de vida, marco, concepção, lua, fato).
+    // Adulto com fato e sem música: 6 cartões (tempo de vida, marco, concepção, lua, fato, final).
     final adult = DateTime(1990, 5, 20);
 
     Future<FakeAdService> open(WidgetTester tester, {bool withNative = true, TestDependencies? deps}) async {
@@ -116,15 +137,15 @@ void main() {
     testWidgets('os anúncios só são pedidos ao chegar ao penúltimo cartão, e uma vez', (tester) async {
       final ads = await open(tester);
 
-      await next(tester, 2); // concepção
+      await next(tester, 3); // lua
       expect(ads.loadCalls, 0);
       expect(ads.nativeRequests, isEmpty);
 
-      await next(tester); // lua, o penúltimo
+      await next(tester); // fato, o penúltimo
       expect(ads.loadCalls, 1);
       expect(ads.nativeRequests, hasLength(1));
 
-      await next(tester); // fato, o último
+      await next(tester); // o cartão final
       tester.widget<PageView>(find.byType(PageView)).controller!.jumpToPage(3);
       await tester.pumpAndSettle();
       expect(ads.loadCalls, 1);
@@ -135,7 +156,7 @@ void main() {
     testWidgets('o nativo fica só no último cartão, com o rótulo "Anúncio" abaixo das ações', (tester) async {
       await open(tester);
 
-      await next(tester, 3);
+      await next(tester, 4);
       expect(nativeView, findsNothing);
 
       await next(tester);
@@ -148,7 +169,7 @@ void main() {
     testWidgets('sem anúncio (sem preenchimento) o último cartão termina nas ações, sem espaço vazio', (tester) async {
       await open(tester, withNative: false);
 
-      await next(tester, 4);
+      await next(tester, 5);
 
       expect(find.text(l10n.chooseAnotherDate), findsOneWidget);
       expect(find.text(l10n.adLabel), findsNothing);
@@ -159,7 +180,7 @@ void main() {
     testWidgets('o anúncio é pedido com as cores do tema', (tester) async {
       final ads = await open(tester);
 
-      await next(tester, 3);
+      await next(tester, 4);
 
       final style = ads.nativeRequests.single;
       final c = tester.element(find.byType(Scaffold).first).kn;
@@ -168,7 +189,7 @@ void main() {
 
     testWidgets('"Ver outra data" no último cartão mostra o intersticial uma vez', (tester) async {
       final ads = await open(tester);
-      await next(tester, 4);
+      await next(tester, 5);
       expect(ads.interstitialCalls, 0);
 
       await tester.tap(find.text(l10n.chooseAnotherDate));
@@ -180,7 +201,7 @@ void main() {
 
     testWidgets('fechar o resumo (X) depois de ver todos os cartões mostra o intersticial', (tester) async {
       final ads = await open(tester);
-      await next(tester, 4);
+      await next(tester, 5);
 
       await tester.tap(find.byTooltip(l10n.summaryClose));
       await tester.pumpAndSettle();
@@ -192,14 +213,19 @@ void main() {
       final deps = TestDependencies();
       final ads = deps.adService as FakeAdService;
       await tester.pumpApp(
-        Builder(builder: (context) => TextButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => SummaryPage(birthDate: adult))), child: const Text('abrir'))),
+        Builder(
+          builder: (context) => TextButton(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => SummaryPage(birthDate: adult))),
+            child: const Text('abrir'),
+          ),
+        ),
         deps,
       );
       await tester.tap(find.text('abrir'));
       await tester.pumpAndSettle();
       ScaffoldMessenger.of(tester.element(find.byType(Scaffold).first)).hideCurrentSnackBar();
       await tester.pumpAndSettle();
-      await next(tester, 4);
+      await next(tester, 5);
 
       // O voltar do sistema (botão ou gesto); a página não tem AppBar com seta.
       await tester.binding.handlePopRoute();
@@ -211,7 +237,7 @@ void main() {
 
     testWidgets('sair antes de ver todos os cartões não mostra intersticial', (tester) async {
       final ads = await open(tester);
-      await next(tester, 3); // até o penúltimo: o intersticial já foi pedido, mas o último não foi visto
+      await next(tester, 4); // até o penúltimo: o intersticial já foi pedido, mas o último não foi visto
 
       await tester.tap(find.byTooltip(l10n.summaryClose));
       await tester.pumpAndSettle();
@@ -232,7 +258,7 @@ void main() {
 
     testWidgets('escolher outra data pelo menu, depois de ver o último cartão, também é uma saída natural', (tester) async {
       final ads = await open(tester);
-      await next(tester, 4);
+      await next(tester, 5);
       tester.widget<PageView>(find.byType(PageView)).controller!.jumpToPage(0);
       await tester.pumpAndSettle();
 
@@ -247,7 +273,7 @@ void main() {
 
     testWidgets('o anúncio nativo é descartado junto com a página', (tester) async {
       final ads = await open(tester);
-      await next(tester, 3);
+      await next(tester, 5);
       final native = ads.nativeAd as FakeNativeAd;
       expect(native.disposeCalls, 0);
 
@@ -264,7 +290,7 @@ void main() {
         ..nativeAd = native
         ..nativeGate = Completer<void>();
       await open(tester, withNative: false, deps: deps);
-      await next(tester, 3);
+      await next(tester, 4);
       expect(ads.nativeRequests, hasLength(1));
 
       await tester.pumpWidget(const SizedBox());
@@ -291,7 +317,7 @@ void main() {
       await tester.pumpAndSettle();
       ScaffoldMessenger.of(tester.element(find.byType(Scaffold).first)).hideCurrentSnackBar();
       await tester.pumpAndSettle();
-      for (var i = 0; i < 4; i++) {
+      for (var i = 0; i < 5; i++) {
         await tester.tap(find.text(l10n.next));
         await tester.pumpAndSettle();
       }
@@ -346,7 +372,12 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    Future<List<bool>> pageThroughSummary(WidgetTester tester, DateTime birth, FakeBrazilCuriositiesRepository repository, int pageCount) async {
+    Future<List<bool>> pageThroughSummary(
+      WidgetTester tester,
+      DateTime birth,
+      FakeBrazilCuriositiesRepository repository,
+      int pageCount,
+    ) async {
       await openSummary(tester, birth, TestDependencies(repository: repository));
       final hasShareButton = <bool>[];
       for (var page = 0; page < pageCount; page++) {
@@ -360,23 +391,23 @@ void main() {
       return hasShareButton;
     }
 
-    testWidgets('adult with curiosity: every page but the milestone offers a card', (tester) async {
-      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(), 5);
+    testWidgets('adult with curiosity: every page but the milestone and the end card offers a card', (tester) async {
+      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(), 6);
 
-      expect(hasShareButton, [true, false, true, true, true]);
-      expect(find.byType(BrazilCuriositySection), findsOneWidget);
+      expect(hasShareButton, [true, false, true, true, true, false]);
+      expect(find.byType(SummaryEndSection), findsOneWidget);
     });
 
-    testWidgets('adult without curiosity: the last page has no card', (tester) async {
-      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(hasCuriosity: false), 5);
+    testWidgets('adult without curiosity: the fact page has no card', (tester) async {
+      final hasShareButton = await pageThroughSummary(tester, adultBirthDate, FakeBrazilCuriositiesRepository(hasCuriosity: false), 6);
 
-      expect(hasShareButton, [true, false, true, true, false]);
+      expect(hasShareButton, [true, false, true, true, false, false]);
     });
 
     testWidgets('minor: the conception card is not part of the sequence', (tester) async {
-      final hasShareButton = await pageThroughSummary(tester, minorBirthDate, FakeBrazilCuriositiesRepository(), 4);
+      final hasShareButton = await pageThroughSummary(tester, minorBirthDate, FakeBrazilCuriositiesRepository(), 5);
 
-      expect(hasShareButton, [true, false, true, true]);
+      expect(hasShareButton, [true, false, true, true, false]);
       expect(find.byType(ConceptionSection), findsNothing);
     });
 
@@ -439,7 +470,10 @@ void main() {
   });
 
   testWidgets('"Ver o que já está pronto" com movimento reduzido volta direto', (tester) async {
-    await tester.pumpApp(SummaryPage(birthDate: birthDate), TestDependencies(repository: FakeBrazilCuriositiesRepository(failFirstCuriosity: true)));
+    await tester.pumpApp(
+      SummaryPage(birthDate: birthDate),
+      TestDependencies(repository: FakeBrazilCuriositiesRepository(failFirstCuriosity: true)),
+    );
     await tester.pumpAndSettle();
     final controller = tester.widget<PageView>(find.byType(PageView)).controller!;
     controller.jumpToPage(4);
@@ -472,7 +506,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text(l10n.saveBirthdateOffer), findsOneWidget);
 
-    tester.widget<PageView>(find.byType(PageView)).controller!.jumpToPage(4);
+    tester.widget<PageView>(find.byType(PageView)).controller!.jumpToPage(5);
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.chooseAnotherDate));
     await tester.pumpAndSettle();

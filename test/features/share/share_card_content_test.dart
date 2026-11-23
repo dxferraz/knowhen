@@ -69,12 +69,13 @@ void main() {
     });
   });
 
-  test('lua mostra a fase, a descrição e a imagem', () {
+  test('lua mostra a fase e a descrição, e é desenhada pelo app na fase exata, sem imagem remota', () {
     final content = build(ShareSection.moonPhase);
 
     expect(content.highlight, 'Lua cheia');
     expect(content.details, [l10n.moonPhaseFullMoonDescription]);
-    expect(content.imageUrl, 'https://example.com/lua.png');
+    expect(content.imageUrl, isNull);
+    expect(content.moonFraction, getMoonPhaseFraction(DateTime(1990, 3, 15)));
   });
 
   group('curiosidade', () {
@@ -92,30 +93,43 @@ void main() {
   });
 
   group('card-resumo "Meu Knowhen"', () {
-    test('adulto inclui a concepção', () {
-      final content = build(ShareSection.summary);
+    test('traz idade, tempo de vida, a lua do nascimento e o gancho do fato', () {
+      final content = build(ShareSection.summary, d: data(curiosity: 'Nasce o Mercosul. O bloco une quatro países'));
 
       expect(content.title, 'Meu Knowhen');
+      expect(content.highlight, '36 anos');
+      expect(content.moonFraction, isNotNull);
       expect(content.details, hasLength(3));
       expect(content.details[1], 'Nasci na Lua cheia');
-      expect(content.details[2], 'Concebido(a) por volta de 15/06/1989 a 29/06/1989');
+      expect(content.details[2], 'No mês em que nasci: Nasce o Mercosul');
     });
 
-    test('menor de 18 anos não inclui a concepção', () {
-      final content = build(ShareSection.summary, d: data(birth: DateTime(2015, 5, 10)));
+    test('não traz a concepção, nem para adultos', () {
+      final content = build(ShareSection.summary);
 
-      expect(content.details, hasLength(2));
       expect(content.details.join(), isNot(contains('Concebido')));
     });
 
+    test('sem fato, ou com primeira frase longa demais para um gancho, a linha do fato some', () {
+      final long = 'Uma primeira frase bem longa que não cabe como título do cartão do fato do mês. Resto';
+
+      expect(build(ShareSection.summary, d: data(curiosity: null)).details, hasLength(2));
+      expect(build(ShareSection.summary, d: data(curiosity: long)).details, hasLength(2));
+    });
+
+    test('bebê no primeiro ano mostra meses em vez de "0 anos"', () {
+      final content = build(ShareSection.summary, d: data(birth: DateTime(2026, 8, 10)));
+
+      expect(content.highlight, '3 meses');
+    });
+
     test('com data escondida nenhuma linha traz dia/mês numérico do nascimento', () {
-      final content = build(ShareSection.summary, hide: true);
+      final content = build(ShareSection.summary, hide: true, d: data(curiosity: 'Nasce o Mercosul. O bloco une quatro países'));
       final text = [content.title, content.highlight, ...content.details, content.birthLabel].join('\n');
 
       expect(text, isNot(contains('/')));
       expect(text, isNot(contains('dias')));
       expect(content.birthLabel, 'Nascimento: março de 1990');
-      expect(content.details[2], 'Concebido(a) por volta de junho de 1989');
     });
   });
 }

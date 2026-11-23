@@ -180,17 +180,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get shareYearsTitle => 'Eu já vivi';
 
   @override
-  String shareYearsHighlight(int years) {
-    String _temp0 = intl.Intl.pluralLogic(
-      years,
-      locale: localeName,
-      other: '$years anos',
-      one: '1 ano',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String shareYearsDetail(int months, int days) {
     String _temp0 = intl.Intl.pluralLogic(
       months,
@@ -230,8 +219,8 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String shareConceptionLine(String when) {
-    return 'Concebido(a) por volta de $when';
+  String shareFactLine(String fact) {
+    return 'No mês em que nasci: $fact';
   }
 
   @override
@@ -592,6 +581,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get endShare => 'Compartilhar meu resumo';
+
+  @override
+  String get endEyebrow => 'Seu resumo';
+
+  @override
+  String endTitle(String date) {
+    return '$date, em um cartão';
+  }
+
+  @override
+  String get endPreviewLabel => 'Prévia do cartão para compartilhar';
 
   @override
   String get adLabel => 'Anúncio';
