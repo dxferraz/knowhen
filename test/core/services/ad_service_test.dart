@@ -91,6 +91,7 @@ void main() {
     await loading;
 
     await Future.wait([service.showInterstitialIfDue(), service.showInterstitialIfDue()]);
+    ad.sdkShowed();
 
     expect(ad.showCalls, 1);
     expect(service.isAdLoaded, isFalse);
@@ -104,6 +105,7 @@ void main() {
     await loading;
 
     await service.showInterstitialIfDue();
+    ad.sdkShowed();
     ad.fullScreenContentCallback!.onAdDismissedFullScreenContent!(ad);
     await pumpEventQueue();
 
@@ -119,6 +121,7 @@ void main() {
     await loading;
 
     await service.showInterstitialIfDue();
+    ad.sdkShowed();
     ad.fullScreenContentCallback!.onAdDismissedFullScreenContent!(ad);
     await pumpEventQueue();
 
@@ -159,6 +162,7 @@ void main() {
     test('a second interstitial inside the interval is held back, not lost or disposed', () async {
       final first = await loadOne();
       expect(await timed.showInterstitialIfDue(), isTrue);
+      first.sdkShowed();
       first.fullScreenContentCallback!.onAdDismissedFullScreenContent!(first);
       await pumpEventQueue();
       final second = await loadOne();
@@ -187,6 +191,58 @@ void main() {
     test('nothing is due without a loaded ad', () {
       expect(timed.isInterstitialDue, isFalse);
     });
+
+    test('the interval starts when the SDK confirms the display, not when it is requested', () async {
+      final ad = await loadOne();
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      now = now.add(const Duration(minutes: 1));
+      ad.sdkShowed();
+      ad.fullScreenContentCallback!.onAdDismissedFullScreenContent!(ad);
+      await pumpEventQueue();
+      final next = await loadOne();
+
+      now = now.add(const Duration(minutes: 2, seconds: 59));
+      expect(timed.isInterstitialDue, isFalse);
+      expect(await timed.showInterstitialIfDue(), isFalse);
+      expect(next.showCalls, 0);
+
+      now = now.add(const Duration(seconds: 1));
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      expect(next.showCalls, 1);
+    });
+
+    test('a display that fails neither logs ad_shown nor starts the interval', () async {
+      final failed = await loadOne();
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      failed.sdkFailedToShow();
+      await pumpEventQueue();
+
+      expect(firebaseAnalytics.names, ['ad_loaded']);
+      expect(failed.disposeCalls, 1);
+      expect(loader.requests, hasLength(2));
+
+      // The ad that loads next can be shown right away, with no interval to wait for.
+      final next = await loadOne();
+      expect(timed.isInterstitialDue, isTrue);
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      expect(next.showCalls, 1);
+      next.sdkShowed();
+      expect(firebaseAnalytics.names, ['ad_loaded', 'ad_loaded', 'ad_shown']);
+    });
+
+    test('a successful display logs ad_shown once and starts the interval', () async {
+      final ad = await loadOne();
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      expect(firebaseAnalytics.names, ['ad_loaded']);
+
+      ad.sdkShowed();
+      ad.fullScreenContentCallback!.onAdDismissedFullScreenContent!(ad);
+      await pumpEventQueue();
+      expect(firebaseAnalytics.names.where((n) => n == 'ad_shown'), hasLength(1));
+
+      await loadOne();
+      expect(timed.isInterstitialDue, isFalse);
+    });
   });
 
   test('the ad events carry the format', () async {
@@ -195,6 +251,7 @@ void main() {
     loader.requests.single.onAdLoaded(ad);
     await loading;
     await service.showInterstitialIfDue();
+    ad.sdkShowed();
 
     expect(firebaseAnalytics.names, ['ad_loaded', 'ad_shown']);
     expect(firebaseAnalytics.events.map((e) => e.parameters), [

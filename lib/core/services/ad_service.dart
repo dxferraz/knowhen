@@ -137,9 +137,10 @@ class AdService {
     return completer.future;
   }
 
-  /// Shows the interstitial if one is loaded and the interval since the last one has passed. Returns whether it was
-  /// shown. Call it only at a natural pause: the policy for *when* lives with the caller, the one for *how often*
-  /// lives here.
+  /// Asks the SDK to show the interstitial if one is loaded and the interval since the last one has passed. Returns
+  /// whether the request was made; `ad_shown` and the start of the interval wait for the SDK to confirm the display
+  /// (`onAdShowedFullScreenContent`), so a display that fails counts for neither. Call it only at a natural pause:
+  /// the policy for *when* lives with the caller, the one for *how often* lives here.
   Future<bool> showInterstitialIfDue() async {
     final ad = _interstitialAd;
     if (ad == null) {
@@ -149,11 +150,14 @@ class AdService {
     if (!isInterstitialDue) return false;
     // An ad can only be shown once: hand it over before any await so a concurrent call finds nothing.
     _interstitialAd = null;
-    _lastInterstitialAt = _now();
 
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) {
+        _lastInterstitialAt = _now();
+        _analytics.logAdShown(format: AdFormat.interstitial);
+      },
       onAdDismissedFullScreenContent: (InterstitialAd ad) async {
         ad.dispose();
         await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -168,7 +172,6 @@ class AdService {
           },
     );
 
-    _analytics.logAdShown(format: AdFormat.interstitial);
     ad.show();
     return true;
   }

@@ -82,6 +82,13 @@ class FakeInterstitialAd extends Fake implements InterstitialAd {
 
   @override
   Future<void> dispose() async => disposeCalls++;
+
+  /// The SDK confirming that the ad reached the screen.
+  void sdkShowed() => fullScreenContentCallback!.onAdShowedFullScreenContent!(this);
+
+  /// The SDK reporting that the ad could not be shown after all.
+  void sdkFailedToShow() =>
+      fullScreenContentCallback!.onAdFailedToShowFullScreenContent!(this, AdError(0, 'domain', 'not ready'));
 }
 
 /// Records each ad request; the test decides when (and how) each one finishes.
