@@ -31,6 +31,7 @@ class SummaryShell extends StatefulWidget {
     required this.onShare,
     required this.onChooseAnotherDate,
     this.initialPage = 0,
+    this.controller,
     this.onPageViewed,
   });
 
@@ -44,6 +45,10 @@ class SummaryShell extends StatefulWidget {
   final VoidCallback onChooseAnotherDate;
   final int initialPage;
 
+  /// Controle da página, para quem precisa levar o resumo a outro cartão (o "Ver o que já está pronto" do fato). Sem
+  /// ele a casca cria o seu a partir de [initialPage]; com ele, quem o passa é quem o descarta.
+  final PageController? controller;
+
   /// Chamado com o índice de cada cartão que passa a ser exibido, inclusive o inicial.
   final void Function(int index)? onPageViewed;
 
@@ -52,8 +57,8 @@ class SummaryShell extends StatefulWidget {
 }
 
 class _SummaryShellState extends State<SummaryShell> {
-  late final PageController _controller = PageController(initialPage: widget.initialPage);
-  late int _current = widget.initialPage;
+  late final PageController _controller = widget.controller ?? PageController(initialPage: widget.initialPage);
+  late int _current = _controller.initialPage;
   bool _started = false;
 
   static const Duration _pageDuration = Duration(milliseconds: 300);
@@ -70,7 +75,7 @@ class _SummaryShellState extends State<SummaryShell> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    if (widget.controller == null) _controller.dispose();
     super.dispose();
   }
 
@@ -131,8 +136,6 @@ class _SummaryShellState extends State<SummaryShell> {
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    // As seções ainda dimensionam o conteúdo pela altura da tela (`MediaQuery`); aqui ela é a da área do cartão.
-                    final media = MediaQuery.of(context).copyWith(size: constraints.biggest);
                     // Fora da árvore de Semantics: o toque nas metades é atalho para quem enxerga. "Próximo" e o próprio
                     // `PageView` já dão navegação acessível, e o gesto criaria um nó `tap` do tamanho do cartão, sem rótulo.
                     return GestureDetector(
@@ -145,9 +148,7 @@ class _SummaryShellState extends State<SummaryShell> {
                           setState(() => _current = index);
                           widget.onPageViewed?.call(index);
                         },
-                        children: [
-                          for (final card in cards) MediaQuery(data: media, child: card.section),
-                        ],
+                        children: [for (final card in cards) card.section],
                       ),
                     );
                   },

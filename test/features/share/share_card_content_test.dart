@@ -54,11 +54,11 @@ void main() {
   });
 
   group('concepção', () {
-    test('mostra a janela de 15 dias em torno de 280 dias antes do nascimento', () {
+    test('mostra a janela de 15 dias em torno de 266 dias antes do nascimento', () {
       final content = build(ShareSection.conception);
 
-      // 15/03/1990 - 280 dias = 08/06/1989; ±7 dias.
-      expect(content.highlight, '01/06/1989 a 15/06/1989');
+      // 15/03/1990 - 266 dias = 22/06/1989; ±7 dias.
+      expect(content.highlight, '15/06/1989 a 29/06/1989');
     });
 
     test('com data escondida mostra só mês e ano', () {
@@ -98,7 +98,7 @@ void main() {
       expect(content.title, 'Meu Knowhen');
       expect(content.details, hasLength(3));
       expect(content.details[1], 'Nasci na Lua cheia');
-      expect(content.details[2], 'Concebido(a) por volta de 01/06/1989 a 15/06/1989');
+      expect(content.details[2], 'Concebido(a) por volta de 15/06/1989 a 29/06/1989');
     });
 
     test('menor de 18 anos não inclui a concepção', () {

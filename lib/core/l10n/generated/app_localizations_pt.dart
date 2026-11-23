@@ -47,82 +47,8 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String conceptionRange(String startRange, String endRange) {
-    return '$startRange a $endRange';
-  }
-
-  @override
-  String get historicalFact => 'Fato histórico';
-
-  @override
-  String firstFactParagraph(String paragraph1) {
-    return '$paragraph1.';
-  }
-
-  @override
-  String get noImageForFact => 'Sem imagem para o fato';
-
-  @override
-  String get noHistoricalFact =>
-      'Ainda não temos um fato histórico para o mês do seu nascimento. Volte em breve!';
-
-  @override
-  String get historicalFactLoadError =>
-      'Não foi possível carregar o fato histórico agora. Verifique sua conexão e tente novamente mais tarde.';
-
-  @override
-  String get aiGeneratedImage => 'Imagem gerada por I.A.';
-
-  @override
-  String lastFactParagraph(String paragraph2) {
-    return '$paragraph2';
-  }
-
-  @override
-  String get yearsOfLifeTitle => 'Caso você não saiba, você tem:';
-
-  @override
-  String yearsOfLife(int years) {
-    return '$years anos,';
-  }
-
-  @override
-  String monthsOfLife(int months) {
-    return '$months meses';
-  }
-
-  @override
-  String daysOfLife(int days) {
-    return 'e $days dias.';
-  }
-
-  @override
-  String hoursOfLife(Object hours) {
-    return '$hours horas';
-  }
-
-  @override
-  String minutesOfLife(Object minutes) {
-    return '$minutes minutos';
-  }
-
-  @override
-  String secondsOfLife(Object seconds) {
-    return '$seconds segundos';
-  }
-
-  @override
-  String get conceptionTitle => 'Muito provavelmente, no período de:';
-
-  @override
   String get conceptionNote =>
-      'Estimativa baseada na duração média de uma gestação, com margem de uma semana.';
-
-  @override
-  String get moonPhaseTitle => 'Você nasceu na:';
-
-  @override
-  String get livedTitle => 'E viveu:';
+      'Estimativa: cerca de 38 semanas antes do nascimento, com margem de uma semana para cada lado.';
 
   @override
   String get moonPhaseNewMoonName => 'Lua nova';
@@ -645,33 +571,12 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get moonCycleLabel => 'Ciclo da Lua';
+  String moonCycleLabel(String phase) {
+    return 'Ciclo da Lua: $phase em destaque';
+  }
 
   @override
   String get factEyebrow => 'Fato histórico';
-
-  @override
-  String factDaysAfterBirth(int days) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days dias depois do seu nascimento',
-      one: '1 dia depois do seu nascimento',
-      zero: 'No dia do seu nascimento',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String factDaysBeforeBirth(int days) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days dias antes do seu nascimento',
-      one: '1 dia antes do seu nascimento',
-    );
-    return '$_temp0';
-  }
 
   @override
   String get factAiBadge => 'Ilustração gerada por IA';
@@ -711,4 +616,75 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get birthSongOpenError => 'Não foi possível abrir o link.';
+
+  @override
+  String lifeMonths(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months meses',
+      one: '1 mês',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lifeDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days dias',
+      one: '1 dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lifeAndDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days dias',
+      one: '1 dia',
+    );
+    return 'e $_temp0';
+  }
+
+  @override
+  String get conceptionFrom => 'de';
+
+  @override
+  String get conceptionTo => 'a';
+
+  @override
+  String factEyebrowDated(String date) {
+    return 'Fato histórico · $date';
+  }
+
+  @override
+  String get factBirthMonthBridge => 'No mês em que você nasceu.';
+
+  @override
+  String get factErrorBody =>
+      'Pode ser a conexão. O resto do seu resumo já está pronto.';
+
+  @override
+  String get factEmptyTitle => 'Ainda não temos um fato para esse mês';
+
+  @override
+  String get factEmptyBody =>
+      'Volte em breve: estamos juntando mais fatos históricos.';
+
+  @override
+  String get historicalFact => 'Fato histórico';
+
+  @override
+  String firstFactParagraph(String paragraph1) {
+    return '$paragraph1.';
+  }
+
+  @override
+  String lastFactParagraph(String paragraph2) {
+    return '$paragraph2';
+  }
 }

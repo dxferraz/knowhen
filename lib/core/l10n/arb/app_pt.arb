@@ -49,99 +49,8 @@
       }
     }
   },
-  "conceptionRange": "{startRange} a {endRange}",
-  "@conceptionRange": {
-    "placeholders": {
-      "startRange": {
-        "type": "String",
-        "example": "01/01/1925"
-      },
-      "endRange": {
-        "type": "String",
-        "example": "01/01/1925"
-      }
-    }
-  },
-  "historicalFact": "Fato histórico",
-  "@historicalFact": {},
-  "firstFactParagraph": "{paragraph1}.",
-  "@firstFactParagraph": {
-    "placeholders": {
-      "paragraph1": {
-        "type": "String",
-        "example": "..."
-      }
-    }
-  },
-  "noImageForFact": "Sem imagem para o fato",
-  "@noImageForFact": {},
-  "noHistoricalFact": "Ainda não temos um fato histórico para o mês do seu nascimento. Volte em breve!",
-  "@noHistoricalFact": {},
-  "historicalFactLoadError": "Não foi possível carregar o fato histórico agora. Verifique sua conexão e tente novamente mais tarde.",
-  "@historicalFactLoadError": {},
-  "aiGeneratedImage": "Imagem gerada por I.A.",
-  "@aiGeneratedImage": {},
-  "lastFactParagraph": "{paragraph2}",
-  "@lastFactParagraph": {
-    "placeholders": {
-      "paragraph2": {
-        "type": "String",
-        "example": "..."
-      }
-    }
-  },
-  "yearsOfLifeTitle": "Caso você não saiba, você tem:",
-  "@yearsOfLifeTitle": {},
-  "yearsOfLife": "{years} anos,",
-  "@yearsOfLife": {
-    "placeholders": {
-      "years": {
-        "type": "int"
-      }
-    }
-  },
-  "monthsOfLife": "{months} meses",
-  "@monthsOfLife": {
-    "placeholders": {
-      "months": {
-        "type": "int"
-      }
-    }
-  },
-  "daysOfLife": "e {days} dias.",
-  "@daysOfLife": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "hoursOfLife": "{hours} horas",
-  "@hoursOfLife": {
-    "placeholders": {
-      "hours": {}
-    }
-  },
-  "minutesOfLife": "{minutes} minutos",
-  "@minutesOfLife": {
-    "placeholders": {
-      "minutes": {}
-    }
-  },
-  "secondsOfLife": "{seconds} segundos",
-  "@secondsOfLife": {
-    "placeholders": {
-      "seconds": {}
-    }
-  },
-  "conceptionTitle": "Muito provavelmente, no período de:",
-  "@conceptionTitle": {},
-  "conceptionNote": "Estimativa baseada na duração média de uma gestação, com margem de uma semana.",
+  "conceptionNote": "Estimativa: cerca de 38 semanas antes do nascimento, com margem de uma semana para cada lado.",
   "@conceptionNote": {},
-  "moonPhaseTitle": "Você nasceu na:",
-  "@moonPhaseTitle": {},
-  "livedTitle": "E viveu:",
-  "@livedTitle": {},
   "moonPhaseNewMoonName": "Lua nova",
   "@moonPhaseNewMoonName": {},
   "moonPhaseNewMoonDescription": "A Lua está invisível no céu, marcando o início de um novo ciclo.",
@@ -543,26 +452,16 @@
       }
     }
   },
-  "moonCycleLabel": "Ciclo da Lua",
-  "@moonCycleLabel": {},
+  "moonCycleLabel": "Ciclo da Lua: {phase} em destaque",
+  "@moonCycleLabel": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
   "factEyebrow": "Fato histórico",
   "@factEyebrow": {},
-  "factDaysAfterBirth": "{days, plural, =0{No dia do seu nascimento} =1{1 dia depois do seu nascimento} other{{days} dias depois do seu nascimento}}",
-  "@factDaysAfterBirth": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "factDaysBeforeBirth": "{days, plural, =1{1 dia antes do seu nascimento} other{{days} dias antes do seu nascimento}}",
-  "@factDaysBeforeBirth": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
   "factAiBadge": "Ilustração gerada por IA",
   "@factAiBadge": {},
   "factErrorTitle": "Não conseguimos buscar o fato histórico",
@@ -593,5 +492,69 @@
   "listenOnYoutube": "Ouvir no YouTube",
   "@listenOnYoutube": {},
   "birthSongOpenError": "Não foi possível abrir o link.",
-  "@birthSongOpenError": {}
+  "@birthSongOpenError": {},
+  "lifeMonths": "{months, plural, =1{1 mês} other{{months} meses}}",
+  "@lifeMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "lifeDays": "{days, plural, =1{1 dia} other{{days} dias}}",
+  "@lifeDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "lifeAndDays": "e {days, plural, =1{1 dia} other{{days} dias}}",
+  "@lifeAndDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "conceptionFrom": "de",
+  "@conceptionFrom": {},
+  "conceptionTo": "a",
+  "@conceptionTo": {},
+  "factEyebrowDated": "Fato histórico · {date}",
+  "@factEyebrowDated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "factBirthMonthBridge": "No mês em que você nasceu.",
+  "@factBirthMonthBridge": {},
+  "factErrorBody": "Pode ser a conexão. O resto do seu resumo já está pronto.",
+  "@factErrorBody": {},
+  "factEmptyTitle": "Ainda não temos um fato para esse mês",
+  "@factEmptyTitle": {},
+  "factEmptyBody": "Volte em breve: estamos juntando mais fatos históricos.",
+  "@factEmptyBody": {},
+  "historicalFact": "Fato histórico",
+  "@historicalFact": {},
+  "firstFactParagraph": "{paragraph1}.",
+  "@firstFactParagraph": {
+    "placeholders": {
+      "paragraph1": {
+        "type": "String",
+        "example": "..."
+      }
+    }
+  },
+  "lastFactParagraph": "{paragraph2}",
+  "@lastFactParagraph": {
+    "placeholders": {
+      "paragraph2": {
+        "type": "String",
+        "example": "..."
+      }
+    }
+  }
 }

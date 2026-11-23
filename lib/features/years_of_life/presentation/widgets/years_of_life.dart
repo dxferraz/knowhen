@@ -1,83 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:knowhen/core/functions/calculate_age.dart';
-import 'package:knowhen/core/theme/widgets/text_widgets.dart';
-import 'package:knowhen/features/years_of_life/presentation/widgets/life_clock.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
+import 'package:knowhen/core/theme/components/kn_card.dart';
+import 'package:knowhen/core/theme/components/kn_story_page.dart';
+import 'package:knowhen/core/theme/tokens/kn_spacing.dart';
+import 'package:knowhen/core/theme/tokens/kn_text.dart';
+import 'package:knowhen/features/years_of_life/presentation/widgets/life_clock.dart';
 
+/// Cartão "Tempo de vida" (DXF-9, 4.5): a idade exata por calendário como herói, o que já foi vivido e quanto falta
+/// para o próximo aniversário.
 class YearsOfLifeSection extends StatelessWidget {
+  const YearsOfLifeSection({super.key, required this.birthDate, required this.birthTime, this.now});
+
   final DateTime birthDate;
   final TimeOfDay? birthTime;
 
-  const YearsOfLifeSection({super.key, required this.birthDate, required this.birthTime});
+  /// Só para testes: um instante fixo no lugar do relógio, que então não corre.
+  final DateTime? now;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final text = context.knText;
+    final c = context.kn;
 
-    final now = DateTime.now();
-    final int yearsOfLife = calculateAge(birthDate, now);
-    final int monthsOfLife = calculateMonthsOfLife(birthDate, now);
-    final int daysOfLife = calculateDaysOfLife(birthDate, now);
+    final today = now ?? DateTime.now();
+    final age = calculateAgeParts(birthDate, today);
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SecondaryH2(
-              l10n.yearsOfLifeTitle,
-              textAlign: TextAlign.center,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.primaryContainer,
+    // Quem nasceu há menos de um ano não tem "0 anos": o herói passa a ser os meses e, antes disso, os dias.
+    final (int heroValue, String Function(int) heroText, String? detail) = switch (age) {
+      (:final years, :final months, :final days) when years > 0 => (years, l10n.lifeYears, l10n.lifeMonthsAndDays(months, days)),
+      (years: _, :final months, :final days) when months > 0 => (months, l10n.lifeMonths, l10n.lifeAndDays(days)),
+      (years: _, months: _, :final days) => (days, l10n.lifeDays, null),
+    };
+    final heroLabel = detail == null ? heroText(heroValue) : '${heroText(heroValue)} $detail';
+
+    return KnStoryPage(
+      eyebrow: l10n.lifeEyebrow,
+      children: [
+        Semantics(
+          header: true,
+          label: heroLabel,
+          excludeSemantics: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // A contagem de 0 até o valor (800 ms) é só visual; o leitor de tela lê o valor final.
+              TweenAnimationBuilder<int>(
+                tween: IntTween(begin: 0, end: heroValue),
+                duration: MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 800),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, _) => FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(heroText(value), style: text.display),
+                ),
               ),
-              child: Column(
-                children: [
-                  PrimaryH3(
-                    l10n.yearsOfLife(yearsOfLife),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  PrimaryH3(
-                    l10n.monthsOfLife(monthsOfLife),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  PrimaryH3(
-                    l10n.daysOfLife(daysOfLife),
-                    textAlign: TextAlign.center,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ],
-              ),
-            ),
-            birthTime != null
-                ? Column(
-                    children: [
-                      SecondaryH2(
-                        l10n.livedTitle,
-                        textAlign: TextAlign.center,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      birthTime != null
-                          ? LifeClock(
-                              birthDateTime: birthDate,
-                              birthTime: birthTime!,
-                            )
-                          : Container()
-                    ],
-                  )
-                : Container(),
-          ],
+              if (detail != null) Text(detail, style: text.title.copyWith(color: c.inkMuted)),
+            ],
+          ),
         ),
-      ),
+        LifeClock(birthDate: birthDate, birthTime: birthTime, clock: () => now ?? DateTime.now(), ticks: now == null),
+        KnCard(
+          padding: const EdgeInsets.symmetric(horizontal: KnSpace.lg, vertical: KnSpace.md),
+          child: Row(
+            children: [
+              ExcludeSemantics(child: Icon(Icons.cake_outlined, color: c.accentText)),
+              const SizedBox(width: KnSpace.md),
+              Expanded(child: Text(l10n.lifeNextBirthday(daysUntilNextBirthday(birthDate, today)), style: text.label)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

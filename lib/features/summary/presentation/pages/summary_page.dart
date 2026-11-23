@@ -54,6 +54,9 @@ class _SummaryPageState extends State<SummaryPage> {
   /// Posição do card "Próximo marco" no resumo.
   static const milestoneSection = 1;
 
+  // Do resumo e não da casca: o "Ver o que já está pronto" do fato precisa levar a pessoa de volta ao primeiro cartão.
+  late final PageController _pageController = PageController(initialPage: widget.openMilestone ? milestoneSection : 0);
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +82,16 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   void dispose() {
     _closeSaveOffer();
+    _pageController.dispose();
     super.dispose();
+  }
+
+  void _seeWhatIsReady() {
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _pageController.jumpToPage(0);
+    } else {
+      _pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
+    }
   }
 
   void _logSectionIfNeeded(List<SummaryCard> cards, int index) {
@@ -206,15 +218,17 @@ class _SummaryPageState extends State<SummaryPage> {
       // sequência, em vez de virar uma página em branco.
       if (showsConception)
         (analyticsName: 'conception', section: ConceptionSection(birthDate: widget.birthDate), share: ShareSection.conception),
-      (analyticsName: 'moon_phase', section: MoonPhaseSection(moonPhase: state.moonPhase), share: ShareSection.moonPhase),
+      (analyticsName: 'moon_phase', section: MoonPhaseSection(moonPhase: state.moonPhase, birthDate: widget.birthDate), share: ShareSection.moonPhase),
       (
         analyticsName: 'brazil_curiosity',
         section: BrazilCuriositySection(
+          birthDate: widget.birthDate,
           imageUrl: state.curiosityImage,
           curiosity: state.brazilCuriosity?.fact,
           loadFailed: state.brazilCuriosityFailed,
           retrying: state.brazilCuriosityRetrying,
           onRetry: () => context.read<SummaryBloc>().add(RetryBrazilCuriosity(birthDate: widget.birthDate)),
+          onSeeReady: _seeWhatIsReady,
         ),
         share: state.brazilCuriosity != null ? ShareSection.brazilCuriosity : null,
       ),
@@ -246,7 +260,7 @@ class _SummaryPageState extends State<SummaryPage> {
             return SummaryShell(
               birthDate: widget.birthDate,
               cards: cards,
-              initialPage: widget.openMilestone ? milestoneSection : 0,
+              controller: _pageController,
               menu: _menu(l10n, state),
               onClose: _chooseAnotherDate,
               onChooseAnotherDate: _chooseAnotherDate,

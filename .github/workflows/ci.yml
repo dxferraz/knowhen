@@ -54,6 +54,10 @@ jobs:
       - name: make check (Flutter version, analyze, tests with coverage)
         run: make check
 
+      # A janela de concepção do compartilhável só diverge do cartão num fuso com horário de verão.
+      - name: Share conception window across DST (America/Sao_Paulo)
+        run: TZ=America/Sao_Paulo flutter test test/features/share/share_card_conception_dst_test.dart
+
       # Regras puras do script que popula o Firestore; só usam módulos nativos do Node, sem npm install.
       - name: firebase_scripts tests
         run: node --test firebase_scripts/test/*.test.js
