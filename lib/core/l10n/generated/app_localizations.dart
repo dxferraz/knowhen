@@ -322,11 +322,11 @@ abstract class AppLocalizations {
   /// **'Muito provavelmente, no período de:'**
   String get conceptionTitle;
 
-  /// No description provided for @conceptionFooter.
+  /// No description provided for @conceptionNote.
   ///
   /// In pt, this message translates to:
-  /// **'Foi quando a cegonha te levou ao colo de sua mãe!'**
-  String get conceptionFooter;
+  /// **'Estimativa baseada na duração média de uma gestação, com margem de uma semana.'**
+  String get conceptionNote;
 
   /// No description provided for @moonPhaseTitle.
   ///
@@ -789,6 +789,294 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Avisos no dia dos marcos da sua vida'**
   String get milestoneChannelDescription;
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'O que o dia em que você nasceu tem a contar?'**
+  String get onboardingTitle;
+
+  /// No description provided for @onboardingRevealLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto tempo você já viveu'**
+  String get onboardingRevealLife;
+
+  /// No description provided for @onboardingRevealConception.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quando a sua história começou'**
+  String get onboardingRevealConception;
+
+  /// No description provided for @onboardingRevealMoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em que fase estava a Lua'**
+  String get onboardingRevealMoon;
+
+  /// No description provided for @onboardingRevealFact.
+  ///
+  /// In pt, this message translates to:
+  /// **'Um fato histórico perto do seu nascimento'**
+  String get onboardingRevealFact;
+
+  /// No description provided for @onboardingTakesLess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Leva menos de um minuto'**
+  String get onboardingTakesLess;
+
+  /// No description provided for @birthdateTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quando você nasceu?'**
+  String get birthdateTitle;
+
+  /// No description provided for @birthdateDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dia'**
+  String get birthdateDay;
+
+  /// No description provided for @birthdateMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mês'**
+  String get birthdateMonth;
+
+  /// No description provided for @birthdateYear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ano'**
+  String get birthdateYear;
+
+  /// No description provided for @birthdatePickFromCalendar.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolher no calendário'**
+  String get birthdatePickFromCalendar;
+
+  /// No description provided for @birthdateTimeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hora do nascimento'**
+  String get birthdateTimeTitle;
+
+  /// No description provided for @birthdateTimeOptional.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional'**
+  String get birthdateTimeOptional;
+
+  /// No description provided for @birthdateTimeToggle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sei a hora em que nasci'**
+  String get birthdateTimeToggle;
+
+  /// No description provided for @birthdateReveal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revelar meu resumo'**
+  String get birthdateReveal;
+
+  /// No description provided for @birthdateErrorInvalid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Essa data não existe. Confira o dia e o mês.'**
+  String get birthdateErrorInvalid;
+
+  /// No description provided for @birthdateErrorFuture.
+  ///
+  /// In pt, this message translates to:
+  /// **'A data não pode estar no futuro.'**
+  String get birthdateErrorFuture;
+
+  /// No description provided for @birthdateErrorTooOld.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite um ano a partir de 1900.'**
+  String get birthdateErrorTooOld;
+
+  /// No description provided for @revealTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Olhando o céu de {date}…'**
+  String revealTitle(String date);
+
+  /// No description provided for @revealStepLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'Calculando o seu tempo de vida'**
+  String get revealStepLife;
+
+  /// No description provided for @revealStepMoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Encontrando a fase da Lua'**
+  String get revealStepMoon;
+
+  /// No description provided for @revealStepFact.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscando um fato histórico'**
+  String get revealStepFact;
+
+  /// No description provided for @summaryClose.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar o resumo'**
+  String get summaryClose;
+
+  /// No description provided for @summaryProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cartão {current} de {total}'**
+  String summaryProgress(int current, int total);
+
+  /// No description provided for @summaryShareCard.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar este cartão'**
+  String get summaryShareCard;
+
+  /// No description provided for @lifeEyebrow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tempo de vida'**
+  String get lifeEyebrow;
+
+  /// No description provided for @lifeYears.
+  ///
+  /// In pt, this message translates to:
+  /// **'{years, plural, =1{1 ano} other{{years} anos}}'**
+  String lifeYears(int years);
+
+  /// No description provided for @lifeMonthsAndDays.
+  ///
+  /// In pt, this message translates to:
+  /// **'{months, plural, =1{1 mês} other{{months} meses}} e {days, plural, =1{1 dia} other{{days} dias}}'**
+  String lifeMonthsAndDays(int months, int days);
+
+  /// No description provided for @lifeSoFar.
+  ///
+  /// In pt, this message translates to:
+  /// **'Até agora você viveu'**
+  String get lifeSoFar;
+
+  /// No description provided for @lifeUnitDays.
+  ///
+  /// In pt, this message translates to:
+  /// **'dias'**
+  String get lifeUnitDays;
+
+  /// No description provided for @lifeUnitHours.
+  ///
+  /// In pt, this message translates to:
+  /// **'horas'**
+  String get lifeUnitHours;
+
+  /// No description provided for @lifeUnitMinutes.
+  ///
+  /// In pt, this message translates to:
+  /// **'minutos'**
+  String get lifeUnitMinutes;
+
+  /// No description provided for @lifeUnitSeconds.
+  ///
+  /// In pt, this message translates to:
+  /// **'segundos'**
+  String get lifeUnitSeconds;
+
+  /// No description provided for @lifeNextBirthday.
+  ///
+  /// In pt, this message translates to:
+  /// **'{days, plural, =0{Hoje é o seu aniversário!} =1{Falta 1 dia para o seu próximo aniversário} other{Faltam {days} dias para o seu próximo aniversário}}'**
+  String lifeNextBirthday(int days);
+
+  /// No description provided for @conceptionEyebrow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concepção'**
+  String get conceptionEyebrow;
+
+  /// No description provided for @conceptionLead.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua história começou entre'**
+  String get conceptionLead;
+
+  /// No description provided for @moonEyebrow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fase da Lua'**
+  String get moonEyebrow;
+
+  /// No description provided for @moonBornUnder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você nasceu numa {phase}'**
+  String moonBornUnder(String phase);
+
+  /// No description provided for @moonCycleLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ciclo da Lua'**
+  String get moonCycleLabel;
+
+  /// No description provided for @factEyebrow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fato histórico'**
+  String get factEyebrow;
+
+  /// No description provided for @factDaysAfterBirth.
+  ///
+  /// In pt, this message translates to:
+  /// **'{days, plural, =0{No dia do seu nascimento} =1{1 dia depois do seu nascimento} other{{days} dias depois do seu nascimento}}'**
+  String factDaysAfterBirth(int days);
+
+  /// No description provided for @factDaysBeforeBirth.
+  ///
+  /// In pt, this message translates to:
+  /// **'{days, plural, =1{1 dia antes do seu nascimento} other{{days} dias antes do seu nascimento}}'**
+  String factDaysBeforeBirth(int days);
+
+  /// No description provided for @factAiBadge.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ilustração gerada por IA'**
+  String get factAiBadge;
+
+  /// No description provided for @factErrorTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não conseguimos buscar o fato histórico'**
+  String get factErrorTitle;
+
+  /// No description provided for @factRetry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tentar de novo'**
+  String get factRetry;
+
+  /// No description provided for @factSeeWhatIsReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver o que já está pronto'**
+  String get factSeeWhatIsReady;
+
+  /// No description provided for @endShare.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar meu resumo'**
+  String get endShare;
+
+  /// No description provided for @adLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anúncio'**
+  String get adLabel;
 
   /// No description provided for @birthSongTitle.
   ///

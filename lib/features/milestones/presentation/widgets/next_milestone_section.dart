@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:knowhen/core/functions/date_text.dart';
 import 'package:knowhen/core/functions/life_milestones.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/core/services/life_profile_service.dart';
@@ -85,7 +85,7 @@ class NextMilestoneSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   PrimaryParagraphM(
-                    l10n.milestoneOnDate(DateFormat('dd/MM/yyyy').format(milestone.date)),
+                    l10n.milestoneOnDate(DateText.numeric(milestone.date)),
                     textAlign: TextAlign.center,
                     color: colors.onPrimaryContainer,
                   ),
