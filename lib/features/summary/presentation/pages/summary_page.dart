@@ -19,6 +19,7 @@ import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
 import 'package:knowhen/features/summary/presentation/widgets/native_ad_slot.dart';
+import 'package:knowhen/features/summary/presentation/widgets/summary_end_section.dart';
 import 'package:knowhen/features/summary/presentation/widgets/summary_reveal.dart';
 import 'package:knowhen/features/summary/presentation/widgets/summary_shell.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
@@ -141,19 +142,21 @@ class _SummaryPageState extends State<SummaryPage> {
     }
   }
 
+  ShareCardData _shareData(SummaryLoaded state) => ShareCardData(
+    birthDate: widget.birthDate,
+    now: DateTime.now(),
+    moonPhase: state.moonPhase,
+    curiosity: state.brazilCuriosity?.fact,
+    curiosityImageUrl: state.curiosityImage,
+  );
+
   void _openShare(ShareSection section, SummaryLoaded state) {
     final analytics = context.read<AnalyticsService>();
     analytics.logShareTapped(section.analyticsName);
     ShareCardSheet.show(
       context,
       section: section,
-      data: ShareCardData(
-        birthDate: widget.birthDate,
-        now: DateTime.now(),
-        moonPhase: state.moonPhase,
-        curiosity: state.brazilCuriosity?.fact,
-        curiosityImageUrl: state.curiosityImage,
-      ),
+      data: _shareData(state),
       onShared: (section) => analytics.logShareCompleted(section.analyticsName),
     );
   }
@@ -275,6 +278,16 @@ class _SummaryPageState extends State<SummaryPage> {
       ),
       // Sem música para o mês, a página nem existe (sem placeholder vazio).
       if (state.birthSong != null) (analyticsName: 'birth_song', section: BirthSongSection(song: state.birthSong!), share: null),
+      // O cartão final fecha a sequência. Compartilha pelo botão do próprio cartão, não pelo ícone do rodapé.
+      (
+        analyticsName: 'summary_end',
+        section: SummaryEndSection(
+          birthDate: widget.birthDate,
+          content: ShareCardContent.build(AppLocalizations.of(context)!, ShareSection.summary, _shareData(state), hideFullDate: false),
+          onShare: () => _openShare(ShareSection.summary, state),
+        ),
+        share: null,
+      ),
     ];
   }
 
