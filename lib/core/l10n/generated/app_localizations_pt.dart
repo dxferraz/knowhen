@@ -15,9 +15,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cancel => 'Cancelar';
 
   @override
-  String get confirm => 'Confirmar';
-
-  @override
   String get skip => 'Pular';
 
   @override
@@ -27,17 +24,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get start => 'Começar';
 
   @override
-  String get continueLabel => 'Continuar';
-
-  @override
-  String get selectBirthdateTitle =>
-      'Para começar selecione a sua data de nascimento:';
-
-  @override
   String get selectADate => 'Selecione uma data';
-
-  @override
-  String get selectABirthdate => 'Selecione uma data de nascimento';
 
   @override
   String summaryPageTitle(String date) {
@@ -123,12 +110,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String secondsOfLife(Object seconds) {
     return '$seconds segundos';
   }
-
-  @override
-  String get birthTimeQuestion => 'Você sabe a hora exata do seu nascimento?';
-
-  @override
-  String get unknownBirthTime => 'Não sei';
 
   @override
   String get conceptionTitle => 'Muito provavelmente, no período de:';
@@ -516,7 +497,36 @@ class AppLocalizationsPt extends AppLocalizations {
   String get birthdateTimeTitle => 'Hora do nascimento';
 
   @override
-  String get birthdateTimeOptional => 'Opcional';
+  String get birthdateEyebrow => 'Só falta isso';
+
+  @override
+  String get birthdateHint => 'Digite só os números. Ex.: 14 03 1991';
+
+  @override
+  String get birthdateDayHint => 'DD';
+
+  @override
+  String get birthdateMonthHint => 'MM';
+
+  @override
+  String get birthdateYearHint => 'AAAA';
+
+  @override
+  String get birthdateBack => 'Voltar';
+
+  @override
+  String get birthdateTimeHelpOff => 'Opcional · deixa o relógio mais preciso';
+
+  @override
+  String birthdateTimeHelpOn(String time) {
+    return '$time · deixa o relógio mais preciso';
+  }
+
+  @override
+  String get birthdateTimeHour => 'Hora';
+
+  @override
+  String get birthdateTimeMinute => 'Minuto';
 
   @override
   String get birthdateTimeToggle => 'Sei a hora em que nasci';
