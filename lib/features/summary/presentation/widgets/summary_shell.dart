@@ -133,7 +133,10 @@ class _SummaryShellState extends State<SummaryShell> {
                   builder: (context, constraints) {
                     // As seções ainda dimensionam o conteúdo pela altura da tela (`MediaQuery`); aqui ela é a da área do cartão.
                     final media = MediaQuery.of(context).copyWith(size: constraints.biggest);
+                    // Fora da árvore de Semantics: o toque nas metades é atalho para quem enxerga. "Próximo" e o próprio
+                    // `PageView` já dão navegação acessível, e o gesto criaria um nó `tap` do tamanho do cartão, sem rótulo.
                     return GestureDetector(
+                      excludeFromSemantics: true,
                       behavior: HitTestBehavior.translucent,
                       onTapUp: (details) => _onTapUp(details, constraints.maxWidth),
                       child: PageView(

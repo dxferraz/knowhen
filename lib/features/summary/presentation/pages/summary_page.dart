@@ -42,6 +42,15 @@ class _SummaryPageState extends State<SummaryPage> {
   final Set<String> _loggedSections = {};
   bool _saveOfferShown = false;
 
+  // O ScaffoldMessenger é o do app, e não o desta rota: o que ele mostra sobrevive ao resumo. Guardado aqui porque
+  // não se consulta `.of(context)` no dispose.
+  late ScaffoldMessengerState _messenger;
+
+  /// O convite de salvar a data é o *atual* do messenger (na tela). É o único SnackBar que este resumo fecha por conta
+  /// própria. Não basta guardar o controller: `close` exige que ele seja o primeiro da fila, e o convite pode estar
+  /// atrás de outro ("Data apagada") ou já ter saído.
+  bool _saveOfferVisible = false;
+
   /// Posição do card "Próximo marco" no resumo.
   static const milestoneSection = 1;
 
@@ -59,6 +68,18 @@ class _SummaryPageState extends State<SummaryPage> {
         if (mounted) adService.showAd();
       });
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _messenger = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    _closeSaveOffer();
+    super.dispose();
   }
 
   void _logSectionIfNeeded(List<SummaryCard> cards, int index) {
@@ -93,16 +114,37 @@ class _SummaryPageState extends State<SummaryPage> {
     }
     _saveOfferShown = true;
     final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.saveBirthdateOffer),
-        duration: const Duration(seconds: 10),
-        // Flutuante e acima do rodapé, para não cobrir o "Próximo" enquanto o convite está na tela.
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.fromLTRB(KnSpace.lg, 0, KnSpace.lg, 96),
-        action: SnackBarAction(label: l10n.saveBirthdateShort, onPressed: _saveBirthdate),
-      ),
-    );
+    _messenger
+        .showSnackBar(
+          SnackBar(
+            content: Text(l10n.saveBirthdateOffer),
+            duration: const Duration(seconds: 10),
+            // Flutuante e acima do rodapé, para não cobrir o "Próximo" enquanto o convite está na tela.
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.fromLTRB(KnSpace.lg, 0, KnSpace.lg, 96),
+            onVisible: _onSaveOfferVisible,
+            action: SnackBarAction(label: l10n.saveBirthdateShort, onPressed: _saveBirthdate),
+          ),
+        )
+        .closed
+        .whenComplete(() => _saveOfferVisible = false);
+  }
+
+  void _onSaveOfferVisible() {
+    // A pessoa saiu do resumo antes de o convite chegar à tela (esperava na fila ou ainda animava a entrada).
+    if (!mounted) {
+      _messenger.hideCurrentSnackBar();
+      return;
+    }
+    _saveOfferVisible = true;
+  }
+
+  /// Fecha só o convite de salvar a data, sem mexer em "Data salva", "Data apagada" ou SnackBars de outras telas.
+  /// Remove na hora, sem animação: serve também ao `dispose`, onde não há mais o que animar.
+  void _closeSaveOffer() {
+    if (!_saveOfferVisible) return;
+    _saveOfferVisible = false;
+    _messenger.removeCurrentSnackBar();
   }
 
   Future<void> _saveBirthdate() async {
@@ -120,8 +162,8 @@ class _SummaryPageState extends State<SummaryPage> {
   }
 
   void _chooseAnotherDate() {
-    // O ScaffoldMessenger é o do app: sem isto o convite de salvar a data (10 s) seguiria cobrindo a tela da data.
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    // Sem isto o convite de salvar a data (10 s) seguiria cobrindo a tela da data.
+    _closeSaveOffer();
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => BirthdatePage(initialBirthDate: widget.birthDate)),
       (route) => false,
@@ -160,7 +202,8 @@ class _SummaryPageState extends State<SummaryPage> {
         section: NextMilestoneSection(birthDate: widget.birthDate, birthTime: widget.birthTime),
         share: null,
       ),
-      // Menores de 18 anos: o cartão da concepção não entra na sequência, em vez de virar uma página em branco.
+      // Quem tem até 18 anos completos não vê o cartão da concepção (`shouldShowConception` exige mais de 18): ele sai da
+      // sequência, em vez de virar uma página em branco.
       if (showsConception)
         (analyticsName: 'conception', section: ConceptionSection(birthDate: widget.birthDate), share: ShareSection.conception),
       (analyticsName: 'moon_phase', section: MoonPhaseSection(moonPhase: state.moonPhase), share: ShareSection.moonPhase),
@@ -184,27 +227,34 @@ class _SummaryPageState extends State<SummaryPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return BlocProvider(
-      create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>(), context.read<BirthSongRepository>())..add(GetSummary(birthDate: widget.birthDate)),
-      child: BlocBuilder<SummaryBloc, SummaryState>(
-        builder: (context, state) {
-          if (state is! SummaryLoaded) return SummaryReveal(birthDate: widget.birthDate);
+    // Voltar pelo botão ou gesto do sistema faz `pop` sem passar por `_chooseAnotherDate`: sem fechar o convite aqui ele
+    // reapareceria por cima da tela anterior.
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) _closeSaveOffer();
+      },
+      child: BlocProvider(
+        create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>(), context.read<BirthSongRepository>())..add(GetSummary(birthDate: widget.birthDate)),
+        child: BlocBuilder<SummaryBloc, SummaryState>(
+          builder: (context, state) {
+            if (state is! SummaryLoaded) return SummaryReveal(birthDate: widget.birthDate);
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) _offerToSaveBirthdate();
-          });
-          final cards = _cards(context, state);
-          return SummaryShell(
-            birthDate: widget.birthDate,
-            cards: cards,
-            initialPage: widget.openMilestone ? milestoneSection : 0,
-            menu: _menu(l10n, state),
-            onClose: _chooseAnotherDate,
-            onChooseAnotherDate: _chooseAnotherDate,
-            onShare: (section) => _openShare(section, state),
-            onPageViewed: (index) => _logSectionIfNeeded(cards, index),
-          );
-        },
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _offerToSaveBirthdate();
+            });
+            final cards = _cards(context, state);
+            return SummaryShell(
+              birthDate: widget.birthDate,
+              cards: cards,
+              initialPage: widget.openMilestone ? milestoneSection : 0,
+              menu: _menu(l10n, state),
+              onClose: _chooseAnotherDate,
+              onChooseAnotherDate: _chooseAnotherDate,
+              onShare: (section) => _openShare(section, state),
+              onPageViewed: (index) => _logSectionIfNeeded(cards, index),
+            );
+          },
+        ),
       ),
     );
   }

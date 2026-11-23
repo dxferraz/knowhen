@@ -222,6 +222,20 @@ void main() {
       semantics.dispose();
     });
 
+    testWidgets('todo alvo de toque tem rótulo, e o toque nas metades continua trocando de cartão', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpShell(tester);
+
+      await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+
+      final body = tester.getRect(find.text('Conteúdo 0'));
+      await tester.tapAt(Offset(body.center.dx + 120, body.center.dy));
+      await tester.pumpAndSettle();
+      expect(_currentCard(tester), 1);
+      await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+      semantics.dispose();
+    });
+
     testWidgets('cada botão tem pelo menos 48 dp de área de toque', (tester) async {
       await _pumpShell(tester);
 

@@ -7,6 +7,7 @@ import 'package:knowhen/core/functions/date_text.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 import 'package:knowhen/features/birth_song/presentation/widgets/birth_song_section.dart';
+import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
@@ -227,5 +228,60 @@ void main() {
 
     expect(find.byType(SummaryPage), findsNothing);
     expect(find.text(l10n.saveBirthdateOffer), findsNothing);
+  });
+
+  group('voltar pelo sistema', () {
+    Future<void> openSummaryFromBirthdate(WidgetTester tester, TestDependencies deps) async {
+      await tester.pumpApp(const BirthdatePage(), deps);
+      await tester.pumpAndSettle();
+      tester.state<NavigatorState>(find.byType(Navigator)).push(MaterialPageRoute(builder: (_) => SummaryPage(birthDate: birthDate)));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('o convite de salvar a data não reaparece por cima da tela da data', (tester) async {
+      await openSummaryFromBirthdate(tester, TestDependencies(birthSongs: FakeBirthSongRepository()));
+      expect(find.text(l10n.saveBirthdateOffer), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BirthdatePage), findsOneWidget);
+      expect(find.byType(SummaryPage), findsNothing);
+      expect(find.text(l10n.saveBirthdateOffer), findsNothing);
+    });
+
+    testWidgets('o convite que esperava na fila atrás de "Data apagada" também não aparece depois da volta', (tester) async {
+      final deps = TestDependencies(birthSongs: FakeBirthSongRepository());
+      await deps.profile.save(birthDate, null);
+      await openSummaryFromBirthdate(tester, deps);
+
+      await tester.tap(find.byKey(const Key('summary_menu')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.deleteSavedBirthdate));
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.birthdateDeleted), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 10));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BirthdatePage), findsOneWidget);
+      expect(find.text(l10n.saveBirthdateOffer), findsNothing);
+    });
+
+    testWidgets('fecha só o convite: um "Data salva" mostrado depois segue na tela', (tester) async {
+      await openSummaryFromBirthdate(tester, TestDependencies(birthSongs: FakeBirthSongRepository()));
+
+      await tester.tap(find.text(l10n.saveBirthdateShort));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      expect(find.text(l10n.birthdateSaved), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SummaryPage), findsNothing);
+      expect(find.text(l10n.birthdateSaved), findsOneWidget);
+    });
   });
 }
