@@ -112,11 +112,16 @@ async function generateYear({ year, ask, seen, minSongs = MIN_SONGS_PER_YEAR }) 
   return songs.length >= minSongs ? songs.slice(0, SONGS_PER_YEAR) : null;
 }
 
-/** Espalha as músicas do ano pelos meses (uma por mês, a partir de janeiro se forem 12). Devolve `{ AAAA-MM: doc }`. */
+/**
+ * Espalha as músicas do ano pelos meses, uma por mês, da primeira em janeiro à última em dezembro (com 12, uma em cada
+ * mês). Com até 12 músicas os meses nunca se repetem. Devolve `{ AAAA-MM: doc }`.
+ */
 function yearDocuments(year, songs) {
   const documents = {};
-  songs.slice(0, SONGS_PER_YEAR).forEach((song, index) => {
-    const date = { year: String(year), month: String(Math.floor((index * 12) / songs.length) + 1) };
+  const picked = songs.slice(0, SONGS_PER_YEAR);
+  picked.forEach((song, index) => {
+    const month = picked.length === 1 ? 1 : Math.round((index * 11) / (picked.length - 1)) + 1;
+    const date = { year: String(year), month: String(month) };
     documents[docId(date)] = toDocument(date, song);
   });
   return documents;

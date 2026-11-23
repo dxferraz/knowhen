@@ -151,7 +151,26 @@ test("yearDocuments põe uma música por mês, de 1 a 12, como string", () => {
 test("yearDocuments com menos de 12 músicas espalha pelos meses sem repetir mês", () => {
   const docs = yearDocuments(1995, songsOf("a", 8).map(([artist, songName]) => ({ artist, songName })));
   assert.equal(Object.keys(docs).length, 8);
-  assert.deepEqual(Object.keys(docs), ["1995-01", "1995-02", "1995-04", "1995-05", "1995-07", "1995-08", "1995-10", "1995-11"]);
+  assert.deepEqual(Object.keys(docs), ["1995-01", "1995-03", "1995-04", "1995-06", "1995-07", "1995-09", "1995-10", "1995-12"]);
+});
+
+for (const count of [8, 9, 10, 11, 12]) {
+  test(`yearDocuments com ${count} músicas usa ${count} meses distintos de 1 a 12, de janeiro a dezembro`, () => {
+    const docs = yearDocuments(1995, songsOf("a", count).map(([artist, songName]) => ({ artist, songName })));
+    const months = Object.values(docs).map((doc) => Number(doc.month));
+    assert.equal(months.length, count);
+    assert.equal(new Set(months).size, count);
+    assert.ok(months.every((month) => Number.isInteger(month) && month >= 1 && month <= 12));
+    assert.equal(Math.min(...months), 1);
+    assert.equal(Math.max(...months), 12);
+    assert.equal(docs["1995-01"].songName, "Música a0");
+    assert.equal(docs["1995-12"].songName, `Música a${count - 1}`);
+  });
+}
+
+test("yearDocuments com uma música só põe em janeiro", () => {
+  const docs = yearDocuments(1995, songsOf("a", 1).map(([artist, songName]) => ({ artist, songName })));
+  assert.deepEqual(Object.keys(docs), ["1995-01"]);
 });
 
 test("buildYearPrompt pede músicas lançadas no ano e deixa dizer menos de 12", () => {
