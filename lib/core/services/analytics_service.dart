@@ -15,6 +15,14 @@ abstract interface class MilestoneAnalytics {
   Future<void> logMilestoneNotificationOpened(String milestone);
 }
 
+/// Formato do anúncio nos eventos `ad_*`: o `ad_format` permite medir o intersticial e o nativo separados (DXF-9, 4.11).
+enum AdFormat {
+  interstitial,
+  native;
+
+  Map<String, Object> get parameters => {'ad_format': name};
+}
+
 class AnalyticsService implements MilestoneAnalytics {
   AnalyticsService(this._analytics);
 
@@ -125,16 +133,16 @@ class AnalyticsService implements MilestoneAnalytics {
     );
   }
 
-  /// Logs when an interstitial ad loads successfully
-  Future<void> logAdLoaded() async {
-    _printDebug('ad_loaded');
-    await _analytics.logEvent(name: 'ad_loaded');
+  /// Logs when an ad loads successfully
+  Future<void> logAdLoaded({required AdFormat format}) async {
+    _printDebug('ad_loaded', format.parameters);
+    await _analytics.logEvent(name: 'ad_loaded', parameters: format.parameters);
   }
 
-  /// Logs when an interstitial ad is shown to the user
-  Future<void> logAdShown() async {
-    _printDebug('ad_shown');
-    await _analytics.logEvent(name: 'ad_shown');
+  /// Logs when an ad is shown to the user (for a native ad: when its impression is counted)
+  Future<void> logAdShown({required AdFormat format}) async {
+    _printDebug('ad_shown', format.parameters);
+    await _analytics.logEvent(name: 'ad_shown', parameters: format.parameters);
   }
 
   /// Logs when an interstitial ad is dismissed

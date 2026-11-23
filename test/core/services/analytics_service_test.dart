@@ -53,10 +53,13 @@ void main() {
   });
 
   test('ad events', () async {
-    await analytics.logAdLoaded();
-    await analytics.logAdShown();
+    await analytics.logAdLoaded(format: AdFormat.interstitial);
+    await analytics.logAdShown(format: AdFormat.native);
     await analytics.logAdDismissed();
 
     expect(firebase.names, ['ad_loaded', 'ad_shown', 'ad_dismissed']);
+    expect(firebase.events[0].parameters, {'ad_format': 'interstitial'});
+    expect(firebase.events[1].parameters, {'ad_format': 'native'});
+    expect(firebase.events[2].parameters, isNull);
   });
 }

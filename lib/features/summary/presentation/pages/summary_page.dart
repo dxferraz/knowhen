@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:knowhen/core/functions/calculate_age.dart';
 import 'package:knowhen/core/services/life_profile_service.dart';
 import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
@@ -15,6 +18,7 @@ import 'package:knowhen/features/share/presentation/widgets/share_card_sheet.dar
 import 'package:knowhen/features/summary/presentation/bloc/summary_bloc.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_events.dart';
 import 'package:knowhen/features/summary/presentation/bloc/summary_state.dart';
+import 'package:knowhen/features/summary/presentation/widgets/native_ad_slot.dart';
 import 'package:knowhen/features/summary/presentation/widgets/summary_reveal.dart';
 import 'package:knowhen/features/summary/presentation/widgets/summary_shell.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
@@ -42,6 +46,14 @@ class _SummaryPageState extends State<SummaryPage> {
   final Set<String> _loggedSections = {};
   bool _saveOfferShown = false;
 
+  // Política de anúncios (DXF-9, 4.11): nada antes do primeiro cartão; o nativo fica no último e o intersticial só
+  // sai ao deixar o resumo depois de chegar a ele. Os dois são pedidos quando a pessoa está perto do fim, não ao
+  // abrir, para não pedir anúncio que não chega a ser visto.
+  bool _adsRequested = false;
+  bool _reachedLastCard = false;
+  bool _interstitialOffered = false;
+  NativeAd? _nativeAd;
+
   // O ScaffoldMessenger é o do app, e não o desta rota: o que ele mostra sobrevive ao resumo. Guardado aqui porque
   // não se consulta `.of(context)` no dispose.
   late ScaffoldMessengerState _messenger;
@@ -64,13 +76,6 @@ class _SummaryPageState extends State<SummaryPage> {
 
     final age = calculateAge(widget.birthDate, DateTime.now());
     context.read<AnalyticsService>().logSummaryViewed(age);
-
-    adService.loadAd().then((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        // The service outlives this page: a loaded ad stays queued for the next visit.
-        if (mounted) adService.showAd();
-      });
-    });
   }
 
   @override
@@ -82,6 +87,7 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   void dispose() {
     _closeSaveOffer();
+    _nativeAd?.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -92,6 +98,40 @@ class _SummaryPageState extends State<SummaryPage> {
     } else {
       _pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
     }
+  }
+
+  /// Pede o intersticial e o nativo uma vez, quando a pessoa chega ao penúltimo cartão.
+  void _requestAds() {
+    if (_adsRequested) return;
+    _adsRequested = true;
+    unawaited(adService.loadAd());
+    unawaited(_loadNativeAd());
+  }
+
+  Future<void> _loadNativeAd() async {
+    final style = nativeAdStyle(context.kn);
+    final ad = await adService.loadNativeAd(style);
+    if (ad == null) return;
+    // O anúncio chegou depois de a pessoa sair: quem o carregou é quem o descarta.
+    if (!mounted) {
+      ad.dispose();
+      return;
+    }
+    setState(() => _nativeAd = ad);
+  }
+
+  /// Intersticial só na pausa natural de deixar o resumo, e só depois de ver o último cartão. O serviço cuida de
+  /// quantas vezes (intervalo mínimo entre dois); aqui, no máximo uma tentativa por visita.
+  void _offerInterstitial() {
+    if (!_reachedLastCard || _interstitialOffered) return;
+    _interstitialOffered = true;
+    unawaited(adService.showInterstitialIfDue());
+  }
+
+  void _onCardViewed(List<SummaryCard> cards, int index) {
+    _logSectionIfNeeded(cards, index);
+    if (index >= cards.length - 2) _requestAds();
+    if (index == cards.length - 1) _reachedLastCard = true;
   }
 
   void _logSectionIfNeeded(List<SummaryCard> cards, int index) {
@@ -176,6 +216,7 @@ class _SummaryPageState extends State<SummaryPage> {
   void _chooseAnotherDate() {
     // Sem isto o convite de salvar a data (10 s) seguiria cobrindo a tela da data.
     _closeSaveOffer();
+    _offerInterstitial();
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => BirthdatePage(initialBirthDate: widget.birthDate)),
       (route) => false,
@@ -245,7 +286,9 @@ class _SummaryPageState extends State<SummaryPage> {
     // reapareceria por cima da tela anterior.
     return PopScope(
       onPopInvokedWithResult: (didPop, _) {
-        if (didPop) _closeSaveOffer();
+        if (!didPop) return;
+        _closeSaveOffer();
+        _offerInterstitial();
       },
       child: BlocProvider(
         create: (context) => SummaryBloc(context.read<BrazilCuriositiesRepository>(), context.read<BirthSongRepository>())..add(GetSummary(birthDate: widget.birthDate)),
@@ -265,7 +308,8 @@ class _SummaryPageState extends State<SummaryPage> {
               onClose: _chooseAnotherDate,
               onChooseAnotherDate: _chooseAnotherDate,
               onShare: (section) => _openShare(section, state),
-              onPageViewed: (index) => _logSectionIfNeeded(cards, index),
+              onPageViewed: (index) => _onCardViewed(cards, index),
+              endSlot: _nativeAd == null ? null : NativeAdSlot(ad: _nativeAd!),
             );
           },
         ),

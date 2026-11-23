@@ -33,6 +33,7 @@ class SummaryShell extends StatefulWidget {
     this.initialPage = 0,
     this.controller,
     this.onPageViewed,
+    this.endSlot,
   });
 
   final DateTime birthDate;
@@ -51,6 +52,9 @@ class SummaryShell extends StatefulWidget {
 
   /// Chamado com o índice de cada cartão que passa a ser exibido, inclusive o inicial.
   final void Function(int index)? onPageViewed;
+
+  /// Aparece abaixo das ações só no último cartão (o anúncio nativo, 4.9). Sem ele, o cartão termina nas ações.
+  final Widget? endSlot;
 
   @override
   State<SummaryShell> createState() => _SummaryShellState();
@@ -170,6 +174,8 @@ class _SummaryShellState extends State<SummaryShell> {
                   ],
                 ),
               ),
+              if (isLast && widget.endSlot != null)
+                Padding(padding: const EdgeInsets.fromLTRB(KnSpace.xl, 0, KnSpace.xl, KnSpace.lg), child: widget.endSlot),
             ],
           ),
         ),

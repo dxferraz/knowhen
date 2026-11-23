@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:knowhen/core/services/ad_service.dart';
@@ -31,13 +32,41 @@ class FakeFirebaseAnalytics extends Fake implements FirebaseAnalytics {
 /// Never touches the Google Mobile Ads plugin.
 class FakeAdService extends Fake implements AdService {
   int loadCalls = 0;
-  int showCalls = 0;
+  int interstitialCalls = 0;
+  final List<NativeTemplateStyle> nativeRequests = [];
+
+  /// The native ad handed to the page; `null` simulates "no fill".
+  NativeAd? nativeAd;
+
+  /// When set, the native ad only arrives once it completes (the page may be gone by then).
+  Completer<void>? nativeGate;
 
   @override
   Future<void> loadAd() async => loadCalls++;
 
   @override
-  Future<void> showAd() async => showCalls++;
+  Future<bool> showInterstitialIfDue() async {
+    interstitialCalls++;
+    return true;
+  }
+
+  @override
+  Future<NativeAd?> loadNativeAd(NativeTemplateStyle style) async {
+    nativeRequests.add(style);
+    await nativeGate?.future;
+    return nativeAd;
+  }
+
+  @override
+  Widget nativeAdView(NativeAd ad) => const SizedBox(key: Key('fake_native_ad_view'));
+}
+
+/// Stands in for a native ad the plugin would hand to `onAdLoaded`.
+class FakeNativeAd extends Fake implements NativeAd {
+  int disposeCalls = 0;
+
+  @override
+  Future<void> dispose() async => disposeCalls++;
 }
 
 /// Stands in for an ad the plugin would hand to `onAdLoaded`.
@@ -60,6 +89,17 @@ class FakeAdLoader {
   final List<InterstitialAdLoadCallback> requests = [];
 
   void call(String adUnitId, InterstitialAdLoadCallback callback) => requests.add(callback);
+}
+
+/// Like [FakeAdLoader], for native ads: records the unit and the listener, and hands back a [FakeNativeAd].
+class FakeNativeAdLoader {
+  final List<({String adUnitId, NativeAdListener listener, FakeNativeAd ad})> requests = [];
+
+  NativeAd call(String adUnitId, NativeAdListener listener, NativeTemplateStyle style) {
+    final ad = FakeNativeAd();
+    requests.add((adUnitId: adUnitId, listener: listener, ad: ad));
+    return ad;
+  }
 }
 
 class FakeBrazilCuriositiesRepository implements BrazilCuriositiesRepository {
