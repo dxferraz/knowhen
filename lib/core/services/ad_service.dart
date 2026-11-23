@@ -90,6 +90,7 @@ class AdService {
   InterstitialAd? _interstitialAd;
   Future<void>? _loading;
   DateTime? _lastInterstitialAt;
+  int _interstitialRequest = 0;
   final String interstitialAdUnitId;
 
   /// `null` when there is no native unit to request (release build without `NATIVE_AD_UNIT_ID`).
@@ -140,8 +141,8 @@ class AdService {
   /// Asks the SDK to show the interstitial if one is loaded and the interval since the last one has passed. Returns
   /// whether the request was made. The interval is held from the request on, so an ad that loads before the SDK
   /// answers is not shown on top of this one, and is restarted when the SDK confirms the display
-  /// (`onAdShowedFullScreenContent`, which also logs `ad_shown`); a display that fails gives the interval back and
-  /// logs nothing. Call it only at a natural pause:
+  /// (`onAdShowedFullScreenContent`, which also logs `ad_shown`); a display that fails gives the interval back, unless
+  /// a newer request already holds it, and logs nothing. Call it only at a natural pause:
   /// the policy for *when* lives with the caller, the one for *how often* lives here.
   Future<bool> showInterstitialIfDue() async {
     final ad = _interstitialAd;
@@ -155,6 +156,7 @@ class AdService {
     // The SDK takes a while to confirm the display, and a new ad can finish loading in the meantime. Hold the
     // interval from the request on so that ad is not shown on top of this one; a failure gives it back.
     final previous = _lastInterstitialAt;
+    final request = ++_interstitialRequest;
     _lastInterstitialAt = _now();
 
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -172,7 +174,8 @@ class AdService {
       },
       onAdFailedToShowFullScreenContent:
           (InterstitialAd ad, AdError error) async {
-            _lastInterstitialAt = previous;
+            // A failure that arrives late must not erase the interval of a newer request.
+            if (request == _interstitialRequest) _lastInterstitialAt = previous;
             ad.dispose();
             await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
             loadAd();

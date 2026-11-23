@@ -250,6 +250,24 @@ void main() {
       expect(second.showCalls, 1);
     });
 
+    test('a late failure of an older request does not give back an interval that belongs to a newer one', () async {
+      final first = await loadOne();
+      expect(await timed.showInterstitialIfDue(), isTrue);
+
+      // The first request never got an answer; its interval runs out and a second ad is shown and confirmed.
+      final second = await loadOne();
+      now = now.add(AdService.interstitialInterval);
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      second.sdkShowed();
+
+      // The first request finally fails. It must not erase the second one's interval.
+      first.sdkFailedToShow();
+      await pumpEventQueue();
+
+      await loadOne();
+      expect(timed.isInterstitialDue, isFalse);
+    });
+
     test('a successful display logs ad_shown once and starts the interval', () async {
       final ad = await loadOne();
       expect(await timed.showInterstitialIfDue(), isTrue);
