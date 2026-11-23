@@ -268,6 +268,45 @@ void main() {
       expect(timed.isInterstitialDue, isFalse);
     });
 
+    test('a late confirmation of an older request is not erased by the failure of the newer one', () async {
+      final first = await loadOne();
+      expect(await timed.showInterstitialIfDue(), isTrue);
+
+      // The first request never got an answer; its interval runs out and a second ad is requested.
+      final second = await loadOne();
+      now = now.add(AdService.interstitialInterval);
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      expect(second.showCalls, 1);
+
+      // The first display is confirmed late, then the second one, the current request, fails.
+      first.sdkShowed();
+      now = now.add(const Duration(seconds: 1));
+      second.sdkFailedToShow();
+      await pumpEventQueue();
+
+      await loadOne();
+      expect(timed.isInterstitialDue, isFalse);
+      expect(firebaseAnalytics.names.where((n) => n == 'ad_shown'), hasLength(1));
+    });
+
+    test('when both requests fail, a late failure of the older one and the current one, the interval is free', () async {
+      final first = await loadOne();
+      expect(await timed.showInterstitialIfDue(), isTrue);
+
+      final second = await loadOne();
+      now = now.add(AdService.interstitialInterval);
+      expect(await timed.showInterstitialIfDue(), isTrue);
+
+      first.sdkFailedToShow();
+      second.sdkFailedToShow();
+      await pumpEventQueue();
+
+      final third = await loadOne();
+      expect(timed.isInterstitialDue, isTrue);
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      expect(third.showCalls, 1);
+    });
+
     test('a successful display logs ad_shown once and starts the interval', () async {
       final ad = await loadOne();
       expect(await timed.showInterstitialIfDue(), isTrue);
