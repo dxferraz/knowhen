@@ -111,6 +111,13 @@ test("generateYear devolve as 12 músicas na primeira tentativa", async () => {
   assert.equal(prompts.length, 1);
 });
 
+test("generateYear passa a tentativa e o ano para o ask", async () => {
+  const calls = [];
+  const ask = async (prompt, attempt, year) => (calls.push([attempt, year]), yearJson(1995, songsOf("a", 5)));
+  await generateYear({ year: 1995, ask, seen: new Set() });
+  assert.deepEqual(calls, [[1, 1995], [2, 1995]]);
+});
+
 test("generateYear tenta de novo uma vez e junta o que veio de novo, sem repetir", async () => {
   const prompts = [];
   const answers = [yearJson(1995, songsOf("a", 5)), yearJson(1995, [...songsOf("a", 5), ...songsOf("b", 4)])];
@@ -133,6 +140,18 @@ test("generateYear não reaproveita música de outro ano (seen) nem do ano errad
   const seen = new Set(songsOf("a", 12).map(([artist, songName]) => songKey({ artist, songName })));
   const ask = async () => yearJson(1995, [...songsOf("a", 12), ...songsOf("b", 12).map(([a, s]) => [a, s, 1970])]);
   assert.equal(await generateYear({ year: 1995, ask, seen }), null);
+});
+
+test("generateYear limita a 12 as músicas listadas no prompt da 2ª tentativa, mesmo com resposta enorme", async () => {
+  const prompts = [];
+  const seen = new Set(songsOf("a", 100).map(([artist, songName]) => songKey({ artist, songName })));
+  const ask = async (prompt) => (prompts.push(prompt), yearJson(1995, songsOf("a", 100)));
+  assert.equal(await generateYear({ year: 1995, ask, seen }), null);
+  assert.equal(prompts.length, 2);
+  assert.equal(prompts[1].split("Não repita nenhuma destas")[1].split("; ").length, 12, "só 12 itens em 'Não repita'");
+  assert.match(prompts[1], /Artista a11 - Música a11/);
+  assert.doesNotMatch(prompts[1], /Artista a12 - Música a12/);
+  assert.ok(prompts[1].length <= buildYearPrompt(1995, Array.from({ length: 12 }, () => ({ artist: "x".repeat(120), songName: "x".repeat(120) }))).length);
 });
 
 test("generateYear deixa o erro de rede subir para quem chamou", async () => {

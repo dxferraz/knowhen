@@ -95,7 +95,7 @@ function dedupeSongs(candidates, seen) {
 }
 
 /**
- * Pergunta ao modelo (`ask(prompt, attempt)` devolve o texto da resposta) as músicas de um ano. Tenta de novo uma
+ * Pergunta ao modelo (`ask(prompt, attempt, year)` devolve o texto da resposta) as músicas de um ano. Tenta de novo uma
  * vez, juntando o que veio de novo, se faltar música válida e inédita. Devolve `null` se, depois disso, ainda
  * houver menos de MIN_SONGS_PER_YEAR: o ano fica de fora. Erros de rede de `ask` sobem para quem chamou.
  */
@@ -103,8 +103,9 @@ async function generateYear({ year, ask, seen, minSongs = MIN_SONGS_PER_YEAR }) 
   const songs = [];
   const asked = [];
   for (let attempt = 1; attempt <= MAX_ATTEMPTS_PER_YEAR; attempt++) {
-    const candidates = parseYearResponse(await ask(buildYearPrompt(year, asked), attempt), year);
-    asked.push(...candidates);
+    const candidates = parseYearResponse(await ask(buildYearPrompt(year, asked), attempt, year), year);
+    // No máximo SONGS_PER_YEAR vão para o prompt da próxima tentativa: é a premissa do teto de custo de `estimateRun`.
+    asked.push(...candidates.slice(0, Math.max(0, SONGS_PER_YEAR - asked.length)));
     const taken = new Set([...seen, ...songs.map(songKey)]);
     songs.push(...dedupeSongs(candidates, taken).accepted);
     if (songs.length >= SONGS_PER_YEAR) break;
@@ -239,6 +240,7 @@ module.exports = {
   DEFAULT_TO_YEAR,
   SONGS_PER_YEAR,
   MIN_SONGS_PER_YEAR,
+  MAX_ATTEMPTS_PER_YEAR,
   YEAR_RESPONSE_SCHEMA,
   parseYearRange,
   docId,
