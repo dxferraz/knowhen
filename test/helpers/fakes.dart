@@ -70,6 +70,9 @@ class FakeBrazilCuriositiesRepository implements BrazilCuriositiesRepository {
     this.curiosityError,
     this.imageError,
     this.wait,
+    this.imageWait,
+    this.failFirstCuriosity = false,
+    this.retryGate,
   });
 
   /// The curiosity returned; defaults to [sampleCuriosity] for the requested month/year.
@@ -84,6 +87,15 @@ class FakeBrazilCuriositiesRepository implements BrazilCuriositiesRepository {
   /// When set, the curiosity only arrives after it completes (to observe the loading state).
   final Completer<void>? wait;
 
+  /// Like [wait], for the image.
+  final Completer<void>? imageWait;
+
+  /// The first curiosity request fails and the following ones succeed (the "try again" flow).
+  final bool failFirstCuriosity;
+
+  /// When set, every request after the first only completes once it does.
+  final Completer<void>? retryGate;
+
   final List<DateTime> requestedDates = [];
   int imageRequests = 0;
 
@@ -91,6 +103,8 @@ class FakeBrazilCuriositiesRepository implements BrazilCuriositiesRepository {
   Future<BrazilCuriosityDTO?> getBrazilCuriosity(DateTime birthDate) async {
     requestedDates.add(birthDate);
     await wait?.future;
+    if (requestedDates.length > 1) await retryGate?.future;
+    if (failFirstCuriosity && requestedDates.length == 1) throw StateError('sem rede');
     if (curiosityError != null) throw curiosityError!;
     if (!hasCuriosity) return null;
     return curiosity ?? sampleCuriosity(year: '${birthDate.year}', month: '${birthDate.month}');
@@ -99,6 +113,7 @@ class FakeBrazilCuriositiesRepository implements BrazilCuriositiesRepository {
   @override
   Future<String> getCuriosityImage(String year, String month) async {
     imageRequests++;
+    await imageWait?.future;
     if (imageError != null) throw imageError!;
     return imageUrl;
   }
@@ -112,7 +127,10 @@ BrazilCuriosityDTO sampleCuriosity({String year = '1990', String month = '5'}) =
     );
 
 class FakeBirthSongRepository implements BirthSongRepository {
-  FakeBirthSongRepository({this.song, this.error});
+  FakeBirthSongRepository({this.song, this.error, this.wait});
+
+  /// When set, the song only arrives after it completes.
+  final Completer<void>? wait;
 
   /// `null` simulates a month/year without a song.
   final BirthSongEntity? song;
@@ -123,6 +141,7 @@ class FakeBirthSongRepository implements BirthSongRepository {
   @override
   Future<BirthSongEntity?> getBirthSong(DateTime birthDate) async {
     requestedDates.add(birthDate);
+    await wait?.future;
     if (error != null) throw error!;
     return song;
   }

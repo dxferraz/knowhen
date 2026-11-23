@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:knowhen/core/theme/components/kn_button.dart';
 import 'package:knowhen/core/theme/widgets/text_widgets.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 
@@ -8,7 +9,20 @@ class BrazilCuriositySection extends StatelessWidget {
   /// `null` mostra um estado vazio: sem curiosidade para o mês/ano ou, com [loadFailed], erro ao carregar.
   final String? curiosity;
   final bool loadFailed;
-  const BrazilCuriositySection({super.key, required this.imageUrl, required this.curiosity, this.loadFailed = false});
+
+  /// "Tentar de novo" do estado de erro; sem ele o erro fica só com a mensagem.
+  final VoidCallback? onRetry;
+
+  /// Há uma nova tentativa em andamento: o botão fica desabilitado.
+  final bool retrying;
+  const BrazilCuriositySection({
+    super.key,
+    required this.imageUrl,
+    required this.curiosity,
+    this.loadFailed = false,
+    this.onRetry,
+    this.retrying = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +32,7 @@ class BrazilCuriositySection extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(bottom: 100, left: 20, right: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -35,17 +49,27 @@ class BrazilCuriositySection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 color: Theme.of(context).colorScheme.primaryContainer,
               ),
-              child: curiosity == null
-                  ? PrimaryParagraphS(
-                      loadFailed ? l10n.historicalFactLoadError : l10n.noHistoricalFact,
-                      textAlign: TextAlign.center,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    )
-                  : _buildFact(context, l10n, curiosity),
+              child: curiosity == null ? _buildEmpty(context, l10n) : _buildFact(context, l10n, curiosity),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildEmpty(BuildContext context, AppLocalizations l10n) {
+    final message = PrimaryParagraphS(
+      loadFailed ? l10n.historicalFactLoadError : l10n.noHistoricalFact,
+      textAlign: TextAlign.center,
+      color: Theme.of(context).colorScheme.onPrimaryContainer,
+    );
+    if (!loadFailed || onRetry == null) return message;
+    return Column(
+      children: [
+        message,
+        const SizedBox(height: 16),
+        KnButton(label: l10n.factRetry, kind: KnButtonKind.secondary, onPressed: retrying ? null : onRetry),
+      ],
     );
   }
 

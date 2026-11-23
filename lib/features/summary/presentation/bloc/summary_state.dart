@@ -23,6 +23,9 @@ class SummaryLoaded extends SummaryState {
   final BrazilCuriosityEntity? brazilCuriosity;
   final bool brazilCuriosityFailed;
 
+  /// Uma nova busca da curiosidade está em andamento ("Tentar de novo").
+  final bool brazilCuriosityRetrying;
+
   /// `null` quando não há música para o mês/ano ou quando ela não pôde ser carregada.
   final BirthSongEntity? birthSong;
 
@@ -31,9 +34,19 @@ class SummaryLoaded extends SummaryState {
     required this.curiosityImage,
     required this.brazilCuriosity,
     this.brazilCuriosityFailed = false,
+    this.brazilCuriosityRetrying = false,
     this.birthSong,
   });
 
+  SummaryLoaded withRetrying() => SummaryLoaded(
+    moonPhase: moonPhase,
+    curiosityImage: curiosityImage,
+    brazilCuriosity: brazilCuriosity,
+    brazilCuriosityFailed: brazilCuriosityFailed,
+    brazilCuriosityRetrying: true,
+    birthSong: birthSong,
+  );
+
   @override
-  List<Object?> get props => [moonPhase, curiosityImage, brazilCuriosity, brazilCuriosityFailed, birthSong];
+  List<Object?> get props => [moonPhase, curiosityImage, brazilCuriosity, brazilCuriosityFailed, brazilCuriosityRetrying, birthSong];
 }

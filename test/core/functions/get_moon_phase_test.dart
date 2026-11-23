@@ -34,6 +34,24 @@ void main() {
     }
   });
 
+  group('getMoonPhaseFraction', () {
+    test('é 0,5 na lua cheia e perto de 0 (ou de 1) na lua nova', () {
+      expect(getMoonPhaseFraction(DateTime(2000, 1, 21)), closeTo(0.5, 0.05));
+      final fresh = getMoonPhaseFraction(DateTime(2024, 4, 8));
+      expect(fresh < 0.05 || fresh > 0.95, isTrue);
+    });
+
+    test('fica sempre em [0, 1) e concorda com a fase de 8 partes', () {
+      for (var day = 0; day < 400; day++) {
+        final date = DateTime(2000, 1, 1).add(Duration(days: day * 37));
+        final fraction = getMoonPhaseFraction(date);
+        expect(fraction, greaterThanOrEqualTo(0), reason: '$date');
+        expect(fraction, lessThan(1), reason: '$date');
+        expect(MoonPhaseType.values[(fraction * 8).round() % 8], getMoonPhase(date).type, reason: '$date');
+      }
+    });
+  });
+
   test('ignora o horário da data', () {
     expect(getMoonPhase(DateTime(2000, 1, 21, 23, 59)), getMoonPhase(DateTime(2000, 1, 21)));
   });

@@ -940,6 +940,12 @@ abstract class AppLocalizations {
   /// **'Compartilhar este cartão'**
   String get summaryShareCard;
 
+  /// No description provided for @summaryMenu.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mais opções'**
+  String get summaryMenu;
+
   /// No description provided for @lifeEyebrow.
   ///
   /// In pt, this message translates to:

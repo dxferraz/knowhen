@@ -389,7 +389,7 @@ void main() {
 
   group('KnMoon', () {
     /// Fração de pixels claros (a parte iluminada) em cada metade da lua, sem o halo.
-    Future<({double left, double right})> litHalves(WidgetTester tester, double phase) async {
+    Future<({double left, double right})> litHalves(WidgetTester tester, double phase, {bool southern = false}) async {
       const size = 200.0;
       final recorder = ui.PictureRecorder();
       KnMoonPainter(
@@ -397,6 +397,7 @@ void main() {
         moon: const Color(0xFFFFFFFF),
         shadow: const Color(0xFF000000),
         glowAlpha: 0,
+        southernHemisphere: southern,
       ).paint(Canvas(recorder), const Size(size, size));
 
       final bytes = await tester.runAsync(() async {
@@ -435,6 +436,25 @@ void main() {
       final h = await litHalves(tester, 0.75);
       expect(h.left, greaterThan(0.9));
       expect(h.right, lessThan(0.05));
+    });
+
+    testWidgets('hemisfério sul: a crescente é iluminada à esquerda e a minguante, à direita', (tester) async {
+      final waxing = await litHalves(tester, 0.25, southern: true);
+      expect(waxing.left, greaterThan(0.9));
+      expect(waxing.right, lessThan(0.05));
+
+      final waning = await litHalves(tester, 0.75, southern: true);
+      expect(waning.right, greaterThan(0.9));
+      expect(waning.left, lessThan(0.05));
+    });
+
+    testWidgets('hemisfério sul: nova e cheia não mudam', (tester) async {
+      final full = await litHalves(tester, 0.5, southern: true);
+      expect(full.left, greaterThan(0.95));
+      expect(full.right, greaterThan(0.95));
+      final none = await litHalves(tester, 0, southern: true);
+      expect(none.left, lessThan(0.02));
+      expect(none.right, lessThan(0.02));
     });
 
     testWidgets('cheia: os dois lados', (tester) async {

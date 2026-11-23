@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:knowhen/core/l10n/generated/app_localizations.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
+import '../../helpers/pump_app.dart' show l10n;
 
 void main() {
   Future<void> pumpSection(WidgetTester tester, BrazilCuriositySection section) async {
@@ -46,5 +47,37 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Sem imagem para o fato'), findsOneWidget);
+  });
+
+  group('"Tentar de novo"', () {
+    testWidgets('no erro com onRetry mostra o botão e o toque chama a nova busca', (WidgetTester tester) async {
+      var retries = 0;
+      await pumpSection(tester, BrazilCuriositySection(imageUrl: '', curiosity: null, loadFailed: true, onRetry: () => retries++));
+
+      await tester.tap(find.text(l10n.factRetry));
+
+      expect(retries, 1);
+    });
+
+    testWidgets('enquanto busca de novo o botão fica desabilitado', (WidgetTester tester) async {
+      var retries = 0;
+      await pumpSection(tester, BrazilCuriositySection(imageUrl: '', curiosity: null, loadFailed: true, retrying: true, onRetry: () => retries++));
+
+      await tester.tap(find.text(l10n.factRetry), warnIfMissed: false);
+
+      expect(retries, 0);
+    });
+
+    testWidgets('sem erro (mês sem fato) não há o que tentar de novo', (WidgetTester tester) async {
+      await pumpSection(tester, BrazilCuriositySection(imageUrl: '', curiosity: null, onRetry: () {}));
+
+      expect(find.text(l10n.factRetry), findsNothing);
+    });
+
+    testWidgets('sem onRetry o erro fica só com a mensagem', (WidgetTester tester) async {
+      await pumpSection(tester, const BrazilCuriositySection(imageUrl: '', curiosity: null, loadFailed: true));
+
+      expect(find.text(l10n.factRetry), findsNothing);
+    });
   });
 }

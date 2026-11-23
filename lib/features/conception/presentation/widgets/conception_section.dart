@@ -22,7 +22,7 @@ class ConceptionSection extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(bottom: 100, left: 20, right: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

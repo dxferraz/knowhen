@@ -487,6 +487,8 @@
   },
   "summaryShareCard": "Compartilhar este cartão",
   "@summaryShareCard": {},
+  "summaryMenu": "Mais opções",
+  "@summaryMenu": {},
   "lifeEyebrow": "Tempo de vida",
   "@lifeEyebrow": {},
   "lifeYears": "{years, plural, =1{1 ano} other{{years} anos}}",

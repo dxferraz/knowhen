@@ -8,13 +8,16 @@ import 'package:knowhen/core/theme/tokens/kn_text.dart';
 /// [phase] em [0, 1): 0 = nova, 0.25 = quarto crescente, 0.5 = cheia, 0.75 = quarto minguante. Valores fora do
 /// intervalo dão a volta (1.0 = 0.0). É decorativa: sem [semanticsLabel], o leitor de tela a ignora.
 class KnMoon extends StatelessWidget {
-  const KnMoon({super.key, required this.phase, this.size = 160, this.glow = true, this.semanticsLabel});
+  const KnMoon({super.key, required this.phase, this.size = 160, this.glow = true, this.southernHemisphere = false, this.semanticsLabel});
 
   final double phase;
   final double size;
 
   /// Halo suave atrás da lua.
   final bool glow;
+
+  /// No hemisfério sul (Brasil) a Lua se vê espelhada: a crescente é iluminada à esquerda e a minguante, à direita.
+  final bool southernHemisphere;
   final String? semanticsLabel;
 
   @override
@@ -28,6 +31,7 @@ class KnMoon extends StatelessWidget {
           moon: c.moon,
           shadow: c.moonShadow,
           glowAlpha: glow ? (c.isDark ? 0.18 : 0.25) : 0,
+          southernHemisphere: southernHemisphere,
         ),
       ),
     );
@@ -37,7 +41,13 @@ class KnMoon extends StatelessWidget {
 }
 
 class KnMoonPainter extends CustomPainter {
-  const KnMoonPainter({required this.phase, required this.moon, required this.shadow, required this.glowAlpha});
+  const KnMoonPainter({
+    required this.phase,
+    required this.moon,
+    required this.shadow,
+    required this.glowAlpha,
+    this.southernHemisphere = false,
+  });
 
   final double phase;
   final Color moon;
@@ -45,6 +55,7 @@ class KnMoonPainter extends CustomPainter {
 
   /// Opacidade do halo; 0 desliga.
   final double glowAlpha;
+  final bool southernHemisphere;
 
   /// O disco ocupa 82% do raio para sobrar espaço ao halo.
   static const double discRatio = 0.82;
@@ -82,8 +93,8 @@ class KnMoonPainter extends CustomPainter {
     if (k > 0.999) return;
 
     canvas.save();
-    // Até a cheia o lado iluminado é o direito; depois da cheia, o esquerdo.
-    if (p >= 0.5) {
+    // No hemisfério norte, até a cheia o lado iluminado é o direito e depois dela, o esquerdo; no sul, o inverso.
+    if ((p >= 0.5) != southernHemisphere) {
       canvas.translate(center.dx * 2, 0);
       canvas.scale(-1, 1);
     }
@@ -99,5 +110,5 @@ class KnMoonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant KnMoonPainter old) =>
-      old.phase != phase || old.moon != moon || old.shadow != shadow || old.glowAlpha != glowAlpha;
+      old.phase != phase || old.moon != moon || old.shadow != shadow || old.glowAlpha != glowAlpha || old.southernHemisphere != southernHemisphere;
 }

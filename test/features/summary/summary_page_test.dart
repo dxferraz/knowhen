@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:knowhen/core/functions/date_text.dart';
 import 'package:knowhen/core/services/ad_service.dart';
 import 'package:knowhen/core/services/analytics_service.dart';
 import 'package:knowhen/features/birth_song/presentation/widgets/birth_song_section.dart';
+import 'package:knowhen/features/birthdate/presentation/pages/birthdate_page.dart';
 import 'package:knowhen/features/brazil_curiosity/presentation/widgets/brazil_curiosity_section.dart';
 import 'package:knowhen/features/conception/presentation/widgets/conception_section.dart';
 import 'package:knowhen/features/moon_phase/presentation/widgets/moon_phase_section.dart';
 import 'package:knowhen/features/summary/presentation/pages/summary_page.dart';
+import 'package:knowhen/features/summary/presentation/widgets/summary_reveal.dart';
 import 'package:knowhen/features/years_of_life/presentation/widgets/years_of_life.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,12 +30,14 @@ void main() {
 
     await tester.pumpApp(SummaryPage(birthDate: birthDate), deps);
     await tester.pump();
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(SummaryReveal), findsOneWidget);
+    expect(find.byType(YearsOfLifeSection), findsNothing);
 
     curiosity.complete();
     await tester.pumpAndSettle();
 
-    expect(find.text(l10n.summaryPageTitle('20/05/1990')), findsOneWidget);
+    expect(find.byType(SummaryReveal), findsNothing);
+    expect(find.text(DateText.compact(birthDate)), findsOneWidget);
     expect(find.byType(YearsOfLifeSection), findsOneWidget);
     final adService = deps.adService as FakeAdService;
     expect(adService.loadCalls, 1);
@@ -123,7 +128,7 @@ void main() {
 
   group('share button on every page of the PageView', () {
     // The button next to the arrow only exists on pages that have a card to share.
-    final shareButton = find.byTooltip(l10n.shareButtonLabel);
+    final shareButton = find.byTooltip(l10n.summaryShareCard);
     final adultBirthDate = DateTime(1990, 5, 20);
     final minorBirthDate = DateTime.now().subtract(const Duration(days: 365 * 10));
 
@@ -141,7 +146,7 @@ void main() {
       for (var page = 0; page < pageCount; page++) {
         hasShareButton.add(shareButton.evaluate().isNotEmpty);
         if (page < pageCount - 1) {
-          await tester.tap(find.byIcon(Icons.arrow_downward));
+          await tester.tap(find.text(l10n.next));
           await tester.pumpAndSettle();
         }
       }
@@ -162,17 +167,17 @@ void main() {
       expect(hasShareButton, [true, false, true, true, false]);
     });
 
-    testWidgets('minor: the conception page is empty and has no card', (tester) async {
-      final hasShareButton = await pageThroughSummary(tester, minorBirthDate, FakeBrazilCuriositiesRepository(), 5);
+    testWidgets('minor: the conception card is not part of the sequence', (tester) async {
+      final hasShareButton = await pageThroughSummary(tester, minorBirthDate, FakeBrazilCuriositiesRepository(), 4);
 
-      expect(hasShareButton, [true, false, false, true, true]);
+      expect(hasShareButton, [true, false, true, true]);
       expect(find.byType(ConceptionSection), findsNothing);
     });
 
     testWidgets('tapping share opens the card preview of the current page', (tester) async {
       await openSummary(tester, adultBirthDate, TestDependencies());
       for (var i = 0; i < 3; i++) {
-        await tester.tap(find.byIcon(Icons.arrow_downward));
+        await tester.tap(find.text(l10n.next));
         await tester.pumpAndSettle();
       }
       expect(find.byType(MoonPhaseSection), findsOneWidget);
@@ -181,6 +186,102 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text(l10n.shareSheetTitle), findsOneWidget);
+    });
+  });
+
+  testWidgets('falha só na parte remota: o resumo abre e "Tentar de novo" busca o fato sem refazer o resto', (tester) async {
+    final repository = FakeBrazilCuriositiesRepository(failFirstCuriosity: true);
+    final deps = TestDependencies(repository: repository);
+
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), deps);
+    await tester.pumpAndSettle();
+    expect(find.byType(YearsOfLifeSection), findsOneWidget);
+    expect(find.textContaining('sem rede'), findsNothing);
+
+    for (var i = 0; i < 4; i++) {
+      ScaffoldMessenger.of(tester.element(find.byType(Scaffold).first)).hideCurrentSnackBar();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.next));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text(l10n.historicalFactLoadError), findsOneWidget);
+
+    await tester.tap(find.text(l10n.factRetry));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.historicalFactLoadError), findsNothing);
+    expect(find.textContaining('Um fato curioso'), findsWidgets);
+    expect(repository.requestedDates, hasLength(2));
+    expect(deps.firebaseAnalytics.names.where((n) => n == 'summary_viewed'), hasLength(1));
+  });
+
+  testWidgets('"Escolher outra data" no último cartão volta para a data e esconde o convite de salvar', (tester) async {
+    final deps = TestDependencies(birthSongs: FakeBirthSongRepository());
+    await tester.pumpApp(SummaryPage(birthDate: birthDate), deps);
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.saveBirthdateOffer), findsOneWidget);
+
+    tester.widget<PageView>(find.byType(PageView)).controller!.jumpToPage(4);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.chooseAnotherDate));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SummaryPage), findsNothing);
+    expect(find.text(l10n.saveBirthdateOffer), findsNothing);
+  });
+
+  group('voltar pelo sistema', () {
+    Future<void> openSummaryFromBirthdate(WidgetTester tester, TestDependencies deps) async {
+      await tester.pumpApp(const BirthdatePage(), deps);
+      await tester.pumpAndSettle();
+      tester.state<NavigatorState>(find.byType(Navigator)).push(MaterialPageRoute(builder: (_) => SummaryPage(birthDate: birthDate)));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('o convite de salvar a data não reaparece por cima da tela da data', (tester) async {
+      await openSummaryFromBirthdate(tester, TestDependencies(birthSongs: FakeBirthSongRepository()));
+      expect(find.text(l10n.saveBirthdateOffer), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BirthdatePage), findsOneWidget);
+      expect(find.byType(SummaryPage), findsNothing);
+      expect(find.text(l10n.saveBirthdateOffer), findsNothing);
+    });
+
+    testWidgets('o convite que esperava na fila atrás de "Data apagada" também não aparece depois da volta', (tester) async {
+      final deps = TestDependencies(birthSongs: FakeBirthSongRepository());
+      await deps.profile.save(birthDate, null);
+      await openSummaryFromBirthdate(tester, deps);
+
+      await tester.tap(find.byKey(const Key('summary_menu')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.deleteSavedBirthdate));
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.birthdateDeleted), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 10));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BirthdatePage), findsOneWidget);
+      expect(find.text(l10n.saveBirthdateOffer), findsNothing);
+    });
+
+    testWidgets('fecha só o convite: um "Data salva" mostrado depois segue na tela', (tester) async {
+      await openSummaryFromBirthdate(tester, TestDependencies(birthSongs: FakeBirthSongRepository()));
+
+      await tester.tap(find.text(l10n.saveBirthdateShort));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      expect(find.text(l10n.birthdateSaved), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SummaryPage), findsNothing);
+      expect(find.text(l10n.birthdateSaved), findsOneWidget);
     });
   });
 }
