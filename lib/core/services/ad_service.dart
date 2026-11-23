@@ -138,8 +138,10 @@ class AdService {
   }
 
   /// Asks the SDK to show the interstitial if one is loaded and the interval since the last one has passed. Returns
-  /// whether the request was made; `ad_shown` and the start of the interval wait for the SDK to confirm the display
-  /// (`onAdShowedFullScreenContent`), so a display that fails counts for neither. Call it only at a natural pause:
+  /// whether the request was made. The interval is held from the request on, so an ad that loads before the SDK
+  /// answers is not shown on top of this one, and is restarted when the SDK confirms the display
+  /// (`onAdShowedFullScreenContent`, which also logs `ad_shown`); a display that fails gives the interval back and
+  /// logs nothing. Call it only at a natural pause:
   /// the policy for *when* lives with the caller, the one for *how often* lives here.
   Future<bool> showInterstitialIfDue() async {
     final ad = _interstitialAd;
@@ -150,6 +152,10 @@ class AdService {
     if (!isInterstitialDue) return false;
     // An ad can only be shown once: hand it over before any await so a concurrent call finds nothing.
     _interstitialAd = null;
+    // The SDK takes a while to confirm the display, and a new ad can finish loading in the meantime. Hold the
+    // interval from the request on so that ad is not shown on top of this one; a failure gives it back.
+    final previous = _lastInterstitialAt;
+    _lastInterstitialAt = _now();
 
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
@@ -166,6 +172,7 @@ class AdService {
       },
       onAdFailedToShowFullScreenContent:
           (InterstitialAd ad, AdError error) async {
+            _lastInterstitialAt = previous;
             ad.dispose();
             await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
             loadAd();

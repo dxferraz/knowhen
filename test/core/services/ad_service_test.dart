@@ -230,6 +230,26 @@ void main() {
       expect(firebaseAnalytics.names, ['ad_loaded', 'ad_loaded', 'ad_shown']);
     });
 
+    test('an ad that loads before the SDK answers is held back, and shown at once if the first display fails', () async {
+      final first = await loadOne();
+      expect(await timed.showInterstitialIfDue(), isTrue);
+
+      // No callback from the SDK yet: the next ad finishes loading inside that window.
+      final second = await loadOne();
+      expect(timed.isInterstitialDue, isFalse);
+      expect(await timed.showInterstitialIfDue(), isFalse);
+      expect(second.showCalls, 0);
+      expect(second.disposeCalls, 0);
+      expect(timed.isAdLoaded, isTrue);
+
+      first.sdkFailedToShow();
+      await pumpEventQueue();
+
+      expect(timed.isInterstitialDue, isTrue);
+      expect(await timed.showInterstitialIfDue(), isTrue);
+      expect(second.showCalls, 1);
+    });
+
     test('a successful display logs ad_shown once and starts the interval', () async {
       final ad = await loadOne();
       expect(await timed.showInterstitialIfDue(), isTrue);
