@@ -334,6 +334,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.idle();
     expect(ad.showCalls, 1);
+    ad.sdkShowed();
 
     // A pessoa fecha o anúncio, o próximo é pré-carregado e ela abre outro resumo enquanto ele carrega.
     ad.fullScreenContentCallback!.onAdDismissedFullScreenContent!(ad);

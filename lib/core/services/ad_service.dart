@@ -89,7 +89,16 @@ class AdService {
   final DateTime Function() _now;
   InterstitialAd? _interstitialAd;
   Future<void>? _loading;
-  DateTime? _lastInterstitialAt;
+
+  /// When the SDK last confirmed an interstitial on screen. Only `onAdShowedFullScreenContent` writes it, and nothing
+  /// restores or clears it.
+  DateTime? _lastInterstitialShownAt;
+
+  /// When the current request for an interstitial was made, until the SDK answers it (shown or failed).
+  DateTime? _interstitialReservedAt;
+
+  /// Id of the latest request: the answer of an older one must not touch the reservation of a newer one.
+  int _interstitialRequest = 0;
   final String interstitialAdUnitId;
 
   /// `null` when there is no native unit to request (release build without `NATIVE_AD_UNIT_ID`).
@@ -99,10 +108,13 @@ class AdService {
 
   /// Whether [showInterstitialIfDue] would show the ad right now.
   bool get isInterstitialDue {
-    final last = _lastInterstitialAt;
     return isAdLoaded &&
-        (last == null || _now().difference(last) >= interstitialInterval);
+        _intervalPassed(_lastInterstitialShownAt) &&
+        _intervalPassed(_interstitialReservedAt);
   }
+
+  bool _intervalPassed(DateTime? since) =>
+      since == null || _now().difference(since) >= interstitialInterval;
 
   Future<void> loadAd() {
     if (_interstitialAd != null) return Future.value();
@@ -137,8 +149,12 @@ class AdService {
     return completer.future;
   }
 
-  /// Shows the interstitial if one is loaded and the interval since the last one has passed. Returns whether it was
-  /// shown. Call it only at a natural pause: the policy for *when* lives with the caller, the one for *how often*
+  /// Asks the SDK to show the interstitial if one is loaded and the interval since the last one has passed. Returns
+  /// whether the request was made. The request *reserves* the interval, so an ad that loads before the SDK answers is
+  /// not shown on top of this one. The interval proper starts when the SDK confirms the display
+  /// (`onAdShowedFullScreenContent`, which also logs `ad_shown`); a display that fails releases the reservation and
+  /// logs nothing. An answer only releases the reservation of its own request, and a confirmed display is never
+  /// undone. Call it only at a natural pause: the policy for *when* lives with the caller, the one for *how often*
   /// lives here.
   Future<bool> showInterstitialIfDue() async {
     final ad = _interstitialAd;
@@ -149,11 +165,19 @@ class AdService {
     if (!isInterstitialDue) return false;
     // An ad can only be shown once: hand it over before any await so a concurrent call finds nothing.
     _interstitialAd = null;
-    _lastInterstitialAt = _now();
+    // The SDK takes a while to confirm the display, and a new ad can finish loading in the meantime. Reserve the
+    // interval from the request on so that ad is not shown on top of this one.
+    final request = ++_interstitialRequest;
+    _interstitialReservedAt = _now();
 
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) {
+        _lastInterstitialShownAt = _now();
+        if (request == _interstitialRequest) _interstitialReservedAt = null;
+        _analytics.logAdShown(format: AdFormat.interstitial);
+      },
       onAdDismissedFullScreenContent: (InterstitialAd ad) async {
         ad.dispose();
         await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -162,13 +186,14 @@ class AdService {
       },
       onAdFailedToShowFullScreenContent:
           (InterstitialAd ad, AdError error) async {
+            // A failure that arrives late must not release the reservation of a newer request.
+            if (request == _interstitialRequest) _interstitialReservedAt = null;
             ad.dispose();
             await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
             loadAd();
           },
     );
 
-    _analytics.logAdShown(format: AdFormat.interstitial);
     ad.show();
     return true;
   }
